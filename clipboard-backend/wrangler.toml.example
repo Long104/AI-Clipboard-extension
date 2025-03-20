@@ -1,0 +1,27 @@
+
+name = "clipboard-backend"
+main = "src/index.ts"
+compatibility_date = "2024-12-30"
+
+[observability]
+enabled = true
+
+node_compat = true
+
+
+# Bind the Workers AI model catalog. Run machine learning models, powered by serverless GPUs, on Cloudflare’s global network
+# Docs: https://developers.cloudflare.com/workers/wrangler/configuration/#workers-ai
+[ai]
+binding = "AI"
+
+
+[[d1_databases]]
+binding = "DB"
+database_name = "stripe"
+database_id = <id>
+
+
+
+[vars]
+STRIPE_SECRET_API_KEY = <key> 
+STRIPE_WEBHOOK_SECRET = <key>

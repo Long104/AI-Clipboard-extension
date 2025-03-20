@@ -1,0 +1,27 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  // provider  = "postgresql"
+  provider = "sqlite" // d1 is sql base database
+  url      = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
+  name     String?
+  password String
+}
+
+model Orders {
+  id        Int    @id @default(autoincrement())
+  fullName  String
+  address   String
+  orderId   String
+  status    String
+  sessionId String
+}

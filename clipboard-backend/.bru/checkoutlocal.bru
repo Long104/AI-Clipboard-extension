@@ -1,0 +1,25 @@
+meta {
+  name: checkoutlocal
+  type: http
+  seq: 6
+}
+
+post {
+  url: http://localhost:8080/checkout
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "user":{
+      "name":"Long",
+      "address":"here"
+    },
+    "product": {
+      "name":"Test",
+      "price":200,
+      "quantity":1
+    }
+  }
+}

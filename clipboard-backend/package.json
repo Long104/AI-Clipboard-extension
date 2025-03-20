@@ -1,0 +1,27 @@
+{
+  "name": "clipboard-backend",
+  "scripts": {
+    "dev": "wrangler dev --port 8080",
+    "deploy": "wrangler deploy --minify",
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings",
+    "env": "dotenv -e .dev.vars",
+    "applying": "npx wrangler d1 migrations apply stripe --local && npx wrangler d1 migrations apply stripe --remote && npx prisma generate"
+  },
+  "dependencies": {
+    "@prisma/adapter-d1": "^6.2.1",
+    "@prisma/adapter-pg": "^6.1.0",
+    "@prisma/client": "^6.2.1",
+    "@prisma/extension-accelerate": "^1.2.1",
+    "hono": "^4.6.14",
+    "openai": "^4.77.0",
+    "pg": "^8.13.1",
+    "stripe": "^17.5.0",
+    "uuid": "^11.0.5"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241224.0",
+    "@types/pg": "^8.11.10",
+    "prisma": "^6.2.1",
+    "wrangler": "^3.101.0"
+  }
+}
