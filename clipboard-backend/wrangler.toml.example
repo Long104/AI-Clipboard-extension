@@ -2,11 +2,10 @@
 name = "clipboard-backend"
 main = "src/index.ts"
 compatibility_date = "2024-12-30"
+compatibility_flags = ["nodejs_compat"]
 
 [observability]
 enabled = true
-
-node_compat = true
 
 
 # Bind the Workers AI model catalog. Run machine learning models, powered by serverless GPUs, on Cloudflare’s global network
@@ -25,3 +24,4 @@ database_id = <id>
 [vars]
 STRIPE_SECRET_API_KEY = <key> 
 STRIPE_WEBHOOK_SECRET = <key>
+OPEN_AI_KEY = <key>
