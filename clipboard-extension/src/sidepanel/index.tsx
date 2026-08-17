@@ -8,6 +8,24 @@ interface ChatMessage {
 	sender: "user" | "bot";
 }
 
+// Helper function to map error codes to user-friendly messages
+function getErrorMessage(error: string | undefined): string {
+	if (!error) return "";
+
+	switch (error) {
+		case "API_ERROR":
+			return "Unable to process request. Check connection or quota.";
+		case "LIMIT_REACHED":
+			return "Usage limit reached. Please wait for the reset.";
+		case "DISABLED":
+			return "Extension is paused. Turn it on from the popup.";
+		case "INVALID_INPUT":
+			return "Please enter a message.";
+		default:
+			return error;
+	}
+}
+
 const IndexSidepanel = () => {
 	const [chatRoom, setChatRoom] = useState<ChatMessage[]>([]);
 	const [chat, setChat] = useState<string>("");
@@ -87,7 +105,7 @@ const IndexSidepanel = () => {
 		}
 
 		if (isLimitReached) {
-			setError("Limit reached. Please wait for the reset.");
+			setError(getErrorMessage("LIMIT_REACHED"));
 			return;
 		}
 
@@ -98,7 +116,7 @@ const IndexSidepanel = () => {
 			{ type: "CHAT", chatMessage: trimmedChat },
 			(response) => {
 				if (response?.error) {
-					setError(response.error);
+					setError(getErrorMessage(response.error));
 				}
 			}
 		);
