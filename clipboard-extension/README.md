@@ -15,6 +15,15 @@ You can start editing the popup by modifying `popup.tsx`. It should auto-update 
 
 For further guidance, [visit our Documentation](https://docs.plasmo.com/)
 
+## Environment Setup
+
+Before building the extension, you must set up the backend URL. The extension calls the backend at `https://clipboard-backend.aieasyuse.workers.dev`. Update the `PLASMO_PUBLIC_BASE_URL` environment variable in `.env` file before packaging:
+
+```bash
+# In clipboard-extension/.env
+PLASMO_PUBLIC_BASE_URL=https://clipboard-backend.aieasyuse.workers.dev
+```
+
 ## Making production build
 
 Run the following:

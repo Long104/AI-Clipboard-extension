@@ -12,7 +12,22 @@ const app = new Hono<{ Bindings: CloudflareBindings }>();
 app.use(
 	"/*",
 	cors({
-		origin: "*",
+		origin: (origin) => {
+			// You can implement more sophisticated logic here
+			// For example, allow requests from a list of trusted domains
+			const allowedOrigins = [
+				"http://localhost:3000",
+				"https://ai-clipboard-extension.vercel.app",
+			];
+
+			if (
+				allowedOrigins.includes(origin) ||
+				origin.startsWith("chrome-extension://")
+			) {
+				return origin;
+			}
+			return "https://ai-clipboard-extension.vercel.app"; // Default origin
+		},
 		allowHeaders: [
 			"Content-Type",
 			"X-Custom-Header",
