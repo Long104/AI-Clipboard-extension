@@ -1,135 +1,161 @@
 export {}; // Avoid polluting the global namespace
 
-interface TranslationResponse {
+export interface ChatMessage {
+	message: string;
+	sender: "user" | "bot";
+}
+
+export interface TranslationResponse {
 	message: { response: string };
 }
 
-let isOn = true; // Track the toggle state
-let isLimit = 0;
-var isExtensionOn = false;
-var hightlight = true;
+export const ALARM_NAME = "RESET_LIMIT_ALARM";
+export const ALARM_INTERVAL_MINUTES = 120; // 2 hours
+export const MAX_USAGE_LIMIT = 10;
 
-chrome.storage.local.get("isOn", (result) => {
-	isOn = result.isOn ?? true; // Default to false if undefined
-	console.log("Initial toggle state:", isOn);
-});
-chrome.storage.local.get("isLimit", (result) => {
-	isLimit = result.isLimit;
-});
+let enqueueChain: Promise<any> = Promise.resolve();
 
-function resetIsLimit() {
-	isLimit = 0; // Reset the local variable
-	chrome.storage.local.set({ isLimit: isLimit }, () => {
-		console.log("isLimit reset to 0");
-	});
+export function enqueueWrite<T>(task: () => Promise<T>): Promise<T> {
+	const res = enqueueChain.then(() => task(), () => task());
+	enqueueChain = res.catch(() => {});
+	return res;
 }
 
-// Start the interval to reset `isLimit` every 2 hours (7200000 ms)
-setInterval(resetIsLimit, 2 * 60 * 60 * 1000);
-
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-	// for turning on and off the extension
-
-	// Update the toggle state
-	if (message.type === "TOGGLE_SWITCH") {
-		isOn = message.isOn;
-		hightlight = false;
-
-		chrome.runtime.sendMessage({
-			isOn: isOn,
-			type: "TOGGLE_HIGHTLIGHT",
-		});
-		return; // No need to process further
-	}
-
-	if (hightlight) {
-		chrome.runtime.sendMessage({
-			isOn: isOn,
-			type: "TOGGLE_HIGHTLIGHT",
-		});
-	}
-
-	chrome.runtime.sendMessage({
-		isOn: isOn,
-		type: "TOGGLE_HIGHTLIGHT",
-	});
-
-	chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-		if (tabs[0]?.id) {
-			chrome.tabs.sendMessage(tabs[0].id, { type: "TOGGLE_HIGHTLIGHT" });
-		}
-	});
-
-	async function fetchTranslate(message: string): Promise<TranslationResponse> {
-		chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-			if (tabs[0]?.id) {
-				chrome.tabs.sendMessage(tabs[0].id, { type: "PENDING_COLOR" });
+export function setupAlarms(): void {
+	if (typeof chrome !== "undefined" && chrome.alarms) {
+		chrome.alarms.get(ALARM_NAME, (alarm) => {
+			if (!alarm) {
+				chrome.alarms.create(ALARM_NAME, {
+					periodInMinutes: ALARM_INTERVAL_MINUTES,
+				});
 			}
 		});
-		const res = await fetch(
-			`${process.env.PLASMO_PUBLIC_BASE_URL}summarizeDocument`,
-			// "https://clipboard-backend.aieasyuse.workers.dev/summarizeDocument",
-			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					documentData: message,
-				}),
+	}
+}
+
+export function handleAlarm(alarm: chrome.alarms.Alarm): void {
+	if (alarm.name === ALARM_NAME) {
+		enqueueWrite(async () => {
+			await new Promise<void>((resolve) => {
+				chrome.storage.local.set({ limit: 0 }, resolve);
+			});
+		});
+	}
+}
+
+if (typeof chrome !== "undefined" && chrome.alarms) {
+	chrome.alarms.onAlarm.addListener(handleAlarm);
+	setupAlarms();
+}
+
+async function fetchTranslate(messageText: string): Promise<string | undefined> {
+	const baseUrl = process.env.PLASMO_PUBLIC_BASE_URL || "";
+	try {
+		const res = await fetch(`${baseUrl}summarizeDocument`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
 			},
-		);
+			body: JSON.stringify({
+				documentData: messageText,
+			}),
+		});
 
 		if (res.ok) {
 			const data = await res.json();
-			chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-				if (tabs[0]?.id) {
-					chrome.tabs.sendMessage(tabs[0].id, { type: "SUCCESS_COLOR" });
-				}
-			});
-			return data.message.response;
-			// return translated_text;
+			return data?.message?.response;
 		}
+	} catch (err) {
+		console.error("Translation API error", err instanceof Error ? err.message : String(err));
+	}
+	return undefined;
+}
 
-		return undefined;
+export async function processAiRequest(inputText: string): Promise<{ modifiedText?: string; error?: "DISABLED" | "LIMIT_REACHED" | "API_ERROR" | "INVALID_INPUT" }> {
+	const text = inputText ? inputText.trim() : "";
+	if (!text) {
+		return { error: "INVALID_INPUT" };
 	}
 
-	if (
-		(message.type === "SELECTED_TEXT" || message.type === "CHAT") &&
-		// message.isLimit <= 10
-		true
-	) {
-		if (!isOn) {
-			// Toggle is off
-			return;
-		}
-		fetchTranslate(message.text || message.chatMessage)
-			.then((translatedText) => {
-				sendResponse({
-					modifiedText: translatedText,
-				});
-				chrome.storage.local.get("chatRoom", (data) => {
-					const chatHistory = [
-						...(data.chatRoom || []),
-						{ message: message.text || message.chatMessage, sender: "user" },
-						{ message: translatedText, sender: "bot" },
-					];
-					chrome.storage.local.set({ chatRoom: chatHistory });
-				});
-				// chrome.runtime.sendMessage({
-				// 	type: "AI",
-				// 	text: translatedText,
-				// });
-			})
-			.catch((err) => {
-				console.error("Translation API error:", err);
-				sendResponse({ modifiedText: undefined });
-			});
-
-		return true; // Keep the message channel open for async response
-	} else {
-		sendResponse({
-			modifiedText: "Your limit is reached Please look for the paid plan",
+	return enqueueWrite(async () => {
+		const storageData = await new Promise<{ isOn?: boolean; limit?: number }>((resolve) => {
+			chrome.storage.local.get(["isOn", "limit"], resolve);
 		});
-	}
-});
+
+		const isOn = storageData.isOn ?? true;
+		const limit = storageData.limit || 0;
+
+		if (!isOn) {
+			return { error: "DISABLED" };
+		}
+
+		if (limit >= MAX_USAGE_LIMIT) {
+			return { error: "LIMIT_REACHED" };
+		}
+
+		const translatedText = await fetchTranslate(text);
+		if (!translatedText) {
+			return { error: "API_ERROR" };
+		}
+
+		const data = await new Promise<{ chatRoom?: ChatMessage[] }>((resolve) => {
+			chrome.storage.local.get(["chatRoom"], resolve);
+		});
+
+		const currentHistory = data.chatRoom || [];
+		const updatedHistory: ChatMessage[] = [
+			...currentHistory,
+			{ message: text, sender: "user" },
+			{ message: translatedText, sender: "bot" },
+		];
+		const updatedLimit = limit + 1;
+
+		await new Promise<void>((resolve) => {
+			chrome.storage.local.set(
+				{
+					chatRoom: updatedHistory,
+					limit: updatedLimit,
+				},
+				resolve,
+			);
+		});
+
+		return { modifiedText: translatedText };
+	});
+}
+
+if (typeof chrome !== "undefined" && chrome.runtime?.onMessage) {
+	chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+		if (message.type === "TOGGLE_SWITCH") {
+			const newState = Boolean(message.isOn);
+			enqueueWrite(async () => {
+				await new Promise<void>((resolve) => {
+					chrome.storage.local.set({ isOn: newState }, resolve);
+				});
+			});
+			sendResponse({ success: true });
+			return false;
+		}
+
+		if (message.type === "RESET_HISTORY") {
+			enqueueWrite(async () => {
+				await new Promise<void>((resolve) => {
+					chrome.storage.local.set({ chatRoom: [] }, resolve);
+				});
+			});
+			sendResponse({ success: true });
+			return false;
+		}
+
+		if (message.type === "SELECTED_TEXT" || message.type === "CHAT") {
+			const rawText = message.type === "SELECTED_TEXT" ? message.text : message.chatMessage;
+			processAiRequest(rawText)
+				.then((result) => sendResponse(result))
+				.catch((err) => {
+					console.error("Unhandled error processing request", err instanceof Error ? err.message : String(err));
+					sendResponse({ error: "API_ERROR" });
+				});
+			return true; // Keep channel open for async response
+		}
+	});
+}

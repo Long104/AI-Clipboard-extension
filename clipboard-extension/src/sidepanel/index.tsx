@@ -1,157 +1,198 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import "@/style.css";
+import { MantineProvider, Button } from "@mantine/core";
 import "@mantine/core/styles.css";
-import { Suspense } from "react";
-import { MantineProvider } from "@mantine/core";
-import { Button } from "@mantine/core";
+
+interface ChatMessage {
+	message: string;
+	sender: "user" | "bot";
+}
+
 const IndexSidepanel = () => {
-	const [chatRoom, setChatRoom] = useState([]);
+	const [chatRoom, setChatRoom] = useState<ChatMessage[]>([]);
 	const [chat, setChat] = useState<string>("");
 	const [isLimit, setIsLimit] = useState<number>(0);
+	const [isLimitReached, setIsLimitReached] = useState(false);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
 
-	async function sendChat() {
-		const userMessage = { message: chat, sender: "user" };
-		setChatRoom((prev) => [...prev, userMessage]);
-		chrome.runtime.sendMessage(
-			{ type: "CHAT", chatMessage: chat, isLimit: isLimit },
-			(response) => {
-				if (response?.modifiedText) {
-					const botMessage = { message: response.modifiedText, sender: "bot" };
-					setChatRoom((prev) => [...prev, botMessage]);
-
-					// Save the bot response to the clipboard
-					navigator.clipboard.writeText(response.modifiedText).catch((err) => {
-						console.error("Failed to copy text:", err);
-					});
-					// Update chat history in storage
-					chrome.storage.local.get("chatRoom", (data) => {
-						const updatedChatRoom = [
-							...(data.chatRoom || []),
-							userMessage,
-							botMessage,
-						];
-						chrome.storage.local.set({ chatRoom: updatedChatRoom });
-					});
+	const setupStorageListeners = useCallback(() => {
+		if (typeof chrome !== "undefined" && chrome.storage?.onChanged) {
+			const handleStorageChange = (
+				changes: { [key: string]: chrome.storage.StorageChange },
+				area: "local" | "sync" | "managed"
+			) => {
+				if (area === "local") {
+					if (changes.chatRoom) {
+						const newValue = changes.chatRoom.newValue;
+						if (Array.isArray(newValue)) {
+							setChatRoom(newValue);
+						}
+					}
+					if (changes.limit) {
+						const newValue = changes.limit.newValue;
+						if (typeof newValue === "number") {
+							setIsLimit(newValue);
+							setIsLimitReached(newValue >= 10);
+						}
+					}
 				}
-			},
-		);
-		setIsLimit(isLimit + 1);
-		await chrome.storage.local.set({ limit: isLimit });
-	}
+			};
 
+			chrome.storage.onChanged.addListener(handleStorageChange);
+			return () => {
+				chrome.storage.onChanged.removeListener(handleStorageChange);
+			};
+		}
+	}, []);
+
+	// Initial storage read
 	useEffect(() => {
 		(async () => {
-			const limitData = await new Promise<{ limit?: number }>((resolve) => {
-				chrome.storage.local.get(["limit"], resolve);
-			});
-			if (limitData.limit === undefined) {
-				await new Promise<void>((resolve) => {
-					chrome.storage.local.set({ limit: 0 }, resolve);
+			try {
+				setLoading(true);
+				setError(null);
+
+				const limitData = await new Promise<{ limit?: number }>((resolve) => {
+					chrome.storage.local.get(["limit"], resolve);
 				});
+
+				const limit = limitData.limit || 0;
+				setIsLimit(limit);
+				setIsLimitReached(limit >= 10);
+
+				const chatHistoryData = await new Promise<{ chatRoom?: ChatMessage[] }>((resolve) => {
+					chrome.storage.local.get(["chatRoom"], resolve);
+				});
+
+				setChatRoom(chatHistoryData.chatRoom || []);
+			} catch (err) {
+				console.error("Initial storage read error", err);
+				setError("Failed to load chat history");
+			} finally {
+				setLoading(false);
 			}
-			setIsLimit(limitData.limit || 0);
-			const chatHistory = await new Promise<any[]>((resolve) => {
-				chrome.storage.local.get("chatRoom", (data) =>
-					resolve(data.chatRoom || []),
-				);
-			});
-			setChatRoom(chatHistory);
 		})();
 	}, []);
 
-	async function ReloadHistory() {
-		const chatHistory = await new Promise<any[]>((resolve) => {
-			chrome.storage.local.get("chatRoom", (data) =>
-				resolve(data.chatRoom || []),
-			);
-		});
-		setChatRoom(chatHistory);
+	// Setup storage change listeners
+	useEffect(() => {
+		return setupStorageListeners();
+	}, [setupStorageListeners]);
+
+	async function sendChat() {
+		const trimmedChat = chat.trim();
+		if (!trimmedChat) {
+			return;
+		}
+
+		if (isLimitReached) {
+			setError("Limit reached. Please wait for the reset.");
+			return;
+		}
+
+		setChat("");
+		setError(null);
+
+		chrome.runtime.sendMessage(
+			{ type: "CHAT", chatMessage: trimmedChat },
+			(response) => {
+				if (response?.error) {
+					setError(response.error);
+				}
+			}
+		);
 	}
 
-	// chrome.runtime.onMessage.addListener((message) => {
-	// 	if (message.type === "SELECTED_TEXT") {
-	// 		setChatRoom((prev) => [
-	// 			...prev,
-	// 			{ message: message.text, sender: "user" },
-	// 		]);
-	// 	}
-	// 	if (message.type === "AI") {
-	// 		setChatRoom((prev) => [
-	// 			...prev,
-	// 			{ message: message.text, sender: "bot" },
-	// 		]);
-	// 	}
-	// });
+	const handleResetHistory = useCallback(() => {
+		chrome.runtime.sendMessage({ type: "RESET_HISTORY" }, (response) => {
+			if (response?.success) {
+				setChatRoom([]);
+				setIsLimit(0);
+				setIsLimitReached(false);
+				setError(null);
+			} else {
+				setError("Failed to reset history");
+			}
+		});
+	}, []);
+
+	if (loading) {
+		return (
+			<div className="min-h-screen min-w-screen flex items-center justify-center bg-gray-100">
+				<div className="text-lg">Loading chat history...</div>
+			</div>
+		);
+	}
 
 	return (
 		<MantineProvider>
-			<>
-				<div className="min-h-screen min-w-screen flex flex-col justify-between flex-1 relative bg-gray-400 overscroll-y-none ">
-					<div className="flex flex-col">
-						{chatRoom.map((msg, index) => (
-							<div
-								key={index}
-								// className={`flex ${msg.sender ? "flex-start pl-2" : "flex-end pr-2"}`}
-								className={`flex mt-2 ${msg.sender === "bot" ? "justify-start pl-2" : "justify-end pr-2"}`}
-							>
-								<div className="max-w-[75%] break-words text-wrap border-2 p-2 gap-y-60 border-gray-800 bg-white rounded-2xl">
-									<Suspense fallback={<p>waiting for chat...</p>}>
-										{msg.message}
-									</Suspense>
-								</div>
-							</div>
-						))}
-					</div>
-					<div className="w-full flex items-center flex-col justify-center p-5">
-						<div className="flex justify-start w-full gap-x-2">
-							<div
-								className="max-w-16 pb-2"
-								onClick={() => {
-									return ReloadHistory();
-								}}
-							>
-								<Button
-									size="xs"
-									radius="md"
-									variant="filled"
-									color="rgba(36, 32, 32, 1)"
-								>
-									Reload
-								</Button>
-							</div>
-							<div
-								className="max-w-16 pb-2"
-								onClick={() => {
-									setChatRoom([]);
-									chrome.storage.local.set({ chatRoom: [] });
-								}}
-							>
-								<Button
-									size="xs"
-									radius="md"
-									variant="filled"
-									color="rgba(36, 32, 32, 1)"
-								>
-									reset
-								</Button>
+			<div className="min-h-screen min-w-screen flex flex-col justify-between flex-1 relative bg-gray-400 overscroll-y-none">
+				<div className="flex flex-col">
+					{error && (
+						<div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 mx-4">
+							<div className="font-bold">Error</div>
+							<div>{error}</div>
+						</div>
+					)}
+
+					{chatRoom.length === 0 && !error && (
+						<div className="text-center py-8 text-gray-500">
+							Copy text or ask a question
+						</div>
+					)}
+
+					{chatRoom.map((msg, index) => (
+						<div
+							key={index}
+							className={`flex mt-2 ${msg.sender === "bot" ? "justify-start pl-2" : "justify-end pr-2"}`}
+						>
+							<div className="max-w-[75%] break-words text-wrap border-2 p-2 gap-y-60 border-gray-800 bg-white rounded-2xl">
+								{msg.message}
 							</div>
 						</div>
-						<textarea
-							placeholder="ask ai"
-							className="text-sm w-full min-h-[50px] border-slate-600 border-solid border-2 rounded-3xl pl-4 text-wrap flex placeholder:text-start pt-1"
-							onChange={(e) => setChat(e.target.value)}
-							value={chat}
-							onKeyDown={(e) => {
-								if (e.key === "Enter") {
-									e.preventDefault();
-									sendChat();
-									setChat("");
-								}
-							}}
-						/>
-					</div>
+					))}
 				</div>
-			</>
+
+				<div className="w-full flex items-center flex-col justify-center p-5">
+					<div className="flex justify-start w-full gap-x-2 items-center mb-2">
+						<div className="max-w-16">
+							<Button
+								size="xs"
+								radius="md"
+								variant="filled"
+								color="rgba(36, 32, 32, 1)"
+								onClick={handleResetHistory}
+							>
+								reset
+							</Button>
+						</div>
+
+						<div className="text-sm text-gray-600">
+							Usage: {isLimit}/10
+						</div>
+
+						{isLimitReached && (
+							<div className="text-red-500 text-sm">
+								Limit reached. Awaiting reset...
+							</div>
+						)}
+					</div>
+
+					<textarea
+						placeholder="ask ai"
+						className="text-sm w-full min-h-[50px] border-slate-600 border-solid border-2 rounded-3xl pl-4 text-wrap flex placeholder:text-start pt-1"
+						onChange={(e) => setChat(e.target.value)}
+						value={chat}
+						onKeyDown={(e) => {
+							if (e.key === "Enter") {
+								e.preventDefault();
+								sendChat();
+							}
+						}}
+					/>
+				</div>
+			</div>
 		</MantineProvider>
 	);
 };
