@@ -1,8 +1,8 @@
 {
   "name": "clipboard-extension",
-  "displayName": "Clipboard extension",
+  "displayName": "AI Clipboard — Copy & Understand",
   "version": "0.0.1",
-  "description": "A basic Plasmo extension.",
+  "description": "Copy any text and get an instant AI explanation. Built for students and note-takers.",
   "author": "InZen333",
   "scripts": {
     "dev": "plasmo dev",
