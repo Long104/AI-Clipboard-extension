@@ -140,6 +140,81 @@ describe("background translation logic", () => {
 		expect(fetch).toHaveBeenCalledTimes(3);
 		expect(result).toEqual({ ok: false, code: "SERVER_ERROR" });
 	});
+
+	it("fetchTranslate coerces numeric response (math answer) to string", async () => {
+		vi.stubGlobal(
+			"fetch",
+			vi.fn().mockResolvedValue({
+				ok: true,
+				json: () => Promise.resolve({ message: { response: 4 } }),
+			})
+		);
+
+		const promise = fetchTranslate("what is 2+2");
+		await vi.runAllTimersAsync();
+		const result = await promise;
+		expect(result).toEqual({ ok: true, text: "4" });
+	});
+
+	it("fetchTranslate coerces boolean response to string", async () => {
+		vi.stubGlobal(
+			"fetch",
+			vi.fn().mockResolvedValue({
+				ok: true,
+				json: () => Promise.resolve({ message: { response: true } }),
+			})
+		);
+
+		const promise = fetchTranslate("test");
+		await vi.runAllTimersAsync();
+		const result = await promise;
+		expect(result).toEqual({ ok: true, text: "true" });
+	});
+
+	it("fetchTranslate passes string response through unchanged", async () => {
+		vi.stubGlobal(
+			"fetch",
+			vi.fn().mockResolvedValue({
+				ok: true,
+				json: () => Promise.resolve({ message: { response: "hello world" } }),
+			})
+		);
+
+		const promise = fetchTranslate("test");
+		await vi.runAllTimersAsync();
+		const result = await promise;
+		expect(result).toEqual({ ok: true, text: "hello world" });
+	});
+
+	it("fetchTranslate rejects null response", async () => {
+		vi.stubGlobal(
+			"fetch",
+			vi.fn().mockResolvedValue({
+				ok: true,
+				json: () => Promise.resolve({ message: { response: null } }),
+			})
+		);
+
+		const promise = fetchTranslate("test");
+		await vi.runAllTimersAsync();
+		const result = await promise;
+		expect(result).toEqual({ ok: false, code: "SERVER_ERROR" });
+	});
+
+	it("fetchTranslate rejects missing response field", async () => {
+		vi.stubGlobal(
+			"fetch",
+			vi.fn().mockResolvedValue({
+				ok: true,
+				json: () => Promise.resolve({ message: {} }),
+			})
+		);
+
+		const promise = fetchTranslate("test");
+		await vi.runAllTimersAsync();
+		const result = await promise;
+		expect(result).toEqual({ ok: false, code: "SERVER_ERROR" });
+	});
 });
 
 describe("background badge feedback", () => {

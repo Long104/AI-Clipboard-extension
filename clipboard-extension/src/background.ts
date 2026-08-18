@@ -131,8 +131,17 @@ export async function fetchTranslate(messageText: string): Promise<TranslateOutc
 
 			if (res.ok) {
 				const data = await res.json();
-				if (typeof data?.message?.response === "string") {
-					return { ok: true, text: data.message.response };
+				const raw = data?.message?.response;
+				// Accept string | number | boolean (e.g. math answers like 4),
+				// coerce to string. Reject null/undefined/objects/arrays.
+				if (
+					raw !== null &&
+					raw !== undefined &&
+					(typeof raw === "string" ||
+						typeof raw === "number" ||
+						typeof raw === "boolean")
+				) {
+					return { ok: true, text: String(raw) };
 				}
 				console.error("Malformed API response", { status: res.status });
 				return { ok: false, code: "SERVER_ERROR" };

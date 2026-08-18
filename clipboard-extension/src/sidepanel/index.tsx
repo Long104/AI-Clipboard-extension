@@ -271,7 +271,7 @@ const IndexSidepanel = () => {
 
 	return (
 		<div className="min-h-screen flex flex-col flex-1 relative bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
-			<div className="flex-1 overflow-y-auto px-4 pt-4 pb-20">
+			<div className="flex-1 overflow-y-auto overflow-x-hidden px-4 pt-4 pb-20">
 				{!isOn && <DisabledBanner onEnable={() => {
                     chrome.runtime.sendMessage({ type: "TOGGLE_SWITCH", isOn: true });
                     setIsOn(true);
@@ -298,7 +298,7 @@ const IndexSidepanel = () => {
 					>
 						<div
 							className={cn(
-								"max-w-[85%] text-sm",
+								"max-w-[85%] text-sm min-w-0 overflow-hidden w-fit",
 								msg.sender === "bot"
 									? "bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl rounded-bl-sm p-3.5"
 									: "bg-blue-600 text-white rounded-2xl rounded-br-sm p-3"
