@@ -63,10 +63,17 @@
 		color: var(--foreground);
 		font-family: "Geist", system-ui, -apple-system, sans-serif;
 		-webkit-font-smoothing: antialiased;
+		overflow: hidden; /* single scrollbar: the message list, never the page */
 	}
 
 	html,
 	body {
+		height: 100%;
+	}
+
+	/* Plasmo mounts the sidepanel into #__plasmo; without an explicit height
+	   the h-full chain from html/body breaks at this div and the chat never scrolls. */
+	#__plasmo {
 		height: 100%;
 	}
 

@@ -2,63 +2,13 @@ import React, { useEffect, useState, useCallback, useRef } from "react";
 import "@/style.css";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Copy, Check, RotateCcw, Send, Sparkles, ShieldAlert } from "lucide-react";
+import { RotateCcw, Send, Sparkles, ShieldAlert } from "lucide-react";
 import type { ChatMessage } from "@/background";
 import type { ExtensionRequest } from "@/shared/messages";
+import { getErrorMessage } from "@/shared/errors";
+import { MessageContent } from "@/components/message-content";
 
-// Helper function to map error codes to user-friendly messages
-export function getErrorMessage(error: string | undefined): string {
-	if (!error) return "";
-
-	switch (error) {
-		case "API_ERROR":
-			return "Unable to process request. Check connection or quota.";
-		case "SERVER_ERROR":
-			return "AI service is busy — retrying usually fixes it.";
-		case "INPUT_TOO_LONG":
-			return "Text too long — trimmed it for you.";
-		case "LIMIT_REACHED":
-			return "Usage limit reached. Please wait for the reset.";
-		case "DISABLED":
-			return "Extension is paused. Turn it on from the popup.";
-		case "INVALID_INPUT":
-			return "Please enter a message.";
-		default:
-			return error;
-	}
-}
-
-function CodeBlock({ code, language }: { code: string; language?: string }) {
-	const [copied, setCopied] = useState(false);
-	const copyCode = useCallback(() => {
-		navigator.clipboard.writeText(code).then(() => {
-			setCopied(true);
-			setTimeout(() => setCopied(false), 2000);
-		});
-	}, [code]);
-
-	return (
-		<div className="mt-2 rounded-lg border border-slate-700/50 overflow-hidden">
-			<div className="flex items-center justify-between bg-slate-800 dark:bg-slate-900 px-3 py-1.5">
-				<span className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">
-					{language || "text"}
-				</span>
-				<Button
-					variant="ghost"
-					size="icon"
-					onClick={copyCode}
-					aria-label="Copy code block"
-					className="h-6 w-6 text-slate-400 hover:text-slate-100"
-				>
-					{copied ? <Check size={12} /> : <Copy size={12} />}
-				</Button>
-			</div>
-			<pre className="font-mono text-xs text-slate-100 bg-slate-950 p-3 overflow-x-auto whitespace-pre-wrap break-words">
-				{code}
-			</pre>
-		</div>
-	);
-}
+export { getErrorMessage };
 
 function Skeleton() {
 	return (
@@ -67,43 +17,6 @@ function Skeleton() {
 				<div className="animate-pulse bg-slate-200 dark:bg-slate-700 h-10 w-full rounded-xl mb-2" />
 				<div className="animate-pulse bg-slate-200 dark:bg-slate-700 h-10 w-3/4 rounded-xl" />
 			</div>
-		</div>
-	);
-}
-
-const FENCE_RE = /```(\w+)?\n([\s\S]*?)```/g;
-
-function MessageContent({ text }: { text: string }) {
-	const parts: Array<{ type: "text" | "code"; content: string; lang?: string }> = [];
-	let lastIndex = 0;
-	let match: RegExpExecArray | null;
-	FENCE_RE.lastIndex = 0;
-	while ((match = FENCE_RE.exec(text)) !== null) {
-		if (match.index > lastIndex) {
-			parts.push({ type: "text", content: text.slice(lastIndex, match.index).trim() });
-		}
-		parts.push({ type: "code", lang: match[1] || "text", content: match[2].trim() });
-		lastIndex = FENCE_RE.lastIndex;
-	}
-	if (lastIndex < text.length) {
-		parts.push({ type: "text", content: text.slice(lastIndex).trim() });
-	}
-
-	if (parts.length === 0) {
-		return <span className="whitespace-pre-wrap break-words">{text}</span>;
-	}
-
-	return (
-		<div className="space-y-2">
-			{parts.map((part, i) =>
-				part.type === "code" ? (
-					<CodeBlock key={i} code={part.content} language={part.lang} />
-				) : (
-					<span key={i} className="whitespace-pre-wrap break-words">
-						{part.content}
-					</span>
-				)
-			)}
 		</div>
 	);
 }

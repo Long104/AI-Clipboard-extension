@@ -16,13 +16,24 @@ export type ExtensionRequest =
 	| { type: "TOGGLE_SWITCH"; isOn: boolean }
 	| { type: "RESET_HISTORY" }
 	| { type: "SELECTED_TEXT"; text: string }
-	| { type: "CHAT"; chatMessage: string };
+	| { type: "CHAT"; chatMessage: string }
+	| {
+			type: "AI_ACTION";
+			text: string; // RAW source text — background composes the prompt (single source)
+			action: "explain" | "summarize";
+			requestId: string;
+			anchor: { x: number; y: number }; // client (viewport) coords
+			source: "selection" | "copy";
+	  }
+	| { type: "GET_TAB_ID" }
+	| { type: "OPEN_SIDEPANEL" };
 
 export type CommandResponse = { success: true };
 export type AiRequestResponse =
 	| { modifiedText: string; truncated?: boolean }
 	| { error: AiRequestError };
-export type ExtensionResponse = CommandResponse | AiRequestResponse;
+export type TabInfoResponse = { tabId: number | null; frameId: number };
+export type ExtensionResponse = CommandResponse | AiRequestResponse | TabInfoResponse;
 
 export const MAX_MODEL_INPUT_LENGTH = 24_000;
 
@@ -55,6 +66,21 @@ export function isExtensionRequest(value: unknown): value is ExtensionRequest {
 			return typeof msg.text === "string";
 		case "CHAT":
 			return typeof msg.chatMessage === "string";
+		case "AI_ACTION":
+			return (
+				(msg.action === "explain" || msg.action === "summarize") &&
+				typeof msg.text === "string" &&
+				typeof msg.requestId === "string" &&
+				msg.requestId.length > 0 &&
+				(msg.source === "selection" || msg.source === "copy") &&
+				typeof msg.anchor === "object" &&
+				msg.anchor !== null &&
+				Number.isFinite((msg.anchor as { x: number }).x) &&
+				Number.isFinite((msg.anchor as { y: number }).y)
+			);
+		case "GET_TAB_ID":
+		case "OPEN_SIDEPANEL":
+			return true;
 		default:
 			return false;
 	}

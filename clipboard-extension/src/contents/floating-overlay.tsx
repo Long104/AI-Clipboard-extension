@@ -2,8 +2,7 @@ import type { PlasmoCSConfig } from "plasmo";
 import React, { useState, useEffect, useCallback } from "react";
 import { Sparkles, FileText, Copy, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { ExtensionRequest } from "@/shared/messages";
-import { isAiRequestResponse } from "@/shared/messages";
+import { triggerAiAction } from "@/shared/popover";
 import styleText from "data-text:@/style.css";
 import { loadSettings, parseSettings } from "@/shared/settings";
 
@@ -21,6 +20,7 @@ export const getStyle = () => {
 export default function FloatingActionPill() {
 	const [visible, setVisible] = useState(false);
 	const [position, setPosition] = useState({ top: 0, left: 0 });
+	const [anchor, setAnchor] = useState({ x: 0, y: 0 });
 	const [copied, setCopied] = useState(false);
 	const [selectedText, setSelectedText] = useState("");
 	const [overlayEnabled, setOverlayEnabled] = useState(true);
@@ -53,6 +53,7 @@ export default function FloatingActionPill() {
 				top: window.scrollY + rect.top - 50,
 				left: window.scrollX + rect.left + rect.width / 2,
 			});
+			setAnchor({ x: rect.left + rect.width / 2, y: rect.bottom });
 			setVisible(true);
 		} else {
 			setVisible(false);
@@ -76,15 +77,11 @@ export default function FloatingActionPill() {
 			return;
 		}
 
-		const message: ExtensionRequest = {
-			type: "SELECTED_TEXT",
+		triggerAiAction({
+			action,
 			text: selectedText,
-		};
-
-		chrome.runtime.sendMessage(message, (response: unknown) => {
-			if (isAiRequestResponse(response) && "modifiedText" in response && response.modifiedText) {
-				navigator.clipboard.writeText(response.modifiedText).catch(console.error);
-			}
+			anchor,
+			source: "selection",
 		});
 	};
 

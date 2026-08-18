@@ -18,11 +18,13 @@ import {
 const testState = {
 	storage: {} as Record<string, any>,
 	storageListeners: [] as Array<(changes: any, area: string) => void>,
+	messageListeners: [] as Array<(message: any, sender: any, sendResponse: any) => void>,
 };
 
 function resetTestState() {
 	testState.storage = {};
 	testState.storageListeners = [];
+	testState.messageListeners = [];
 }
 
 const mockChrome = {
@@ -69,8 +71,16 @@ const mockChrome = {
 	},
 	runtime: {
 		onMessage: {
-			addListener: () => {},
+			addListener: (listener: (message: any, sender: any, sendResponse: any) => void) => {
+				testState.messageListeners.push(listener);
+			},
 		},
+	},
+	windows: {
+		getLastFocused: vi.fn().mockResolvedValue({ id: 1 }),
+	},
+	sidePanel: {
+		open: vi.fn().mockResolvedValue(undefined),
 	},
 	action: {
 		setBadgeText: vi.fn(),
@@ -502,6 +512,112 @@ describe("background commands", () => {
 		const opener = vi.fn();
 		await handleCommand("other", opener);
 		expect(opener).not.toHaveBeenCalled();
+	});
+});
+
+describe("background AI message relay", () => {
+	beforeEach(() => {
+		resetTestState();
+		vi.stubGlobal("chrome", mockChrome);
+		vi.stubGlobal("fetch", vi.fn());
+		// Force re-evaluation to register listener with stubbed chrome
+		vi.resetModules();
+	});
+
+	it("AI_ACTION success writes popoverRequest and result", async () => {
+		const { processAiRequest: _ } = await import("../background");
+		const listener = testState.messageListeners[0];
+		
+		vi.stubGlobal(
+			"fetch",
+			vi.fn().mockResolvedValue({
+				ok: true,
+				json: () => Promise.resolve({ message: { response: "translated" } }),
+			})
+		);
+
+		const sender = { tab: { id: 42 }, frameId: 7 };
+		const responsePromise = new Promise((resolve) => {
+			listener({
+				type: "AI_ACTION",
+				text: "raw",
+				action: "explain",
+				requestId: "rid-1",
+				anchor: { x: 1, y: 2 },
+				source: "selection"
+			}, sender, resolve);
+		});
+
+		const response = await responsePromise;
+		expect(response).toEqual({ modifiedText: "translated" });
+		expect(testState.storage.popoverRequest).toMatchObject({ requestId: "rid-1", text: "raw" });
+		expect(testState.storage.popoverResult).toMatchObject({ ok: true, text: "translated" });
+	});
+
+	it("AI_ACTION failing fetch writes popoverResult error", async () => {
+		const { processAiRequest: _ } = await import("../background");
+		const listener = testState.messageListeners[0];
+		
+		vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 500 }));
+		vi.useFakeTimers();
+
+		const sender = { tab: { id: 42 }, frameId: 7 };
+		const responsePromise = new Promise((resolve) => {
+			listener({
+				type: "AI_ACTION",
+				text: "raw",
+				action: "explain",
+				requestId: "rid-1",
+				anchor: { x: 1, y: 2 },
+				source: "selection"
+			}, sender, resolve);
+		});
+
+		await vi.runAllTimersAsync();
+		const response = await responsePromise;
+		expect(response).toEqual({ error: "SERVER_ERROR" });
+		expect(testState.storage.popoverResult).toMatchObject({ ok: false, error: "SERVER_ERROR" });
+		vi.useRealTimers();
+	});
+
+	it("GET_TAB_ID responds tabId/frameId", async () => {
+		const { processAiRequest: _ } = await import("../background");
+		const listener = testState.messageListeners[0];
+		const sender = { tab: { id: 42 }, frameId: 7 };
+		
+		const response = await new Promise((resolve) => {
+			listener({ type: "GET_TAB_ID" }, sender, resolve);
+		});
+		expect(response).toEqual({ tabId: 42, frameId: 7 });
+	});
+
+	it("OPEN_SIDEPANEL responds success", async () => {
+		const { processAiRequest: _ } = await import("../background");
+		const listener = testState.messageListeners[0];
+		
+		const response = await new Promise((resolve) => {
+			listener({ type: "OPEN_SIDEPANEL" }, {}, resolve);
+		});
+		expect(response).toEqual({ success: true });
+		expect(mockChrome.sidePanel.open).toHaveBeenCalled();
+	});
+
+	it("AI_ACTION empty text writes nothing", async () => {
+		const { processAiRequest: _ } = await import("../background");
+		const listener = testState.messageListeners[0];
+		
+		const response = await new Promise((resolve) => {
+			listener({
+				type: "AI_ACTION",
+				text: "   ",
+				action: "explain",
+				requestId: "rid-1",
+				anchor: { x: 1, y: 2 },
+				source: "selection"
+			}, {}, resolve);
+		});
+		expect(response).toEqual({ error: "INVALID_INPUT" });
+		expect(testState.storage.popoverRequest).toBeUndefined();
 	});
 });
 

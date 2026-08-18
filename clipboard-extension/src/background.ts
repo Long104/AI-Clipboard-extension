@@ -6,6 +6,12 @@ import type {
 } from "./shared/messages";
 import { clampInput, isExtensionRequest, validateInput } from "./shared/messages";
 import { isByoActive, parseSettings } from "./shared/settings";
+import {
+	POPOVER_REQUEST_KEY,
+	POPOVER_RESULT_KEY,
+	type PopoverResult,
+	composePrompt,
+} from "./shared/popover";
 
 export {}; // Avoid polluting the global namespace
 
@@ -266,7 +272,7 @@ if (typeof chrome !== "undefined" && chrome.runtime?.onMessage) {
 	chrome.runtime.onMessage.addListener(
 		(
 			message: unknown,
-			_sender: chrome.runtime.MessageSender,
+			sender: chrome.runtime.MessageSender,
 			sendResponse: (response: ExtensionResponse) => void
 		) => {
 			if (!isExtensionRequest(message)) {
@@ -276,6 +282,69 @@ if (typeof chrome !== "undefined" && chrome.runtime?.onMessage) {
 			}
 
 			switch (message.type) {
+				case "GET_TAB_ID": {
+					sendResponse({ tabId: sender?.tab?.id ?? null, frameId: sender?.frameId ?? 0 });
+					return false;
+				}
+
+				case "OPEN_SIDEPANEL": {
+					(async () => {
+						try {
+							const win = await chrome.windows.getLastFocused();
+							if (win?.id != null) {
+								// @ts-ignore sidePanel is not yet in @types/chrome
+								await chrome.sidePanel?.open?.({ windowId: win.id });
+							}
+						} catch {
+							/* best-effort: panel also reachable via Alt+C */
+						}
+						sendResponse({ success: true });
+					})();
+					return true;
+				}
+
+				case "AI_ACTION": {
+					const text = validateInput(message.text);
+					if (text === null) {
+						sendResponse({ error: "INVALID_INPUT" });
+						return false;
+					}
+					const composed = composePrompt(message.action, text);
+					const meta = {
+						requestId: message.requestId,
+						tabId: sender?.tab?.id ?? null,
+						frameId: sender?.frameId ?? 0,
+					};
+					const writePopoverRequest = enqueueWrite(async () => {
+						await new Promise<void>((resolve) => {
+							chrome.storage.local.set(
+								{ [POPOVER_REQUEST_KEY]: { ...meta, action: message.action, text, anchor: message.anchor, source: message.source, at: Date.now() } },
+								resolve
+							);
+						});
+					});
+					writePopoverRequest.catch(() => {});
+					processAiRequest(composed)
+						.then(async (result: AiRequestResponse) => {
+							const payload: PopoverResult =
+								"modifiedText" in result
+									? { ...meta, ok: true, text: result.modifiedText, truncated: result.truncated ?? false, at: Date.now() }
+									: { ...meta, ok: false, error: result.error, at: Date.now() };
+							await new Promise<void>((resolve) => {
+								chrome.storage.local.set({ [POPOVER_RESULT_KEY]: payload }, resolve);
+							});
+							sendResponse(result);
+						})
+						.catch(() => {
+							// Structured error, no user content logged (existing pattern).
+							console.error("Unhandled error processing AI_ACTION");
+							const payload: PopoverResult = { ...meta, ok: false, error: "API_ERROR", at: Date.now() };
+							chrome.storage.local.set({ [POPOVER_RESULT_KEY]: payload }, () => { void 0; });
+							sendResponse({ error: "API_ERROR" });
+						});
+					return true; // async response
+				}
+
 				case "TOGGLE_SWITCH": {
 					enqueueWrite(async () => {
 						await new Promise<void>((resolve) => {

@@ -4,8 +4,7 @@ import { Check, FileText, Sparkles, X } from "lucide-react";
 
 import styleText from "data-text:@/style.css";
 import { cn } from "@/lib/utils";
-import type { ExtensionRequest } from "@/shared/messages";
-import { isAiRequestResponse } from "@/shared/messages";
+import { triggerAiAction } from "@/shared/popover";
 import {
 	shouldCaptureCopy,
 	TOAST_AUTO_DISMISS_MS,
@@ -82,21 +81,13 @@ export default function CopyToast() {
 		return () => document.removeEventListener("copy", handleCopy);
 	}, [handleCopy]);
 
-	const handleAction = (action: "explain" | "summarize") => {
+	const handleAction = (action: "explain" | "summarize", e: React.MouseEvent) => {
 		dismiss();
-		const message: ExtensionRequest = {
-			type: "SELECTED_TEXT",
-			text: `${action} the following text: ${capturedText}`,
-		};
-
-		chrome.runtime.sendMessage(message, (response: unknown) => {
-			if (chrome.runtime.lastError) {
-				console.error(chrome.runtime.lastError.message);
-				return;
-			}
-			if (isAiRequestResponse(response) && "modifiedText" in response && response.modifiedText) {
-				navigator.clipboard.writeText(response.modifiedText).catch(console.error);
-			}
+		triggerAiAction({
+			action,
+			text: capturedText,
+			anchor: { x: e.clientX, y: e.clientY },
+			source: "copy",
 		});
 	};
 
@@ -132,7 +123,7 @@ export default function CopyToast() {
 										variant="ghost"
 										size="sm"
 										className="h-auto px-2 py-1 text-xs"
-										onClick={() => handleAction("explain")}
+										onClick={(e) => handleAction("explain", e)}
 									>
 										<Sparkles size={14} className="mr-1.5" />
 										Explain
@@ -141,7 +132,7 @@ export default function CopyToast() {
 										variant="ghost"
 										size="sm"
 										className="h-auto px-2 py-1 text-xs"
-										onClick={() => handleAction("summarize")}
+										onClick={(e) => handleAction("summarize", e)}
 									>
 										<FileText size={14} className="mr-1.5" />
 										Summarize

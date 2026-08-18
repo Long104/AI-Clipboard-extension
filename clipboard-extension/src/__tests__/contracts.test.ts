@@ -18,6 +18,30 @@ describe("shared contracts", () => {
 		expect(isExtensionRequest({ type: "SELECTED_TEXT", text: 123 })).toBe(false);
 	});
 
+	it("isExtensionRequest validates AI_ACTION contract", () => {
+		expect(isExtensionRequest({
+			type: "AI_ACTION",
+			text: "hello",
+			action: "explain",
+			requestId: "r1",
+			anchor: { x: 10, y: 20 },
+			source: "selection"
+		})).toBe(true);
+		expect(isExtensionRequest({ type: "AI_ACTION", text: "x", action: "summarize", requestId: "r1", anchor: { x: 1, y: 1 }, source: "copy" })).toBe(true);
+		expect(isExtensionRequest({ type: "AI_ACTION", text: "x", action: "invalid", requestId: "r1", anchor: { x: 1, y: 1 }, source: "copy" })).toBe(false);
+		expect(isExtensionRequest({ type: "AI_ACTION", text: "x", action: "explain", requestId: "", anchor: { x: 1, y: 1 }, source: "copy" })).toBe(false);
+		expect(isExtensionRequest({ type: "AI_ACTION", text: 123, action: "explain", requestId: "r1", anchor: { x: 1, y: 1 }, source: "copy" })).toBe(false);
+		expect(isExtensionRequest({ type: "AI_ACTION", text: "x", action: "explain", requestId: "r1", anchor: { x: NaN, y: 1 }, source: "copy" })).toBe(false);
+		expect(isExtensionRequest({ type: "AI_ACTION", text: "x", action: "explain", requestId: "r1", anchor: { x: 1, y: Infinity }, source: "copy" })).toBe(false);
+		expect(isExtensionRequest({ type: "AI_ACTION", text: "x", action: "explain", requestId: "r1", anchor: null, source: "copy" })).toBe(false);
+	});
+
+	it("isExtensionRequest validates GET_TAB_ID and OPEN_SIDEPANEL", () => {
+		expect(isExtensionRequest({ type: "GET_TAB_ID" })).toBe(true);
+		expect(isExtensionRequest({ type: "OPEN_SIDEPANEL" })).toBe(true);
+		expect(isExtensionRequest({ type: "UNKNOWN" })).toBe(false);
+	});
+
 	it("validateInput trims and rejects empty/non-string", () => {
 		expect(validateInput("hello")).toBe("hello");
 		expect(validateInput("  hello  ")).toBe("hello");
