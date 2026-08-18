@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ChatMessage } from "../background";
 import {
 	enqueueWrite,
@@ -69,11 +69,82 @@ const mockChrome = {
 			addListener: () => {},
 		},
 	},
+	action: {
+		setBadgeText: vi.fn(),
+		setBadgeBackgroundColor: vi.fn(),
+	},
 };
 
 // ---------------------------------------------------------------------------
 // Tests
 // ---------------------------------------------------------------------------
+
+describe("background badge feedback", () => {
+	beforeEach(() => {
+		resetTestState();
+		vi.stubGlobal("chrome", mockChrome);
+		vi.stubGlobal("fetch", vi.fn());
+		vi.useFakeTimers();
+		vi.mocked(chrome.action.setBadgeText).mockClear();
+		vi.mocked(chrome.action.setBadgeBackgroundColor).mockClear();
+	});
+
+	afterEach(() => {
+		vi.useRealTimers();
+	});
+
+	it("badge shows AI then ✓ and clears on success", async () => {
+		testState.storage = { isOn: true, limit: 0 };
+		vi.stubGlobal(
+			"fetch",
+			vi.fn().mockResolvedValue({
+				ok: true,
+				json: () => Promise.resolve({ message: { response: "translated" } }),
+			})
+		);
+
+		const promise = processAiRequest("hello");
+		await promise;
+		expect(chrome.action.setBadgeText).toHaveBeenNthCalledWith(1, { text: "AI" });
+		expect(chrome.action.setBadgeText).toHaveBeenNthCalledWith(2, { text: "✓" });
+		expect(chrome.action.setBadgeBackgroundColor).toHaveBeenLastCalledWith({ color: "#2f9e44" });
+
+		vi.advanceTimersByTime(2000);
+		expect(chrome.action.setBadgeText).toHaveBeenNthCalledWith(3, { text: "" });
+	});
+
+	it("badge shows ! and clears on API error", async () => {
+		testState.storage = { isOn: true, limit: 0 };
+		vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false }));
+
+		await processAiRequest("hello");
+		expect(chrome.action.setBadgeText).toHaveBeenNthCalledWith(2, { text: "!" });
+		expect(chrome.action.setBadgeBackgroundColor).toHaveBeenLastCalledWith({ color: "#e03131" });
+
+		vi.advanceTimersByTime(2000);
+		expect(chrome.action.setBadgeText).toHaveBeenNthCalledWith(3, { text: "" });
+	});
+
+	it("badge shows ! on limit reached without fetching", async () => {
+		testState.storage = { isOn: true, limit: 10 };
+		await processAiRequest("hello");
+		expect(chrome.action.setBadgeText).toHaveBeenCalledWith({ text: "!" });
+		expect(fetch).not.toHaveBeenCalled();
+		vi.advanceTimersByTime(2000);
+		expect(chrome.action.setBadgeText).toHaveBeenNthCalledWith(2, { text: "" });
+	});
+
+	it("no badge on blank input", async () => {
+		await processAiRequest("   ");
+		expect(chrome.action.setBadgeText).not.toHaveBeenCalled();
+	});
+
+	it("no badge when extension disabled", async () => {
+		testState.storage = { isOn: false };
+		await processAiRequest("hello");
+		expect(chrome.action.setBadgeText).not.toHaveBeenCalled();
+	});
+});
 
 describe("background MV3 state management", () => {
 	beforeEach(() => {

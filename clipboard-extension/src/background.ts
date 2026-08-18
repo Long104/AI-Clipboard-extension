@@ -13,6 +13,21 @@ export const ALARM_NAME = "RESET_LIMIT_ALARM";
 export const ALARM_INTERVAL_MINUTES = 120; // 2 hours
 export const MAX_USAGE_LIMIT = 10;
 
+const BADGE_CLEAR_MS = 2000;
+let badgeClearTimer: ReturnType<typeof setTimeout> | undefined;
+
+function setBadge(text: string, color: string): void {
+	if (typeof chrome !== "undefined" && chrome.action?.setBadgeText) {
+		chrome.action.setBadgeText({ text });
+		chrome.action.setBadgeBackgroundColor({ color });
+	}
+}
+
+function clearBadgeAfter(ms: number): void {
+	if (badgeClearTimer) clearTimeout(badgeClearTimer);
+	badgeClearTimer = setTimeout(() => setBadge("", "#000000"), ms);
+}
+
 let enqueueChain: Promise<any> = Promise.resolve();
 
 export function enqueueWrite<T>(task: () => Promise<T>): Promise<T> {
@@ -90,11 +105,16 @@ export async function processAiRequest(inputText: string): Promise<{ modifiedTex
 		}
 
 		if (limit >= MAX_USAGE_LIMIT) {
+			setBadge("!", "#e03131");
+			clearBadgeAfter(BADGE_CLEAR_MS);
 			return { error: "LIMIT_REACHED" };
 		}
 
+		setBadge("AI", "#5c5f66");
 		const translatedText = await fetchTranslate(text);
 		if (!translatedText) {
+			setBadge("!", "#e03131");
+			clearBadgeAfter(BADGE_CLEAR_MS);
 			return { error: "API_ERROR" };
 		}
 
@@ -120,6 +140,8 @@ export async function processAiRequest(inputText: string): Promise<{ modifiedTex
 			);
 		});
 
+		setBadge("✓", "#2f9e44");
+		clearBadgeAfter(BADGE_CLEAR_MS);
 		return { modifiedText: translatedText };
 	});
 }

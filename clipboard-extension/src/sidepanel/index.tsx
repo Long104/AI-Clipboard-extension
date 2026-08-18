@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import "@/style.css";
 import { MantineProvider, Button } from "@mantine/core";
 import "@mantine/core/styles.css";
@@ -33,6 +33,8 @@ const IndexSidepanel = () => {
 	const [isLimitReached, setIsLimitReached] = useState(false);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [pending, setPending] = useState(false);
+	const messagesEndRef = useRef<HTMLDivElement>(null);
 
 	const setupStorageListeners = useCallback(() => {
 		if (typeof chrome !== "undefined" && chrome.storage?.onChanged) {
@@ -98,9 +100,13 @@ const IndexSidepanel = () => {
 		return setupStorageListeners();
 	}, [setupStorageListeners]);
 
+	useEffect(() => {
+		messagesEndRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+	}, [chatRoom]);
+
 	async function sendChat() {
 		const trimmedChat = chat.trim();
-		if (!trimmedChat) {
+		if (!trimmedChat || pending) {
 			return;
 		}
 
@@ -111,10 +117,16 @@ const IndexSidepanel = () => {
 
 		setChat("");
 		setError(null);
+		setPending(true);
 
 		chrome.runtime.sendMessage(
 			{ type: "CHAT", chatMessage: trimmedChat },
 			(response) => {
+				setPending(false);
+				if (chrome.runtime.lastError) {
+					setError("Unable to reach background service.");
+					return;
+				}
 				if (response?.error) {
 					setError(getErrorMessage(response.error));
 				}
@@ -145,17 +157,17 @@ const IndexSidepanel = () => {
 
 	return (
 		<MantineProvider>
-			<div className="min-h-screen min-w-screen flex flex-col justify-between flex-1 relative bg-gray-400 overscroll-y-none">
-				<div className="flex flex-col">
+			<div className="min-h-screen min-w-screen flex flex-col flex-1 relative bg-gray-100 overscroll-y-none">
+				<div className="flex flex-col flex-1 overflow-y-auto min-h-0 px-2 pb-2">
 					{error && (
-						<div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 mx-4">
+						<div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 mx-4 mt-3">
 							<div className="font-bold">Error</div>
 							<div>{error}</div>
 						</div>
 					)}
 
 					{chatRoom.length === 0 && !error && (
-						<div className="text-center py-8 text-gray-500">
+						<div className="text-center py-8 text-gray-500 pt-6">
 							Copy text or ask a question
 						</div>
 					)}
@@ -163,28 +175,25 @@ const IndexSidepanel = () => {
 					{chatRoom.map((msg, index) => (
 						<div
 							key={index}
-							className={`flex mt-2 ${msg.sender === "bot" ? "justify-start pl-2" : "justify-end pr-2"}`}
+							className={`flex mt-2 ${msg.sender === "bot" ? "justify-start" : "justify-end"}`}
 						>
-							<div className="max-w-[75%] break-words text-wrap border-2 p-2 gap-y-60 border-gray-800 bg-white rounded-2xl">
+							<div
+								className={`max-w-[75%] break-words p-2.5 ${
+									msg.sender === "bot"
+										? "bg-white border border-gray-200 text-gray-900 rounded-2xl rounded-bl-md"
+										: "bg-blue-600 text-white rounded-2xl rounded-br-md"
+								}`}
+							>
 								{msg.message}
 							</div>
 						</div>
 					))}
+					<div ref={messagesEndRef} />
 				</div>
 
 				<div className="w-full flex items-center flex-col justify-center p-5">
 					<div className="flex justify-start w-full gap-x-2 items-center mb-2">
-						<div className="max-w-16">
-							<Button
-								size="xs"
-								radius="md"
-								variant="filled"
-								color="rgba(36, 32, 32, 1)"
-								onClick={handleResetHistory}
-							>
-								reset
-							</Button>
-						</div>
+						<Button size="xs" radius="md" variant="subtle" color="gray" onClick={handleResetHistory} aria-label="Reset chat history">Reset</Button>
 
 						<div className="text-sm text-gray-600">
 							Usage: {isLimit}/10
@@ -196,19 +205,23 @@ const IndexSidepanel = () => {
 							</div>
 						)}
 					</div>
-
-					<textarea
-						placeholder="ask ai"
-						className="text-sm w-full min-h-[50px] border-slate-600 border-solid border-2 rounded-3xl pl-4 text-wrap flex placeholder:text-start pt-1"
-						onChange={(e) => setChat(e.target.value)}
-						value={chat}
-						onKeyDown={(e) => {
-							if (e.key === "Enter") {
-								e.preventDefault();
-								sendChat();
-							}
-						}}
-					/>
+					<div className="flex w-full items-end gap-2">
+						<textarea
+							placeholder="Ask AI…"
+							rows={2}
+							disabled={pending}
+							className="text-sm w-full min-h-[50px] border border-gray-300 rounded-xl pl-4 pt-2 resize-none bg-white placeholder:text-gray-400 disabled:opacity-60"
+							onChange={(e) => setChat(e.target.value)}
+							value={chat}
+							onKeyDown={(e) => {
+								if (e.key === "Enter" && !e.shiftKey) {
+									e.preventDefault();
+									sendChat();
+								}
+							}}
+						/>
+						<Button size="sm" radius="md" loading={pending} disabled={!chat.trim() || isLimitReached} onClick={sendChat}>Send</Button>
+					</div>
 				</div>
 			</div>
 		</MantineProvider>

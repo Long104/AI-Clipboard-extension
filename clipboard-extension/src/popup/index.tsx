@@ -6,26 +6,19 @@ import "@mantine/core/styles.css";
 
 function IndexPopup() {
 	const [isOn, setIsOn] = useState(true);
-	const [isExtensionOn, SetIsExtensionOn] = useState(true);
 
 	// Toggle the switch and update storage
 	const toggleSwitch = async () => {
 		const newState = !isOn;
 		setIsOn(newState); // Update UI state
 
-		// Update @plasmohq/storage
-
-		// Update chrome.storage.local and notify background script
-		chrome.storage.local.set({ isOn: newState }, () => {
-			console.log("Value is set to " + newState);
-			chrome.runtime.sendMessage({ type: "TOGGLE_SWITCH", isOn: newState, highlight: "Highlight" });
-		});
-
+		chrome.runtime.sendMessage({ type: "TOGGLE_SWITCH", isOn: newState, highlight: "Highlight" });
 	};
 
 	const toggleHistory = async () => {
 		chrome.windows.getCurrent({ populate: true }, (window) => {
-			(chrome as any).sidePanel.open({ windowId: window.id });
+			const sidePanelApi = (chrome as unknown as { sidePanel?: { open: (opts: { windowId?: number }) => Promise<void> | void } }).sidePanel;
+			sidePanelApi?.open({ windowId: window.id });
 		});
 
 		window.close();
@@ -46,15 +39,15 @@ function IndexPopup() {
 	return (
 		<MantineProvider>
 			<>
-				<div className="min-w-64 min-h-64 flex flex-col items-center">
+				<div className="min-w-64 min-h-64 flex flex-col items-center justify-center gap-6 p-4">
 					<But isOn={isOn} toggleSwitch={toggleSwitch} />
 					<Button
-						// className="z-50 absolute bottom-4 text-lg text-white font-bold"
-						className="z-50 absolute bottom-5"
 						onClick={toggleHistory}
 						variant="light"
 						radius="xl"
 						color="cyan"
+						size="md"
+						aria-label="Open clipboard history sidepanel"
 					>
 						Clipboard History
 					</Button>
