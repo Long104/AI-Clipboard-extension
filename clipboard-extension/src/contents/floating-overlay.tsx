@@ -1,0 +1,103 @@
+import type { PlasmoCSConfig } from "plasmo";
+import React, { useState, useEffect, useCallback } from "react";
+import { createRoot } from "react-dom/client";
+import { Sparkles, FileText, Copy, Check } from "lucide-react";
+import { cn } from "@/lib/utils";
+import type { ExtensionRequest } from "@/shared/messages";
+import { isAiRequestResponse } from "@/shared/messages";
+
+export const config: PlasmoCSConfig = {
+	matches: ["<all_urls>"],
+	all_frames: true,
+};
+
+function FloatingActionPill() {
+	const [visible, setVisible] = useState(false);
+	const [position, setPosition] = useState({ top: 0, left: 0 });
+	const [copied, setCopied] = useState(false);
+	const [selectedText, setSelectedText] = useState("");
+
+	const handleSelection = useCallback(() => {
+		const selection = window.getSelection();
+		const text = selection?.toString().trim() || "";
+
+		if (text.length > 5) {
+			const range = selection.getRangeAt(0);
+			const rect = range.getBoundingClientRect();
+			setSelectedText(text);
+			setPosition({
+				top: window.scrollY + rect.top - 50,
+				left: window.scrollX + rect.left + rect.width / 2,
+			});
+			setVisible(true);
+		} else {
+			setVisible(false);
+		}
+	}, []);
+
+	useEffect(() => {
+		document.addEventListener("mouseup", handleSelection);
+		return () => {
+			document.removeEventListener("mouseup", handleSelection);
+		};
+	}, [handleSelection]);
+
+	const handleAction = (action: "explain" | "summarize" | "copy") => {
+		setVisible(false);
+		if (action === "copy") {
+			navigator.clipboard.writeText(selectedText).then(() => {
+				setCopied(true);
+				setTimeout(() => setCopied(false), 2000);
+			});
+			return;
+		}
+
+		const message: ExtensionRequest = {
+			type: "SELECTED_TEXT",
+			text: selectedText,
+		};
+
+		chrome.runtime.sendMessage(message, (response: unknown) => {
+			if (isAiRequestResponse(response) && "modifiedText" in response && response.modifiedText) {
+				navigator.clipboard.writeText(response.modifiedText).catch(console.error);
+			}
+		});
+	};
+
+	if (!visible) return null;
+
+	return (
+		<div
+			className="fixed z-[99999] -translate-x-1/2 animate-in fade-in zoom-in-95 duration-150"
+			style={{ top: position.top, left: position.left }}
+		>
+			<div className="flex items-center gap-1.5 rounded-full bg-slate-900/90 text-white backdrop-blur-md border border-slate-700/50 px-3 py-1.5 shadow-xl">
+				<button
+					onClick={() => handleAction("explain")}
+					className="flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-medium text-slate-200 hover:bg-slate-800"
+				>
+					<Sparkles size={14} /> Explain
+				</button>
+				<div className="h-4 w-px bg-slate-700" />
+				<button
+					onClick={() => handleAction("summarize")}
+					className="flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-medium text-slate-200 hover:bg-slate-800"
+				>
+					<FileText size={14} /> Summarize
+				</button>
+				<div className="h-4 w-px bg-slate-700" />
+				<button
+					onClick={() => handleAction("copy")}
+					className="flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-medium text-slate-200 hover:bg-slate-800"
+				>
+					{copied ? <Check size={14} /> : <Copy size={14} />} Copy
+				</button>
+			</div>
+		</div>
+	);
+}
+
+const root = document.createElement("div");
+root.id = "ai-clipboard-overlay-root";
+document.body.append(root);
+createRoot(root).render(<FloatingActionPill />);

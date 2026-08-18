@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import "@/style.css";
-import "@mantine/core/styles.css";
-import { MantineProvider, Button, Textarea, Loader } from "@mantine/core";
-import { theme } from "@/shared/theme";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Copy, Check, RotateCcw, Send, Sparkles, ShieldAlert } from "lucide-react";
 import type { ChatMessage } from "@/background";
 import type { ExtensionRequest } from "@/shared/messages";
 
@@ -24,6 +24,102 @@ function getErrorMessage(error: string | undefined): string {
 	}
 }
 
+function CodeBlock({ code, language }: { code: string; language?: string }) {
+	const [copied, setCopied] = useState(false);
+	const copyCode = useCallback(() => {
+		navigator.clipboard.writeText(code).then(() => {
+			setCopied(true);
+			setTimeout(() => setCopied(false), 2000);
+		});
+	}, [code]);
+
+	return (
+		<div className="mt-2 rounded-lg border border-slate-700/50 overflow-hidden">
+			<div className="flex items-center justify-between bg-slate-800 dark:bg-slate-900 px-3 py-1.5">
+				<span className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">
+					{language || "text"}
+				</span>
+				<Button
+					variant="ghost"
+					size="icon"
+					onClick={copyCode}
+					aria-label="Copy code block"
+					className="h-6 w-6 text-slate-400 hover:text-slate-100"
+				>
+					{copied ? <Check size={12} /> : <Copy size={12} />}
+				</Button>
+			</div>
+			<pre className="font-mono text-xs text-slate-100 bg-slate-950 p-3 overflow-x-auto whitespace-pre-wrap break-words">
+				{code}
+			</pre>
+		</div>
+	);
+}
+
+function Skeleton() {
+	return (
+		<div className="flex justify-start mt-2">
+			<div className="max-w-[85%] w-3/4">
+				<div className="animate-pulse bg-slate-200 dark:bg-slate-700 h-10 w-full rounded-xl mb-2" />
+				<div className="animate-pulse bg-slate-200 dark:bg-slate-700 h-10 w-3/4 rounded-xl" />
+			</div>
+		</div>
+	);
+}
+
+const FENCE_RE = /```(\w+)?\n([\s\S]*?)```/g;
+
+function MessageContent({ text }: { text: string }) {
+	const parts: Array<{ type: "text" | "code"; content: string; lang?: string }> = [];
+	let lastIndex = 0;
+	let match: RegExpExecArray | null;
+	FENCE_RE.lastIndex = 0;
+	while ((match = FENCE_RE.exec(text)) !== null) {
+		if (match.index > lastIndex) {
+			parts.push({ type: "text", content: text.slice(lastIndex, match.index).trim() });
+		}
+		parts.push({ type: "code", lang: match[1] || "text", content: match[2].trim() });
+		lastIndex = FENCE_RE.lastIndex;
+	}
+	if (lastIndex < text.length) {
+		parts.push({ type: "text", content: text.slice(lastIndex).trim() });
+	}
+
+	if (parts.length === 0) {
+		return <span className="whitespace-pre-wrap break-words">{text}</span>;
+	}
+
+	return (
+		<div className="space-y-2">
+			{parts.map((part, i) =>
+				part.type === "code" ? (
+					<CodeBlock key={i} code={part.content} language={part.lang} />
+				) : (
+					<span key={i} className="whitespace-pre-wrap break-words">
+						{part.content}
+					</span>
+				)
+			)}
+		</div>
+	);
+}
+
+function DisabledBanner({ onEnable }: { onEnable: () => void }) {
+	return (
+		<div className="flex items-start gap-3 p-3.5 rounded-xl border border-amber-200 bg-amber-50 dark:border-amber-500/30 dark:bg-amber-500/10">
+			<ShieldAlert size={18} className="text-amber-500 shrink-0 mt-0.5" />
+			<div className="flex flex-col gap-2">
+				<span className="text-sm font-medium text-amber-900 dark:text-amber-200">
+					Extension is currently paused
+				</span>
+				<Button variant="secondary" size="sm" onClick={onEnable} className="w-fit">
+					Enable extension
+				</Button>
+			</div>
+		</div>
+	);
+}
+
 const IndexSidepanel = () => {
 	const [chatRoom, setChatRoom] = useState<ChatMessage[]>([]);
 	const [chat, setChat] = useState<string>("");
@@ -32,6 +128,7 @@ const IndexSidepanel = () => {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const [pending, setPending] = useState(false);
+	const [isOn, setIsOn] = useState(true);
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 
 	const setupStorageListeners = useCallback(() => {
@@ -54,6 +151,12 @@ const IndexSidepanel = () => {
 							setIsLimitReached(newValue >= 10);
 						}
 					}
+					if (changes.isOn) {
+						const newValue = changes.isOn.newValue;
+						if (typeof newValue === "boolean") {
+							setIsOn(newValue);
+						}
+					}
 				}
 			};
 
@@ -71,13 +174,14 @@ const IndexSidepanel = () => {
 			try {
 				setLoading(true);
 				setError(null);
-				const data = await new Promise<{ limit?: number; chatRoom?: ChatMessage[] }>((resolve) => {
-					chrome.storage.local.get(["limit", "chatRoom"], resolve);
+				const data = await new Promise<{ limit?: number; chatRoom?: ChatMessage[]; isOn?: boolean }>((resolve) => {
+					chrome.storage.local.get(["limit", "chatRoom", "isOn"], resolve);
 				});
 				if (isMounted) {
 					setIsLimit(data.limit || 0);
 					setIsLimitReached((data.limit || 0) >= 10);
 					setChatRoom(data.chatRoom || []);
+					setIsOn(data.isOn ?? true);
 				}
 			} catch (err) {
 				if (isMounted) {
@@ -152,87 +256,89 @@ const IndexSidepanel = () => {
 
 	if (loading) {
 		return (
-			<MantineProvider theme={theme}>
-				<div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900">
-					<Loader size="md" />
-					<div className="text-sm mt-2 text-gray-600 dark:text-gray-400">Loading history...</div>
-				</div>
-			</MantineProvider>
+			<div className="min-h-screen flex flex-col items-center justify-center bg-white dark:bg-slate-950">
+				<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+				<div className="text-sm mt-3 text-slate-500">Loading history...</div>
+			</div>
 		);
 	}
 
 	return (
-		<MantineProvider theme={theme}>
-			<div className="min-h-screen flex flex-col flex-1 relative bg-gray-100 dark:bg-gray-900 overscroll-y-none">
-				<div className="flex flex-col flex-1 overflow-y-auto min-h-0 px-3 pb-2">
-					{error && (
-						<div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 mx-2 mt-3 text-sm">
-							<div className="font-bold">Error</div>
-							<div>{error}</div>
-						</div>
-					)}
+		<div className="min-h-screen flex flex-col flex-1 relative bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
+			<div className="flex-1 overflow-y-auto px-4 pt-4 pb-20">
+				{!isOn && <DisabledBanner onEnable={() => {
+                    chrome.runtime.sendMessage({ type: "TOGGLE_SWITCH", isOn: true });
+                    setIsOn(true);
+                }} />}
 
-					{chatRoom.length === 0 && !error && (
-						<div className="text-center py-8 text-gray-500 pt-6 text-sm">
-							Copy text or ask a question
-						</div>
-					)}
+				{error && (
+					<div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded-xl mb-4 text-sm flex gap-2">
+						<ShieldAlert size={18} />
+						<span>{error}</span>
+					</div>
+				)}
 
-					{chatRoom.map((msg, index) => (
+				{chatRoom.length === 0 && !error && (
+					<div className="text-center py-16 text-slate-500 dark:text-slate-400 text-sm">
+						<Sparkles size={32} className="mx-auto mb-3 opacity-50" />
+						Copy text or ask a question to start.
+					</div>
+				)}
+
+				{chatRoom.map((msg, index) => (
+					<div
+						key={index}
+						className={cn("flex mt-3", msg.sender === "bot" ? "justify-start" : "justify-end")}
+					>
 						<div
-							key={index}
-							className={`flex mt-2 ${msg.sender === "bot" ? "justify-start" : "justify-end"}`}
+							className={cn(
+								"max-w-[85%] text-sm",
+								msg.sender === "bot"
+									? "bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl rounded-bl-sm p-3.5"
+									: "bg-blue-600 text-white rounded-2xl rounded-br-sm p-3"
+							)}
 						>
-							<div
-								className={`max-w-[85%] break-words p-2.5 text-sm ${
-									msg.sender === "bot"
-										? "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100 rounded-2xl rounded-bl-md"
-										: "bg-blue-600 text-white rounded-2xl rounded-br-md"
-								}`}
-							>
-								{msg.message}
-							</div>
+							<MessageContent text={msg.message} />
 						</div>
-					))}
-					<div ref={messagesEndRef} />
+					</div>
+				))}
+				{pending && <Skeleton />}
+				<div ref={messagesEndRef} />
+			</div>
+
+			<div className="absolute bottom-0 w-full flex flex-col p-3 bg-white/95 dark:bg-slate-950/95 backdrop-blur-sm border-t border-slate-200 dark:border-slate-800">
+				<div className="flex justify-between w-full items-center mb-2 px-1">
+					<Button variant="ghost" size="sm" onClick={handleResetHistory} className="text-slate-500 hover:text-slate-900">
+						<RotateCcw size={14} className="mr-1.5" />
+						Reset
+					</Button>
+					<div className="text-xs text-slate-400 font-medium tracking-tight">
+						{isLimit}/10 Usage
+					</div>
 				</div>
-
-				<div className="w-full flex items-center flex-col justify-center p-3 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
-					<div className="flex justify-between w-full items-center mb-2 px-1">
-						<Button size="xs" radius="md" variant="subtle" color="gray" onClick={handleResetHistory} aria-label="Reset chat history">Reset</Button>
-
-						<div className="text-xs text-gray-600 dark:text-gray-400">
-							Usage: {isLimit}/10
-						</div>
-
-						{isLimitReached && (
-							<div className="text-red-500 text-xs font-semibold">
-								Limit reached
-							</div>
-						)}
-					</div>
-					<div className="flex w-full items-end gap-2">
-						<Textarea
-							placeholder="Ask AI…"
-							rows={2}
-							disabled={pending}
-							className="text-sm w-full"
-							onChange={(e) => setChat(e.target.value)}
-							value={chat}
-							onKeyDown={(e) => {
-								if (e.key === "Enter" && !e.shiftKey) {
-									e.preventDefault();
-									sendChat();
-								}
-							}}
-							aria-label="Ask AI input field"
-						/>
-						<Button size="sm" radius="md" loading={pending} disabled={!chat.trim() || isLimitReached} onClick={sendChat}>Send</Button>
-					</div>
+				<div className="flex w-full items-end gap-2">
+					<textarea
+						placeholder="Ask AI…"
+						rows={1}
+						disabled={pending || !isOn}
+						className="flex-1 min-h-[48px] max-h-[120px] resize-none border border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 rounded-xl text-sm p-3 bg-slate-50 dark:bg-slate-900 dark:text-slate-100 disabled:opacity-50"
+						onChange={(e) => setChat(e.target.value)}
+						value={chat}
+						onKeyDown={(e) => {
+							if (e.key === "Enter" && !e.shiftKey) {
+								e.preventDefault();
+								sendChat();
+							}
+						}}
+					/>
+					<Button size="icon" className="h-[48px] w-[48px] shrink-0" onClick={sendChat} disabled={!chat.trim() || isLimitReached || pending || !isOn}>
+						{pending ? <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" /> : <Send size={18} />}
+					</Button>
 				</div>
 			</div>
-		</MantineProvider>
+		</div>
 	);
 };
+
 
 export default IndexSidepanel;

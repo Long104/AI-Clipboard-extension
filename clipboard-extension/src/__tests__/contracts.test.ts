@@ -3,7 +3,7 @@ import { isExtensionRequest, validateInput } from "../shared/messages";
 import { loadInitialSidepanelState } from "../shared/storage";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { Switch, MantineProvider } from "@mantine/core";
+import { Switch } from "../components/ui/switch";
 
 describe("shared contracts", () => {
 	it("isExtensionRequest rejects malformed messages without throwing", () => {
@@ -28,11 +28,9 @@ describe("shared contracts", () => {
 });
 
 describe("accessibility", () => {
-	it("Mantine Switch exposes role=switch", () => {
+	it("Switch exposes role=switch", () => {
 		const html = renderToStaticMarkup(
-			createElement(MantineProvider, null,
-				createElement(Switch, { checked: true, onChange: () => {}, "aria-label": "Toggle" })
-			)
+			createElement(Switch, { checked: true, onCheckedChange: () => {}, "aria-label": "Toggle" })
 		);
 		expect(html).toContain('role="switch"');
 		expect(html).toContain('type="checkbox"');
