@@ -6,6 +6,7 @@ import {
 	processAiRequest,
 	setupAlarms,
 	handleAlarm,
+	fetchTranslate,
 } from "../background";
 
 // ---------------------------------------------------------------------------
@@ -79,6 +80,47 @@ const mockChrome = {
 // Tests
 // ---------------------------------------------------------------------------
 
+describe("background translation logic", () => {
+	beforeEach(() => {
+		resetTestState();
+		vi.stubGlobal("chrome", mockChrome);
+		vi.stubGlobal("fetch", vi.fn());
+		vi.useFakeTimers();
+	});
+
+	afterEach(() => {
+		vi.useRealTimers();
+	});
+
+	it("fetchTranslate retries on 500 error", async () => {
+		vi.stubGlobal(
+			"fetch",
+			vi.fn()
+				.mockResolvedValueOnce({ ok: false, status: 500 })
+				.mockResolvedValueOnce({
+					ok: true,
+					json: () => Promise.resolve({ message: { response: "success" } }),
+				})
+		);
+
+		const promise = fetchTranslate("hello");
+		await vi.runAllTimersAsync();
+		const result = await promise;
+		expect(fetch).toHaveBeenCalledTimes(2);
+		expect(result).toEqual({ ok: true, text: "success" });
+	});
+
+	it("fetchTranslate fails after retries", async () => {
+		vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 503 }));
+
+		const promise = fetchTranslate("hello");
+		await vi.runAllTimersAsync();
+		const result = await promise;
+		expect(fetch).toHaveBeenCalledTimes(3);
+		expect(result).toEqual({ ok: false, code: "SERVER_ERROR" });
+	});
+});
+
 describe("background badge feedback", () => {
 	beforeEach(() => {
 		resetTestState();
@@ -115,7 +157,7 @@ describe("background badge feedback", () => {
 
 	it("badge shows ! and clears on API error", async () => {
 		testState.storage = { isOn: true, limit: 0 };
-		vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false }));
+		vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 400 }));
 
 		await processAiRequest("hello");
 		expect(chrome.action.setBadgeText).toHaveBeenNthCalledWith(2, { text: "!" });
@@ -220,7 +262,7 @@ describe("background MV3 state management", () => {
 
 		const result = await processAiRequest("test");
 		if ("error" in result) {
-			expect(result.error).toBe("API_ERROR");
+			expect(result.error).toBe("SERVER_ERROR");
 		} else {
 			throw new Error("Expected error, got modifiedText");
 		}
@@ -256,3 +298,4 @@ describe("background MV3 state management", () => {
 		expect(testState.storage.limit).toBe(0);
 	});
 });
+

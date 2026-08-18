@@ -4,7 +4,13 @@
  * point safe against malformed or untrusted messages (never throws).
  */
 
-export type AiRequestError = "DISABLED" | "LIMIT_REACHED" | "API_ERROR" | "INVALID_INPUT";
+export type AiRequestError =
+	| "DISABLED"
+	| "LIMIT_REACHED"
+	| "API_ERROR"
+	| "INVALID_INPUT"
+	| "SERVER_ERROR"
+	| "INPUT_TOO_LONG";
 
 export type ExtensionRequest =
 	| { type: "TOGGLE_SWITCH"; isOn: boolean }
@@ -14,19 +20,24 @@ export type ExtensionRequest =
 
 export type CommandResponse = { success: true };
 export type AiRequestResponse =
-	| { modifiedText: string }
+	| { modifiedText: string; truncated?: boolean }
 	| { error: AiRequestError };
 export type ExtensionResponse = CommandResponse | AiRequestResponse;
 
-/** Longest accepted user text; protects the backend and storage from abuse. */
-export const MAX_INPUT_LENGTH = 10_000;
+export const MAX_MODEL_INPUT_LENGTH = 24_000;
 
-/** Trim and reject empty/oversized input deterministically without a network call. */
+/** Trim; reject empty/non-string. */
 export function validateInput(rawText: unknown): string | null {
 	if (typeof rawText !== "string") return null;
 	const text = rawText.trim();
-	if (text.length === 0 || text.length > MAX_INPUT_LENGTH) return null;
+	if (text.length === 0) return null;
 	return text;
+}
+
+/** Clamp oversized text to the model limit. */
+export function clampInput(text: string): { text: string; truncated: boolean } {
+	if (text.length <= MAX_MODEL_INPUT_LENGTH) return { text, truncated: false };
+	return { text: text.slice(0, MAX_MODEL_INPUT_LENGTH), truncated: true };
 }
 
 /** Structural guard: returns true only for well-formed extension requests. */
@@ -53,10 +64,19 @@ export function isExtensionRequest(value: unknown): value is ExtensionRequest {
 export function isAiRequestResponse(value: unknown): value is AiRequestResponse {
 	if (typeof value !== "object" || value === null) return false;
 	const res = value as Record<string, unknown>;
-	if (typeof res.modifiedText === "string") return true;
+	if (typeof res.modifiedText === "string") {
+		return res.truncated === undefined || typeof res.truncated === "boolean";
+	}
 	if (
 		typeof res.error === "string" &&
-		["DISABLED", "LIMIT_REACHED", "API_ERROR", "INVALID_INPUT"].includes(res.error)
+		[
+			"DISABLED",
+			"LIMIT_REACHED",
+			"API_ERROR",
+			"INVALID_INPUT",
+			"SERVER_ERROR",
+			"INPUT_TOO_LONG",
+		].includes(res.error)
 	) {
 		return true;
 	}

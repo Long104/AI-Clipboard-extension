@@ -1,5 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
-import { isExtensionRequest, validateInput } from "../shared/messages";
+import {
+	isExtensionRequest,
+	validateInput,
+	clampInput,
+	isAiRequestResponse,
+	MAX_MODEL_INPUT_LENGTH,
+} from "../shared/messages";
 import { loadInitialSidepanelState } from "../shared/storage";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -12,10 +18,31 @@ describe("shared contracts", () => {
 		expect(isExtensionRequest({ type: "SELECTED_TEXT", text: 123 })).toBe(false);
 	});
 
-	it("validateInput caps input length", () => {
+	it("validateInput trims and rejects empty/non-string", () => {
 		expect(validateInput("hello")).toBe("hello");
-		expect(validateInput(" ".repeat(10001))).toBe(null);
+		expect(validateInput("  hello  ")).toBe("hello");
+		expect(validateInput("")).toBe(null);
+		expect(validateInput("   ")).toBe(null);
 		expect(validateInput(123)).toBe(null);
+	});
+
+	it("clampInput leaves short text untouched", () => {
+		expect(clampInput("hello")).toEqual({ text: "hello", truncated: false });
+	});
+
+	it("clampInput truncates text beyond the model limit", () => {
+		const long = "x".repeat(MAX_MODEL_INPUT_LENGTH + 500);
+		const result = clampInput(long);
+		expect(result.truncated).toBe(true);
+		expect(result.text.length).toBe(MAX_MODEL_INPUT_LENGTH);
+	});
+
+	it("isAiRequestResponse accepts new error codes and truncated flag", () => {
+		expect(isAiRequestResponse({ error: "SERVER_ERROR" })).toBe(true);
+		expect(isAiRequestResponse({ error: "INPUT_TOO_LONG" })).toBe(true);
+		expect(isAiRequestResponse({ modifiedText: "ok", truncated: true })).toBe(true);
+		expect(isAiRequestResponse({ modifiedText: "ok" })).toBe(true);
+		expect(isAiRequestResponse({ error: "UNKNOWN" })).toBe(false);
 	});
 
 	it("loadInitialSidepanelState calls storage.local.get once with both keys", async () => {

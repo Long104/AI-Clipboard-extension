@@ -7,12 +7,16 @@ import type { ChatMessage } from "@/background";
 import type { ExtensionRequest } from "@/shared/messages";
 
 // Helper function to map error codes to user-friendly messages
-function getErrorMessage(error: string | undefined): string {
+export function getErrorMessage(error: string | undefined): string {
 	if (!error) return "";
 
 	switch (error) {
 		case "API_ERROR":
 			return "Unable to process request. Check connection or quota.";
+		case "SERVER_ERROR":
+			return "AI service is busy — retrying usually fixes it.";
+		case "INPUT_TOO_LONG":
+			return "Text too long — trimmed it for you.";
 		case "LIMIT_REACHED":
 			return "Usage limit reached. Please wait for the reset.";
 		case "DISABLED":
@@ -233,9 +237,11 @@ const IndexSidepanel = () => {
 					setError("Unable to reach background service.");
 					return;
 				}
-				if (response?.error) {
-					setError(getErrorMessage(response.error));
-				}
+			if (response?.error) {
+				setError(getErrorMessage(response.error));
+			} else if (response?.truncated) {
+				setError(getErrorMessage("INPUT_TOO_LONG"));
+			}
 			}
 		);
 	}

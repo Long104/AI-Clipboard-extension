@@ -4,7 +4,7 @@ import type {
 	ExtensionRequest,
 	ExtensionResponse,
 } from "./shared/messages";
-import { isExtensionRequest, MAX_INPUT_LENGTH, validateInput } from "./shared/messages";
+import { clampInput, isExtensionRequest, validateInput } from "./shared/messages";
 
 export {}; // Avoid polluting the global namespace
 
@@ -76,7 +76,20 @@ if (typeof chrome !== "undefined" && chrome.alarms) {
  * time. The header is omitted when the key is absent (never an empty/accidental
  * credential) and the value is never logged.
  */
-async function fetchTranslate(messageText: string): Promise<string | undefined> {
+export const TRANSLATE_MAX_ATTEMPTS = 3;
+export const TRANSLATE_RETRY_DELAYS_MS = [500, 1500] as const;
+
+export type TranslateOutcome =
+	| { ok: true; text: string }
+	| { ok: false; code: "API_ERROR" | "SERVER_ERROR" };
+
+const RETRYABLE_STATUS = new Set([429, 500, 502, 503, 504]);
+
+function delay(ms: number): Promise<void> {
+	return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export async function fetchTranslate(messageText: string): Promise<TranslateOutcome> {
 	const baseUrl = process.env.PLASMO_PUBLIC_BASE_URL || "";
 	const apiKey = process.env.PLASMO_PUBLIC_API_KEY || "";
 	const headers: Record<string, string> = {
@@ -85,37 +98,73 @@ async function fetchTranslate(messageText: string): Promise<string | undefined> 
 	if (apiKey) {
 		headers["Authorization"] = `Bearer ${apiKey}`;
 	}
-	try {
-		const res = await fetch(`${baseUrl}summarizeDocument`, {
-			method: "POST",
-			headers,
-			body: JSON.stringify({
-				documentData: messageText,
-			}),
-		});
 
-		if (res.ok) {
-			const data = await res.json();
-			if (typeof data?.message?.response === "string") {
-				return data.message.response;
-			}
-			// Malformed successful response → structured error, no payload logged.
-			console.error("Malformed API response", { status: res.status });
-			return undefined;
+	let lastCode: "API_ERROR" | "SERVER_ERROR" = "SERVER_ERROR";
+
+	for (let attempt = 0; attempt < TRANSLATE_MAX_ATTEMPTS; attempt++) {
+		if (attempt > 0) {
+			const delayMs =
+				TRANSLATE_RETRY_DELAYS_MS[attempt - 1] ??
+				TRANSLATE_RETRY_DELAYS_MS[TRANSLATE_RETRY_DELAYS_MS.length - 1];
+			await delay(delayMs);
 		}
-	} catch (err) {
-		console.error("Translation API error", err instanceof Error ? err.message : String(err));
+
+		try {
+			const res = await fetch(`${baseUrl}summarizeDocument`, {
+				method: "POST",
+				headers,
+				body: JSON.stringify({
+					documentData: messageText,
+				}),
+			});
+
+			if (res.ok) {
+				const data = await res.json();
+				if (typeof data?.message?.response === "string") {
+					return { ok: true, text: data.message.response };
+				}
+				console.error("Malformed API response", { status: res.status });
+				return { ok: false, code: "SERVER_ERROR" };
+			}
+
+			// Capture worker-provided error detail ({ error, details }) for diagnosis.
+			let detail: unknown = null;
+			try {
+				detail = await res.json();
+			} catch {
+				/* body not JSON */
+			}
+			console.error("Translation API error", {
+				status: res.status,
+				body: detail,
+				attempt: attempt + 1,
+			});
+
+			if (RETRYABLE_STATUS.has(res.status)) {
+				lastCode = "SERVER_ERROR";
+				continue;
+			}
+			return { ok: false, code: "API_ERROR" };
+		} catch (err) {
+			lastCode = "API_ERROR";
+			console.error("Translation network error", {
+				attempt: attempt + 1,
+				error: err instanceof Error ? err.message : String(err),
+			});
+		}
 	}
-	return undefined;
+	return { ok: false, code: lastCode };
 }
 
 export async function processAiRequest(
 	inputText: string
 ): Promise<AiRequestResponse> {
-	const text = validateInput(inputText);
-	if (text === null) {
+	const rawText = validateInput(inputText);
+	if (rawText === null) {
 		return { error: "INVALID_INPUT" };
 	}
+
+	const { text, truncated } = clampInput(rawText);
 
 	return enqueueWrite(async () => {
 		const storageData = await new Promise<{ isOn?: boolean; limit?: number }>((resolve) => {
@@ -136,12 +185,13 @@ export async function processAiRequest(
 		}
 
 		setBadge("AI", "#5c5f66");
-		const translatedText = await fetchTranslate(text);
-		if (!translatedText) {
+		const translateResult = await fetchTranslate(text);
+		if (!translateResult.ok) {
 			setBadge("!", "#e03131");
 			clearBadgeAfter(BADGE_CLEAR_MS);
-			return { error: "API_ERROR" };
+			return { error: translateResult.code };
 		}
+		const translatedText = translateResult.text;
 
 		const data = await new Promise<{ chatRoom?: ChatMessage[] }>((resolve) => {
 			chrome.storage.local.get(["chatRoom"], resolve);
@@ -167,7 +217,7 @@ export async function processAiRequest(
 
 		setBadge("✓", "#2f9e44");
 		clearBadgeAfter(BADGE_CLEAR_MS);
-		return { modifiedText: translatedText };
+		return { modifiedText: translatedText, ...(truncated ? { truncated: true } : {}) };
 	});
 }
 
