@@ -1,12 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ChatMessage } from "../background";
 import {
+	buildTranslateEndpoint,
 	enqueueWrite,
+	fetchTranslate,
+	handleAlarm,
 	MAX_USAGE_LIMIT,
 	processAiRequest,
 	setupAlarms,
-	handleAlarm,
-	fetchTranslate,
 } from "../background";
 
 // ---------------------------------------------------------------------------
@@ -90,6 +91,26 @@ describe("background translation logic", () => {
 
 	afterEach(() => {
 		vi.useRealTimers();
+	});
+
+	it("buildTranslateEndpoint normalizes trailing slash", () => {
+		const expected =
+			"https://clipboard-backend.aieasyuse.workers.dev/summarizeDocument";
+		expect(
+			buildTranslateEndpoint(
+				"https://clipboard-backend.aieasyuse.workers.dev"
+			)
+		).toBe(expected);
+		expect(
+			buildTranslateEndpoint(
+				"https://clipboard-backend.aieasyuse.workers.dev/"
+			)
+		).toBe(expected);
+		expect(
+			buildTranslateEndpoint(
+				"https://clipboard-backend.aieasyuse.workers.dev///"
+			)
+		).toBe(expected);
 	});
 
 	it("fetchTranslate retries on 500 error", async () => {

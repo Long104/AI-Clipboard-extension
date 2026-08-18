@@ -83,6 +83,17 @@ export type TranslateOutcome =
 	| { ok: true; text: string }
 	| { ok: false; code: "API_ERROR" | "SERVER_ERROR" };
 
+/**
+ * Build the absolute summarizeDocument endpoint from the configured base URL.
+ * Normalizes the join so the result is correct whether or not the base URL
+ * carries a trailing slash (e.g. "...workers.dev" or "...workers.dev/").
+ */
+export function buildTranslateEndpoint(
+	baseUrl: string = process.env.PLASMO_PUBLIC_BASE_URL || ""
+): string {
+	return `${baseUrl.replace(/\/+$/, "")}/summarizeDocument`;
+}
+
 const RETRYABLE_STATUS = new Set([429, 500, 502, 503, 504]);
 
 function delay(ms: number): Promise<void> {
@@ -110,7 +121,7 @@ export async function fetchTranslate(messageText: string): Promise<TranslateOutc
 		}
 
 		try {
-			const res = await fetch(`${baseUrl}summarizeDocument`, {
+			const res = await fetch(buildTranslateEndpoint(baseUrl), {
 				method: "POST",
 				headers,
 				body: JSON.stringify({
