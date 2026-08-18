@@ -40,7 +40,6 @@
       "clipboardRead",
       "storage",
       "tabs",
-      "scripting",
       "alarms"
     ]
   }
