@@ -262,7 +262,7 @@ const IndexSidepanel = () => {
 
 	if (loading) {
 		return (
-			<div className="min-h-screen flex flex-col items-center justify-center bg-white dark:bg-slate-950">
+			<div className="h-full flex flex-col items-center justify-center bg-white dark:bg-slate-950">
 				<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
 				<div className="text-sm mt-3 text-slate-500">Loading history...</div>
 			</div>
@@ -270,8 +270,8 @@ const IndexSidepanel = () => {
 	}
 
 	return (
-		<div className="min-h-screen flex flex-col flex-1 relative bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
-			<div className="flex-1 overflow-y-auto overflow-x-hidden px-4 pt-4 pb-20">
+		<div className="h-full flex flex-col relative bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
+			<div className="flex-1 overflow-y-auto overflow-x-hidden px-4 pt-4 pb-4">
 				{!isOn && <DisabledBanner onEnable={() => {
                     chrome.runtime.sendMessage({ type: "TOGGLE_SWITCH", isOn: true });
                     setIsOn(true);
@@ -312,7 +312,7 @@ const IndexSidepanel = () => {
 				<div ref={messagesEndRef} />
 			</div>
 
-			<div className="absolute bottom-0 w-full flex flex-col p-3 bg-white/95 dark:bg-slate-950/95 backdrop-blur-sm border-t border-slate-200 dark:border-slate-800">
+			<div className="shrink-0 w-full flex flex-col p-3 bg-white/95 dark:bg-slate-950/95 backdrop-blur-sm border-t border-slate-200 dark:border-slate-800">
 				<div className="flex justify-between w-full items-center mb-2 px-1">
 					<Button variant="ghost" size="sm" onClick={handleResetHistory} className="text-slate-500 hover:text-slate-900">
 						<RotateCcw size={14} className="mr-1.5" />

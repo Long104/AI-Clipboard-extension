@@ -16,7 +16,7 @@
     "@radix-ui/react-switch": "^1.3.7",
     "clsx": "^2.1.1",
     "lucide-react": "^1.31.0",
-    "plasmo": "0.89.4",
+    "plasmo": "0.90.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "tailwind-merge": "^3.6.0",
@@ -44,7 +44,14 @@
       "clipboardWrite",
       "storage",
       "tabs",
-      "alarms"
-    ]
+      "alarms",
+      "sidePanel"
+    ],
+    "commands": {
+      "toggle-sidepanel": {
+        "suggested_key": { "default": "Alt+C", "mac": "Alt+C" },
+        "description": "Open the AI Clipboard side panel"
+      }
+    }
   }
 }

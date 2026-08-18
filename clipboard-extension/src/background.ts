@@ -5,6 +5,7 @@ import type {
 	ExtensionResponse,
 } from "./shared/messages";
 import { clampInput, isExtensionRequest, validateInput } from "./shared/messages";
+import { isByoActive, parseSettings } from "./shared/settings";
 
 export {}; // Avoid polluting the global namespace
 
@@ -100,7 +101,10 @@ function delay(ms: number): Promise<void> {
 	return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export async function fetchTranslate(messageText: string): Promise<TranslateOutcome> {
+export async function fetchTranslate(
+	messageText: string,
+	byoKey?: string
+): Promise<TranslateOutcome> {
 	const baseUrl = process.env.PLASMO_PUBLIC_BASE_URL || "";
 	const apiKey = process.env.PLASMO_PUBLIC_API_KEY || "";
 	const headers: Record<string, string> = {
@@ -108,6 +112,9 @@ export async function fetchTranslate(messageText: string): Promise<TranslateOutc
 	};
 	if (apiKey) {
 		headers["Authorization"] = `Bearer ${apiKey}`;
+	}
+	if (byoKey) {
+		headers["X-Extension-Key"] = byoKey;
 	}
 
 	let lastCode: "API_ERROR" | "SERVER_ERROR" = "SERVER_ERROR";
@@ -187,9 +194,16 @@ export async function processAiRequest(
 	const { text, truncated } = clampInput(rawText);
 
 	return enqueueWrite(async () => {
-		const storageData = await new Promise<{ isOn?: boolean; limit?: number }>((resolve) => {
-			chrome.storage.local.get(["isOn", "limit"], resolve);
+		const storageData = await new Promise<{
+			isOn?: boolean;
+			limit?: number;
+			settings?: unknown;
+		}>((resolve) => {
+			chrome.storage.local.get(["isOn", "limit", "settings"], resolve);
 		});
+
+		const settings = parseSettings(storageData.settings);
+		const byo = isByoActive(settings);
 
 		const isOn = storageData.isOn ?? true;
 		const limit = storageData.limit || 0;
@@ -198,15 +212,18 @@ export async function processAiRequest(
 			return { error: "DISABLED" };
 		}
 
-		if (limit >= MAX_USAGE_LIMIT) {
+		if (!byo && limit >= MAX_USAGE_LIMIT) {
 			setBadge("!", "#e03131");
 			clearBadgeAfter(BADGE_CLEAR_MS);
 			return { error: "LIMIT_REACHED" };
 		}
 
 		setBadge("AI", "#5c5f66");
-		const translateResult = await fetchTranslate(text);
-		if (!translateResult.ok) {
+		const translateResult = await fetchTranslate(
+			text,
+			byo ? settings.apiKey.trim() : undefined
+		);
+		if (translateResult.ok === false) {
 			setBadge("!", "#e03131");
 			clearBadgeAfter(BADGE_CLEAR_MS);
 			return { error: translateResult.code };
@@ -223,7 +240,7 @@ export async function processAiRequest(
 			{ message: text, sender: "user" },
 			{ message: translatedText, sender: "bot" },
 		];
-		const updatedLimit = limit + 1;
+		const updatedLimit = byo ? limit : limit + 1;
 
 		await new Promise<void>((resolve) => {
 			chrome.storage.local.set(
@@ -300,4 +317,29 @@ if (typeof chrome !== "undefined" && chrome.runtime?.onMessage) {
 			}
 		}
 	);
+}
+
+export async function handleCommand(
+	command: string,
+	openPanel: (windowId: number) => Promise<void> | void
+): Promise<void> {
+	if (command === "toggle-sidepanel") {
+		try {
+			const win = await chrome.windows.getLastFocused();
+			if (win?.id != null) {
+				await openPanel(win.id);
+			}
+		} catch (e) {
+			console.error("Failed to handle command:", e);
+		}
+	}
+}
+
+if (typeof chrome !== "undefined" && chrome.commands?.onCommand) {
+	chrome.commands.onCommand.addListener((command) => {
+		handleCommand(command, (windowId) => {
+			// @ts-ignore sidePanel is not yet in @types/chrome
+			chrome.sidePanel?.open?.({ windowId });
+		});
+	});
 }

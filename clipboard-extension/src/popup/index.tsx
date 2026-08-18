@@ -3,7 +3,7 @@ import "@/style.css";
 import { useEffect, useState } from "react";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { Sparkles, KeyRound } from "lucide-react";
+import { Sparkles, KeyRound, Settings } from "lucide-react";
 import type { ExtensionRequest } from "@/shared/messages";
 
 function IndexPopup() {
@@ -133,10 +133,21 @@ function IndexPopup() {
 								<span className="text-xs text-slate-500 dark:text-slate-400">
 									Usage: 0/10
 								</span>
-								<span className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-400 bg-slate-100 dark:bg-slate-800 rounded-md px-2 py-1">
-									<KeyRound size={11} />
-									Alt+C
-								</span>
+								<div className="flex items-center gap-2">
+									<Button
+										variant="ghost"
+										size="sm"
+										className="h-7 w-7 p-0"
+										onClick={() => chrome.runtime.openOptionsPage()}
+										aria-label="Open settings"
+									>
+										<Settings size={12} />
+									</Button>
+									<span className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-400 bg-slate-100 dark:bg-slate-800 rounded-md px-2 py-1">
+										<KeyRound size={11} />
+										Alt+C
+									</span>
+								</div>
 							</div>
 						</>
 					)}

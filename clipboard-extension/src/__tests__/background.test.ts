@@ -5,6 +5,7 @@ import {
 	enqueueWrite,
 	fetchTranslate,
 	handleAlarm,
+	handleCommand,
 	MAX_USAGE_LIMIT,
 	processAiRequest,
 	setupAlarms,
@@ -215,6 +216,42 @@ describe("background translation logic", () => {
 		const result = await promise;
 		expect(result).toEqual({ ok: false, code: "SERVER_ERROR" });
 	});
+
+	it("fetchTranslate sends X-Extension-Key header when BYO key provided", async () => {
+		vi.stubGlobal(
+			"fetch",
+			vi.fn().mockResolvedValue({
+				ok: true,
+				json: () => Promise.resolve({ message: { response: "ok" } }),
+			})
+		);
+
+		await fetchTranslate("test", "sk-byo-key");
+		expect(fetch).toHaveBeenCalledWith(
+			expect.any(String),
+			expect.objectContaining({
+				headers: expect.objectContaining({ "X-Extension-Key": "sk-byo-key" }),
+			})
+		);
+	});
+
+	it("fetchTranslate omits X-Extension-Key header when no BYO key", async () => {
+		vi.stubGlobal(
+			"fetch",
+			vi.fn().mockResolvedValue({
+				ok: true,
+				json: () => Promise.resolve({ message: { response: "ok" } }),
+			})
+		);
+
+		await fetchTranslate("test");
+		expect(fetch).toHaveBeenCalledWith(
+			expect.any(String),
+			expect.not.objectContaining({
+				headers: expect.objectContaining({ "X-Extension-Key": expect.any(String) }),
+			})
+		);
+	});
 });
 
 describe("background badge feedback", () => {
@@ -392,6 +429,79 @@ describe("background MV3 state management", () => {
 		// Need to wait for the enqueueWrite task
 		await new Promise((resolve) => setTimeout(resolve, 10));
 		expect(testState.storage.limit).toBe(0);
+	});
+});
+
+describe("background BYO mode", () => {
+	beforeEach(() => {
+		resetTestState();
+		vi.stubGlobal("chrome", mockChrome);
+		vi.stubGlobal("fetch", vi.fn());
+	});
+
+	it("BYO mode unlimited requests even at limit", async () => {
+		testState.storage = {
+			settings: {
+				usageMode: "byo",
+				apiKey: "sk-test",
+				overlayEnabled: true,
+				captureOnCopy: true,
+			},
+			limit: 10,
+		};
+		vi.stubGlobal(
+			"fetch",
+			vi.fn().mockResolvedValue({
+				ok: true,
+				json: () => Promise.resolve({ message: { response: "translated" } }),
+			})
+		);
+
+		const result = await processAiRequest("hello");
+		expect(result).toEqual({ modifiedText: "translated" });
+		expect(testState.storage.limit).toBe(10);
+		expect(testState.storage.chatRoom.length).toBe(2);
+	});
+
+	it("BYO mode with blank key falls back to free limit", async () => {
+		testState.storage = {
+			settings: {
+				usageMode: "byo",
+				apiKey: "   ",
+				overlayEnabled: true,
+				captureOnCopy: true,
+			},
+			limit: 10,
+		};
+		const result = await processAiRequest("hello");
+		expect(result).toEqual({ error: "LIMIT_REACHED" });
+	});
+});
+
+describe("background commands", () => {
+	beforeEach(() => {
+		resetTestState();
+		vi.stubGlobal("chrome", mockChrome);
+	});
+
+	it("handleCommand toggle-sidepanel opens panel on last focused window", async () => {
+		const opener = vi.fn();
+		const mockWindows = {
+			...mockChrome,
+			windows: {
+				getLastFocused: vi.fn().mockResolvedValue({ id: 7 }),
+			},
+		};
+		vi.stubGlobal("chrome", mockWindows);
+
+		await handleCommand("toggle-sidepanel", opener);
+		expect(opener).toHaveBeenCalledWith(7);
+	});
+
+	it("handleCommand ignores unknown commands", async () => {
+		const opener = vi.fn();
+		await handleCommand("other", opener);
+		expect(opener).not.toHaveBeenCalled();
 	});
 });
 
