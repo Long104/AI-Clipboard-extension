@@ -6,7 +6,7 @@ export const metadata: Metadata = {
 };
 
 // ---- MUST-EDIT constants (flagged for the user) ----
-const CONTACT_EMAIL = "privacy@example.com"; // TODO(owner): replace with real email before CWS submission
+const CONTACT_EMAIL = "longpantorn@gmail.com";
 const LAST_UPDATED = "August 17, 2026";
 
 export default function PrivacyPage() {
