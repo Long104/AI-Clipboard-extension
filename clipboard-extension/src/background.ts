@@ -1,3 +1,11 @@
+import type {
+	AiRequestError,
+	AiRequestResponse,
+	ExtensionRequest,
+	ExtensionResponse,
+} from "./shared/messages";
+import { isExtensionRequest, MAX_INPUT_LENGTH, validateInput } from "./shared/messages";
+
 export {}; // Avoid polluting the global namespace
 
 export interface ChatMessage {
@@ -63,14 +71,24 @@ if (typeof chrome !== "undefined" && chrome.alarms) {
 	setupAlarms();
 }
 
+/**
+ * Backend request seam: optional API key sourced from the environment at build
+ * time. The header is omitted when the key is absent (never an empty/accidental
+ * credential) and the value is never logged.
+ */
 async function fetchTranslate(messageText: string): Promise<string | undefined> {
 	const baseUrl = process.env.PLASMO_PUBLIC_BASE_URL || "";
+	const apiKey = process.env.PLASMO_PUBLIC_API_KEY || "";
+	const headers: Record<string, string> = {
+		"Content-Type": "application/json",
+	};
+	if (apiKey) {
+		headers["Authorization"] = `Bearer ${apiKey}`;
+	}
 	try {
 		const res = await fetch(`${baseUrl}summarizeDocument`, {
 			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
+			headers,
 			body: JSON.stringify({
 				documentData: messageText,
 			}),
@@ -78,7 +96,12 @@ async function fetchTranslate(messageText: string): Promise<string | undefined> 
 
 		if (res.ok) {
 			const data = await res.json();
-			return data?.message?.response;
+			if (typeof data?.message?.response === "string") {
+				return data.message.response;
+			}
+			// Malformed successful response → structured error, no payload logged.
+			console.error("Malformed API response", { status: res.status });
+			return undefined;
 		}
 	} catch (err) {
 		console.error("Translation API error", err instanceof Error ? err.message : String(err));
@@ -86,9 +109,11 @@ async function fetchTranslate(messageText: string): Promise<string | undefined> 
 	return undefined;
 }
 
-export async function processAiRequest(inputText: string): Promise<{ modifiedText?: string; error?: "DISABLED" | "LIMIT_REACHED" | "API_ERROR" | "INVALID_INPUT" }> {
-	const text = inputText ? inputText.trim() : "";
-	if (!text) {
+export async function processAiRequest(
+	inputText: string
+): Promise<AiRequestResponse> {
+	const text = validateInput(inputText);
+	if (text === null) {
 		return { error: "INVALID_INPUT" };
 	}
 
@@ -146,38 +171,63 @@ export async function processAiRequest(inputText: string): Promise<{ modifiedTex
 	});
 }
 
+function sendSafeResponse(sendResponse: (response: ExtensionResponse) => void): void {
+	sendResponse({ error: "API_ERROR" });
+}
+
 if (typeof chrome !== "undefined" && chrome.runtime?.onMessage) {
-	chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-		if (message.type === "TOGGLE_SWITCH") {
-			const newState = Boolean(message.isOn);
-			enqueueWrite(async () => {
-				await new Promise<void>((resolve) => {
-					chrome.storage.local.set({ isOn: newState }, resolve);
-				});
-			});
-			sendResponse({ success: true });
-			return false;
-		}
+	chrome.runtime.onMessage.addListener(
+		(
+			message: unknown,
+			_sender: chrome.runtime.MessageSender,
+			sendResponse: (response: ExtensionResponse) => void
+		) => {
+			if (!isExtensionRequest(message)) {
+				// Unknown or malformed message: safe no-op, never throw.
+				sendSafeResponse(sendResponse);
+				return false;
+			}
 
-		if (message.type === "RESET_HISTORY") {
-			enqueueWrite(async () => {
-				await new Promise<void>((resolve) => {
-					chrome.storage.local.set({ chatRoom: [] }, resolve);
-				});
-			});
-			sendResponse({ success: true });
-			return false;
-		}
+			switch (message.type) {
+				case "TOGGLE_SWITCH": {
+					enqueueWrite(async () => {
+						await new Promise<void>((resolve) => {
+							chrome.storage.local.set({ isOn: message.isOn }, resolve);
+						});
+					});
+					sendResponse({ success: true });
+					return false;
+				}
 
-		if (message.type === "SELECTED_TEXT" || message.type === "CHAT") {
-			const rawText = message.type === "SELECTED_TEXT" ? message.text : message.chatMessage;
-			processAiRequest(rawText)
-				.then((result) => sendResponse(result))
-				.catch((err) => {
-					console.error("Unhandled error processing request", err instanceof Error ? err.message : String(err));
-					sendResponse({ error: "API_ERROR" });
-				});
-			return true; // Keep channel open for async response
+				case "RESET_HISTORY": {
+					enqueueWrite(async () => {
+						await new Promise<void>((resolve) => {
+							chrome.storage.local.set({ chatRoom: [] }, resolve);
+						});
+					});
+					sendResponse({ success: true });
+					return false;
+				}
+
+				case "SELECTED_TEXT":
+				case "CHAT": {
+					const rawText = message.type === "SELECTED_TEXT" ? message.text : message.chatMessage;
+					// Cap input to the documented finite limit.
+					const text = validateInput(rawText);
+					if (text === null) {
+						sendResponse({ error: "INVALID_INPUT" });
+						return false;
+					}
+					processAiRequest(text)
+						.then((result: AiRequestResponse) => sendResponse(result))
+						.catch(() => {
+							// Structured error, no user content logged.
+							console.error("Unhandled error processing request");
+							sendResponse({ error: "API_ERROR" });
+						});
+					return true; // Keep channel open for async response
+				}
+			}
 		}
-	});
+	);
 }

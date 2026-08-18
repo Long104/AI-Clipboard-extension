@@ -155,8 +155,33 @@ describe("background MV3 state management", () => {
 
 	it("background rejects blank input", async () => {
 		const result = await processAiRequest("");
-		expect(result.error).toBe("INVALID_INPUT");
+		if ("error" in result) {
+			expect(result.error).toBe("INVALID_INPUT");
+		} else {
+			throw new Error("Expected error, got modifiedText");
+		}
 	});
+
+	it("omits Authorization header when API key is missing", async () => {
+		process.env.PLASMO_PUBLIC_API_KEY = "";
+		const mockFetch = vi.fn().mockResolvedValue({ ok: true, json: () => Promise.resolve({ message: { response: "ok" } }) });
+		vi.stubGlobal("fetch", mockFetch);
+		await processAiRequest("test");
+		expect(mockFetch).toHaveBeenCalledWith(expect.any(String), expect.not.objectContaining({
+			headers: expect.objectContaining({ Authorization: expect.any(String) })
+		}));
+	});
+
+	it("includes Authorization header when API key is present", async () => {
+		process.env.PLASMO_PUBLIC_API_KEY = "test-key";
+		const mockFetch = vi.fn().mockResolvedValue({ ok: true, json: () => Promise.resolve({ message: { response: "ok" } }) });
+		vi.stubGlobal("fetch", mockFetch);
+		await processAiRequest("test");
+		expect(mockFetch).toHaveBeenCalledWith(expect.any(String), expect.objectContaining({
+			headers: expect.objectContaining({ Authorization: "Bearer test-key" })
+		}));
+	});
+
 
 	it("background appends one user/bot pair on success", async () => {
 		vi.stubGlobal(
@@ -168,7 +193,11 @@ describe("background MV3 state management", () => {
 		);
 
 		const result = await processAiRequest("hello world");
-		expect(result.modifiedText).toBe("translated");
+		if ("modifiedText" in result) {
+			expect(result.modifiedText).toBe("translated");
+		} else {
+			throw new Error("Expected modifiedText, got error");
+		}
 		expect(testState.storage.limit).toBe(1);
 		expect(testState.storage.chatRoom).toEqual([
 			{ message: "hello world", sender: "user" },
@@ -190,7 +219,11 @@ describe("background MV3 state management", () => {
 		);
 
 		const result = await processAiRequest("test");
-		expect(result.error).toBe("API_ERROR");
+		if ("error" in result) {
+			expect(result.error).toBe("API_ERROR");
+		} else {
+			throw new Error("Expected error, got modifiedText");
+		}
 		expect(testState.storage.limit).toBe(2);
 		expect(testState.storage.chatRoom).toEqual([
 			{ message: "existing", sender: "user" },

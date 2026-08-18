@@ -1,31 +1,35 @@
+import type { ExtensionRequest, AiRequestResponse } from "../shared/messages";
+import { isAiRequestResponse } from "../shared/messages";
+
 export {}; // Avoid polluting the global namespace
 
 function isNonEmptyString(value: unknown): value is string {
 	return typeof value === "string" && value.trim().length > 0;
 }
 
-document.addEventListener("copy", async (event) => {
+document.addEventListener("copy", () => {
 	const selectedText = document.getSelection()?.toString() ?? "";
 	if (!isNonEmptyString(selectedText)) {
 		return;
 	}
-	// Send the selected text to the background script
-	chrome.runtime.sendMessage(
-		{
-			type: "SELECTED_TEXT",
-			text: selectedText,
-		},
-		(response) => {
-			if (response?.modifiedText) {
-				// Use Clipboard API in the content script
-				navigator.clipboard.writeText(response.modifiedText).catch((err) => {
-					console.error("Failed to copy text", err instanceof Error ? err.message : String(err));
-				});
-			} else if (response?.error) {
-				// Show error state to user; no state mutated by content script
-				console.warn("Request failed", response.error);
-			} else {
-				console.warn("Unexpected response format");
-			}
-		});
+
+	const message: ExtensionRequest = {
+		type: "SELECTED_TEXT",
+		text: selectedText,
+	};
+
+	chrome.runtime.sendMessage(message, (response: unknown) => {
+		if (!isAiRequestResponse(response)) {
+			// Malformed/unknown response: safe no-op, no content logged.
+			return;
+		}
+		if ("modifiedText" in response && response.modifiedText) {
+			navigator.clipboard.writeText(response.modifiedText).catch(() => {
+				// Clipboard write failure is non-fatal for the copy flow.
+				console.error("Clipboard write failed");
+			});
+		}
+		// On error responses the content script mutates no state; the side
+		// panel surfaces user-safe messaging.
 	});
+});

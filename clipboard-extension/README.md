@@ -11,7 +11,7 @@ npm run dev
 ```
 
 Open your browser and load the appropriate development build. For example, if you are developing for the chrome browser, using manifest v3, use: `build/chrome-mv3-dev`.
-You can start editing the popup by modifying `popup.tsx`. It should auto-update as you make changes. To add an options page, simply add a `options.tsx` file to the root of the project, with a react component default exported. Likewise to add a content page, add a `content.ts` file to the root of the project, importing some module and do some logic, then reload the extension on your browser.
+You can start editing the popup by modifying `popup.tsx`. It should auto-update as you make changes. To add a content page, add a `content.ts` file to the root of the project, importing some module and do some logic, then reload the extension on your browser.
 
 For further guidance, [visit our Documentation](https://docs.plasmo.com/)
 
@@ -22,6 +22,7 @@ Before building the extension, you must set up the backend URL. The extension ca
 ```bash
 # In clipboard-extension/.env
 PLASMO_PUBLIC_BASE_URL=https://clipboard-backend.aieasyuse.workers.dev
+# Optional: PLASMO_PUBLIC_API_KEY=
 ```
 
 ## Making production build

@@ -1,23 +1,24 @@
 import React from "react";
-import "@/style.css";
-import "@/button.css";
+import { Switch } from "@mantine/core";
 
-const But = ({ isOn, toggleSwitch }) => {
+interface ButProps {
+	isOn: boolean;
+	toggleSwitch: () => void;
+}
+
+const But: React.FC<ButProps> = ({ isOn, toggleSwitch }) => {
 	return (
-		<div className=" flex flex-grow items-center justify-center">
-			<button className="toggle">
-				<input
-					type="checkbox"
-					id="btn"
-					checked={isOn}
-					onChange={toggleSwitch}
-				/>
-				<label htmlFor="btn">
-					<span className="thumb"></span>
-				</label>
-				<div className="light"></div>
-			</button>
+		<div className="flex items-center justify-center p-2">
+			<Switch
+				checked={isOn}
+				onChange={toggleSwitch}
+				size="lg"
+				color="blue"
+				label={isOn ? "Extension Enabled" : "Extension Paused"}
+				aria-label="Toggle AI Clipboard extension on or off"
+			/>
 		</div>
 	);
 };
+
 export default But;
