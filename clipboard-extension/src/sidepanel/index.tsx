@@ -184,7 +184,7 @@ const IndexSidepanel = () => {
 
 	return (
 		<div className="h-full flex flex-col relative bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
-			<div className="flex-1 overflow-y-auto overflow-x-hidden px-4 pt-4 pb-4">
+			<div className="flex-1 overflow-y-auto overflow-x-hidden overscroll-contain px-4 pt-4 pb-4">
 				{!isOn && <DisabledBanner onEnable={() => {
                     chrome.runtime.sendMessage({ type: "TOGGLE_SWITCH", isOn: true });
                     setIsOn(true);

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { shouldCaptureCopy, CAPTURE_MIN_LENGTH } from "../shared/capture";
+import { shouldCaptureCopy, shouldShowPill, CAPTURE_MIN_LENGTH } from "../shared/capture";
 
 describe("capture logic", () => {
 	describe("shouldCaptureCopy", () => {
@@ -37,6 +37,22 @@ describe("capture logic", () => {
 			expect(shouldCaptureCopy(text, true)).toBe(true);
 			const shortText = `   ${"a".repeat(CAPTURE_MIN_LENGTH)}   `;
 			expect(shouldCaptureCopy(shortText, true)).toBe(false);
+		});
+	});
+
+	describe("shouldShowPill", () => {
+		it("should return false for <= 5 characters", () => {
+			expect(shouldShowPill("")).toBe(false);
+			expect(shouldShowPill("12345")).toBe(false);
+		});
+
+		it("should return true for > 5 characters", () => {
+			expect(shouldShowPill("123456")).toBe(true);
+		});
+
+		it("should trim the text before checking length", () => {
+			expect(shouldShowPill("   123456   ")).toBe(true);
+			expect(shouldShowPill("   12345   ")).toBe(false);
 		});
 	});
 });

@@ -28,6 +28,51 @@ export type PopoverResult = {
 	at: number;
 };
 
+// --- REDUCER STATE ---
+export type PopoverState =
+	| { status: "idle" }
+	| { status: "loading"; request: PopoverRequest }
+	| { status: "done"; request: PopoverRequest; result: string; truncated: boolean }
+	| { status: "error"; request: PopoverRequest; code: string };
+
+export type TabFrameInfo = { tabId: number | null; frameId: number };
+
+export function applyPopoverRequest(
+	current: PopoverState,
+	req: PopoverRequest | undefined,
+	info: TabFrameInfo
+): PopoverState {
+	if (!req) return current;
+	if (req.tabId !== info.tabId || req.frameId !== info.frameId) return current;
+	if (current.status === "loading" && current.request.requestId === req.requestId) return current;
+	return { status: "loading", request: req };
+}
+
+export function applyPopoverResult(
+	current: PopoverState,
+	res: PopoverResult | undefined,
+	info: TabFrameInfo
+): PopoverState {
+	if (!res || current.status !== "loading") return current; // DOMAIN INVARIANT: only a pending load accepts a result
+	if (res.requestId !== current.request.requestId) return current; // stale-result guard
+	if (res.tabId !== info.tabId || res.frameId !== info.frameId) return current;
+	if (res.ok && res.text) {
+		return { status: "done", request: current.request, result: res.text, truncated: !!res.truncated };
+	}
+	return { status: "error", request: current.request, code: res.error || "API_ERROR" };
+}
+
+export function applyPopoverStorageChanges(
+	current: PopoverState,
+	changes: { [key: string]: chrome.storage.StorageChange },
+	info: TabFrameInfo
+): PopoverState {
+	const req = changes[POPOVER_REQUEST_KEY]?.newValue as PopoverRequest | undefined;
+	const res = changes[POPOVER_RESULT_KEY]?.newValue as PopoverResult | undefined;
+	return applyPopoverResult(applyPopoverRequest(current, req, info), res, info);
+}
+
+// --- ORIGINAL EXPORTS ---
 export function buildRequestId(): string {
 	// crypto.randomUUID is available in MV3 content scripts; fallback for safety
 	return typeof crypto !== "undefined" && "randomUUID" in crypto

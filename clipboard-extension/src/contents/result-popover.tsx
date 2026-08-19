@@ -11,8 +11,12 @@ import {
 	POPOVER_REQUEST_KEY,
 	POPOVER_RESULT_KEY,
 	triggerAiAction,
+	applyPopoverResult,
+	applyPopoverStorageChanges,
 	type PopoverRequest,
 	type PopoverResult,
+	type PopoverState,
+	type TabFrameInfo,
 } from "@/shared/popover";
 import { computePlacement, POPOVER_MAX_HEIGHT, POPOVER_WIDTH } from "@/shared/popover-position";
 
@@ -24,17 +28,15 @@ export const getStyle = () => {
 	return style;
 };
 
-type PopoverState =
-	| { status: "idle" }
-	| { status: "loading"; request: PopoverRequest }
-	| { status: "done"; request: PopoverRequest; result: string; truncated: boolean }
-	| { status: "error"; request: PopoverRequest; code: string };
+type PopoverState = import("@/shared/popover").PopoverState;
 
 export default function ResultPopover() {
 	const [state, setState] = useState<PopoverState>({ status: "idle" });
+	const stateRef = useRef(state);
+	stateRef.current = state;
 	const [copied, setCopied] = useState(false);
 	const cardRef = useRef<HTMLDivElement>(null);
-	const tabInfoRef = useRef<{ tabId: number | null; frameId: number } | null>(null);
+	const tabInfoRef = useRef<TabFrameInfo | null>(null);
 
 	// 1. Get own tab/frame ID on mount
 	useEffect(() => {
@@ -42,53 +44,44 @@ export default function ResultPopover() {
 			if (chrome.runtime.lastError || !res) return;
 			tabInfoRef.current = { tabId: res.tabId, frameId: res.frameId };
 
-			// Check for a fresh request that may have arrived before we were ready
-			chrome.storage.local.get([POPOVER_REQUEST_KEY], (storage) => {
+			// Hydrate: check for a fresh request (and possibly an already-written result)
+			// that may have arrived before we were ready to listen.
+			chrome.storage.local.get([POPOVER_REQUEST_KEY, POPOVER_RESULT_KEY], (storage) => {
 				const req = storage[POPOVER_REQUEST_KEY] as PopoverRequest | undefined;
 				if (
-					req &&
-					req.tabId === res.tabId &&
-					req.frameId === res.frameId &&
-					Date.now() - req.at < 30000
+					!req ||
+					req.tabId !== res.tabId ||
+					req.frameId !== res.frameId ||
+					Date.now() - req.at >= 30000
 				) {
-					setState({ status: "loading", request: req });
+					return;
 				}
+				const info = { tabId: res.tabId, frameId: res.frameId };
+				const next = applyPopoverResult(
+					{ status: "loading", request: req },
+					storage[POPOVER_RESULT_KEY] as PopoverResult | undefined,
+					info
+				);
+				stateRef.current = next;
+				setState(next);
 			});
 		});
 	}, []);
 
-	// 2. Listen for storage changes
+	// 2. Listen for storage changes (stable subscription; reads latest state via ref)
 	useEffect(() => {
 		const handleStorage = (changes: { [key: string]: chrome.storage.StorageChange }) => {
-			if (!tabInfoRef.current) return;
-			const { tabId, frameId } = tabInfoRef.current;
-
-			if (changes[POPOVER_REQUEST_KEY]) {
-				const req = changes[POPOVER_REQUEST_KEY].newValue as PopoverRequest;
-				if (req.tabId === tabId && req.frameId === frameId) {
-					setState({ status: "loading", request: req });
-				}
-			}
-
-			if (changes[POPOVER_RESULT_KEY] && state.status !== "idle") {
-				const res = changes[POPOVER_RESULT_KEY].newValue as PopoverResult;
-				if (
-					res.requestId === state.request.requestId &&
-					res.tabId === tabId &&
-					res.frameId === frameId
-				) {
-					if (res.ok && res.text) {
-						setState({ status: "done", request: state.request, result: res.text, truncated: !!res.truncated });
-					} else {
-						setState({ status: "error", request: state.request, code: res.error || "API_ERROR" });
-					}
-				}
+			const info = tabInfoRef.current;
+			if (!info) return;
+			const next = applyPopoverStorageChanges(stateRef.current, changes, info);
+			if (next !== stateRef.current) {
+				stateRef.current = next;
+				setState(next);
 			}
 		};
-
 		chrome.storage.onChanged.addListener(handleStorage);
 		return () => chrome.storage.onChanged.removeListener(handleStorage);
-	}, [state]);
+	}, []);
 
 	// 3. Handle dismissals
 	const dismiss = useCallback(() => setState({ status: "idle" }), []);
