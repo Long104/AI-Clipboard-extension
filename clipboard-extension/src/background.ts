@@ -290,17 +290,27 @@ if (typeof chrome !== "undefined" && chrome.runtime?.onMessage) {
 				case "OPEN_SIDEPANEL": {
 					(async () => {
 						try {
-							const win = await chrome.windows.getLastFocused();
-							if (win?.id != null) {
+							// Gesture-safe path: use the tabId from the content script that
+							// sent the message. This preserves the user gesture.
+							if (sender?.tab?.id != null) {
 								// @ts-ignore sidePanel is not yet in @types/chrome
-								await chrome.sidePanel?.open?.({ windowId: win.id });
+								await chrome.sidePanel?.open?.({ tabId: sender.tab.id });
+								sendResponse({ success: true });
+							} else {
+								// Fallback for context without a tab (e.g. extension popups)
+								const win = await chrome.windows.getLastFocused();
+								if (win?.id != null) {
+									// @ts-ignore sidePanel is not yet in @types/chrome
+									await chrome.sidePanel?.open?.({ windowId: win.id });
+									sendResponse({ success: true });
+								}
 							}
-						} catch {
-							/* best-effort: panel also reachable via Alt+C */
+						} catch (e) {
+							console.error("Side panel open failed:", e);
+							sendResponse({ success: false, error: "SIDEPANEL_ERROR" });
 						}
-						sendResponse({ success: true });
 					})();
-					return true;
+					return true; // async
 				}
 
 				case "AI_ACTION": {
@@ -390,13 +400,19 @@ if (typeof chrome !== "undefined" && chrome.runtime?.onMessage) {
 
 export async function handleCommand(
 	command: string,
-	openPanel: (windowId: number) => Promise<void> | void
+	openPanel: (options: { tabId?: number; windowId?: number }) => Promise<void> | void
 ): Promise<void> {
 	if (command === "toggle-sidepanel") {
 		try {
-			const win = await chrome.windows.getLastFocused();
-			if (win?.id != null) {
-				await openPanel(win.id);
+			// Commands are user gestures; preference is active tabId
+			const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+			if (tab?.id != null) {
+				await openPanel({ tabId: tab.id });
+			} else {
+				const win = await chrome.windows.getLastFocused();
+				if (win?.id != null) {
+					await openPanel({ windowId: win.id });
+				}
 			}
 		} catch (e) {
 			console.error("Failed to handle command:", e);
@@ -406,9 +422,9 @@ export async function handleCommand(
 
 if (typeof chrome !== "undefined" && chrome.commands?.onCommand) {
 	chrome.commands.onCommand.addListener((command) => {
-		handleCommand(command, (windowId) => {
+		handleCommand(command, (target) => {
 			// @ts-ignore sidePanel is not yet in @types/chrome
-			chrome.sidePanel?.open?.({ windowId });
+			chrome.sidePanel?.open?.(target);
 		});
 	});
 }

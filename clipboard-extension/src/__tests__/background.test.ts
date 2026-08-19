@@ -19,6 +19,7 @@ const testState = {
 	storage: {} as Record<string, any>,
 	storageListeners: [] as Array<(changes: any, area: string) => void>,
 	messageListeners: [] as Array<(message: any, sender: any, sendResponse: any) => void>,
+	commandListeners: [] as Array<(command: string) => void>,
 };
 
 function resetTestState() {
@@ -81,6 +82,16 @@ const mockChrome = {
 	},
 	sidePanel: {
 		open: vi.fn().mockResolvedValue(undefined),
+	},
+	tabs: {
+		query: vi.fn().mockResolvedValue([]),
+	},
+	commands: {
+		onCommand: {
+			addListener: (listener: (command: string) => void) => {
+				testState.commandListeners.push(listener);
+			},
+		},
 	},
 	action: {
 		setBadgeText: vi.fn(),
@@ -494,24 +505,76 @@ describe("background commands", () => {
 		vi.stubGlobal("chrome", mockChrome);
 	});
 
-	it("handleCommand toggle-sidepanel opens panel on last focused window", async () => {
+	it("handleCommand toggle-sidepanel opens panel with tabId", async () => {
 		const opener = vi.fn();
+		const mockTabs = [
+			{ id: 7, index: 0, windowId: 7, selected: true, url: "https://example.com", title: "test" },
+		];
 		const mockWindows = {
 			...mockChrome,
+			tabs: {
+				query: vi.fn().mockResolvedValue(mockTabs),
+			},
 			windows: {
 				getLastFocused: vi.fn().mockResolvedValue({ id: 7 }),
 			},
 		};
 		vi.stubGlobal("chrome", mockWindows);
-
+		
 		await handleCommand("toggle-sidepanel", opener);
-		expect(opener).toHaveBeenCalledWith(7);
+		expect(opener).toHaveBeenCalledWith({ tabId: 7 });
 	});
 
-	it("handleCommand ignores unknown commands", async () => {
+	it("handleCommand toggle-sidepanel opens panel with windowId when no active tab", async () => {
 		const opener = vi.fn();
-		await handleCommand("other", opener);
-		expect(opener).not.toHaveBeenCalled();
+		const mockTabs = [];
+		const mockWindows = {
+			...mockChrome,
+			tabs: {
+				query: vi.fn().mockResolvedValue(mockTabs),
+			},
+			windows: {
+				getLastFocused: vi.fn().mockResolvedValue({ id: 7 }),
+			},
+		};
+		vi.stubGlobal("chrome", mockWindows);
+		
+		await handleCommand("toggle-sidepanel", opener);
+		expect(opener).toHaveBeenCalledWith({ windowId: 7 });
+	});
+});
+
+describe("background commands.onCommand listener", () => {
+	beforeEach(() => {
+		resetTestState();
+		vi.stubGlobal("chrome", mockChrome);
+		vi.stubGlobal("fetch", vi.fn());
+		vi.mocked(mockChrome.sidePanel.open).mockClear();
+		vi.mocked(mockChrome.tabs.query).mockReset().mockResolvedValue([]);
+		vi.resetModules();
+	});
+
+	it("registers onCommand listener and opens sidepanel via tabId", async () => {
+		await import("../background");
+		const listener = testState.commandListeners[0];
+		expect(listener).toBeDefined();
+
+		vi.mocked(mockChrome.tabs.query).mockResolvedValue([{ id: 33 }] as any);
+		await listener("toggle-sidepanel");
+
+		expect(mockChrome.tabs.query).toHaveBeenCalledWith({
+			active: true,
+			currentWindow: true,
+		});
+		expect(mockChrome.sidePanel.open).toHaveBeenCalledWith({ tabId: 33 });
+	});
+
+	it("ignores unknown commands via onCommand listener", async () => {
+		await import("../background");
+		const listener = testState.commandListeners[0];
+
+		await listener("other-command");
+		expect(mockChrome.sidePanel.open).not.toHaveBeenCalled();
 	});
 });
 
@@ -596,10 +659,24 @@ describe("background AI message relay", () => {
 		const listener = testState.messageListeners[0];
 		
 		const response = await new Promise((resolve) => {
+			listener({ type: "OPEN_SIDEPANEL" }, { tab: { id: 99 }, frameId: 1 }, resolve);
+		});
+		expect(response).toEqual({ success: true });
+		expect(mockChrome.sidePanel.open).toHaveBeenCalledWith({ tabId: 99 });
+	});
+
+	it("OPEN_SIDEPANEL responds success with windowId when tabId not available", async () => {
+		const { processAiRequest: _ } = await import("../background");
+		const listener = testState.messageListeners[0];
+		
+		// Mock windows.getLastFocused
+		vi.mocked(mockChrome.windows.getLastFocused).mockResolvedValueOnce({ id: 42 });
+		
+		const response = await new Promise((resolve) => {
 			listener({ type: "OPEN_SIDEPANEL" }, {}, resolve);
 		});
 		expect(response).toEqual({ success: true });
-		expect(mockChrome.sidePanel.open).toHaveBeenCalled();
+		expect(mockChrome.sidePanel.open).toHaveBeenCalledWith({ windowId: 42 });
 	});
 
 	it("AI_ACTION empty text writes nothing", async () => {
