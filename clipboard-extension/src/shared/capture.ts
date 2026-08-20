@@ -1,6 +1,6 @@
 import { validateInput } from "./messages";
 
-export const CAPTURE_MIN_LENGTH = 5;
+export const CAPTURE_MIN_LENGTH = 1;
 export const TOAST_CAPTURING_MS = 600;
 export const TOAST_AUTO_DISMISS_MS = 5000;
 

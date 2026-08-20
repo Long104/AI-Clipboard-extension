@@ -12,7 +12,7 @@ describe("capture logic", () => {
 		});
 
 		it("should return false for text shorter than the minimum length", () => {
-			expect(shouldCaptureCopy("short", true)).toBe(false);
+			expect(shouldCaptureCopy("a", true)).toBe(false);
 		});
 
 		it("should return true for text exactly at the boundary length + 1", () => {
@@ -41,18 +41,19 @@ describe("capture logic", () => {
 	});
 
 	describe("shouldShowPill", () => {
-		it("should return false for <= 5 characters", () => {
+		it("should return false for empty or single characters", () => {
 			expect(shouldShowPill("")).toBe(false);
-			expect(shouldShowPill("12345")).toBe(false);
+			expect(shouldShowPill("1")).toBe(false);
 		});
 
-		it("should return true for > 5 characters", () => {
-			expect(shouldShowPill("123456")).toBe(true);
+		it("should return true for 2+ characters", () => {
+			expect(shouldShowPill("12")).toBe(true);
+			expect(shouldShowPill("this")).toBe(true);
 		});
 
 		it("should trim the text before checking length", () => {
-			expect(shouldShowPill("   123456   ")).toBe(true);
-			expect(shouldShowPill("   12345   ")).toBe(false);
+			expect(shouldShowPill("   123   ")).toBe(true);
+			expect(shouldShowPill("   1   ")).toBe(false);
 		});
 	});
 });
