@@ -33,7 +33,7 @@ cd AI-Clipboard-extension/clipboard-extension
 # 2. Install dependencies
 pnpm install
 
-# 3. Build production bundle
+# 3. Build production bundle (Chrome)
 pnpm build
 ```
 
@@ -45,13 +45,27 @@ pnpm build
 4. Select `clipboard-extension/build/chrome-mv3-prod/`.
 5. Pin the extension icon and press `Alt+C` (or `Option+C`) to open the AI Sidepanel.
 
+### Loading in Firefox
+
+```bash
+# Build the Firefox bundle (Manifest V3 with sidebar_action)
+pnpm build_firefox
+```
+
+1. Open Firefox and navigate to `about:debugging#/runtime/this-firefox`.
+2. Click **Load Temporary Add-on…**.
+3. Select the manifest inside `clipboard-extension/build/firefox-mv3-prod/`.
+4. Open the sidebar with the toolbar icon or press `Alt+C`.
+
+> Temporary add-ons are removed on Firefox restart — install the signed version from [Firefox Add-ons (AMO)](https://addons.mozilla.org/) for permanent use (the gecko ID is pre-configured in `package.json`).
+
 ---
 
 ## 🛠️ Architecture
 
 Monorepo workspace structure:
 
-- `clipboard-extension/` — Chrome Extension Manifest V3 built with Plasmo framework, React 18, Tailwind CSS, Lucide icons.
+- `clipboard-extension/` — Browser extension (Chrome & Firefox) — Manifest V3, built with Plasmo framework, React 18, Tailwind CSS, Lucide icons. Chrome uses the Side Panel API; Firefox uses the Sidebar API (`sidebar_action`) — same codebase, per-target builds.
 - `clipboard-backend/` — Cloudflare Workers AI backend running `@cf/meta/llama-3.3-70b-instruct-sd`.
 - `clipboard-web/` — Web landing page.
 
