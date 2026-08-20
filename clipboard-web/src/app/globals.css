@@ -3,19 +3,100 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Surface Ladder */
+  --bg-canvas: #07080a;
+  --bg-surface-1: #0e1015;
+  --bg-surface-2: #14171f;
+  --bg-surface-3: #1c1f26;
+  --bg-surface-card: #0d0f14;
+  --bg-surface-popover: #0f1219;
+
+  /* Hairline Borders */
+  --border-hairline: #222733;
+  --border-hairline-strong: #2e3545;
+  --border-hairline-hover: #3d465c;
+
+  /* Ink Hierarchy */
+  --text-primary: #f3f5f8;
+  --text-secondary: #a1a7b5;
+  --text-tertiary: #687082;
+  --text-disabled: #434957;
+
+  /* The Electric Lime CTA Accent */
+  --accent-lime: #d4ff32;
+  --accent-lime-hover: #e2ff66;
+  --accent-lime-active: #c2eb24;
+  --accent-lime-fg: #07080a;
+  --accent-lime-glow: rgba(212, 255, 50, 0.12);
+  --accent-lime-ring: rgba(212, 255, 50, 0.35);
+
+  /* Semantic Highlights */
+  --semantic-green: #22c55e;
+  --semantic-blue: #3b82f6;
+  --semantic-amber: #f59e0b;
+  --semantic-red: #ef4444;
+
+  /* Standard Radii */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-full: 9999px;
+
+  /* Spacing */
+  --section-y: 96px;
+  --section-y-mobile: 64px;
+  --container-max: 1200px;
+  --container-px: 24px;
+  --container-px-mobile: 16px;
+  --grid-gap: 20px;
+  --grid-gap-sm: 12px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--bg-canvas);
+    color: var(--text-primary);
+    font-family: var(--font-geist-sans), Inter, -apple-system, BlinkMacSystemFont,
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--accent-lime);
+    color: var(--accent-lime-fg);
+  }
+
+  /* Tabular figures on all badges, quotas, and shortcuts */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Keyboard focus: strict ring on canvas offset */
+  :focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--accent-lime-ring);
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  /* Reduced motion: all transforms collapse to opacity crossfades */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
