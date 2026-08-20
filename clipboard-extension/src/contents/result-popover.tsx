@@ -28,8 +28,6 @@ export const getStyle = () => {
 	return style;
 };
 
-type PopoverState = import("@/shared/popover").PopoverState;
-
 export default function ResultPopover() {
 	const [state, setState] = useState<PopoverState>({ status: "idle" });
 	const stateRef = useRef(state);
