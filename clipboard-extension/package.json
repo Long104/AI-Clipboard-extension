@@ -44,14 +44,23 @@
       "clipboardWrite",
       "storage",
       "tabs",
-      "alarms",
-      "sidePanel"
+      "alarms"
     ],
     "commands": {
       "toggle-sidepanel": {
         "suggested_key": { "default": "Alt+C", "mac": "Alt+C" },
         "description": "Open the AI Clipboard side panel"
       }
+    },
+    "browser_specific_settings": {
+      "gecko": {
+        "id": "ai-clipboard@satori.example",
+        "strict_min_version": "109.0"
+      }
+    },
+    "sidebar_action": {
+      "default_panel": "sidepanel.html",
+      "default_title": "AI Clipboard"
     }
   }
 }

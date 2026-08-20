@@ -404,14 +404,23 @@ export async function handleCommand(
 ): Promise<void> {
 	if (command === "toggle-sidepanel") {
 		try {
-			// Commands are user gestures; preference is active tabId
-			const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-			if (tab?.id != null) {
-				await openPanel({ tabId: tab.id });
+			// Chrome sidePanel (MV3) vs Firefox sidebarAction
+			if (globalThis.browser?.sidebarAction) {
+				if (typeof globalThis.browser.sidebarAction.toggle === "function") {
+					await globalThis.browser.sidebarAction.toggle();
+				} else {
+					await globalThis.browser.sidebarAction.open();
+				}
 			} else {
-				const win = await chrome.windows.getLastFocused();
-				if (win?.id != null) {
-					await openPanel({ windowId: win.id });
+				// Commands are user gestures; preference is active tabId
+				const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+				if (tab?.id != null) {
+					await openPanel({ tabId: tab.id });
+				} else {
+					const win = await chrome.windows.getLastFocused();
+					if (win?.id != null) {
+						await openPanel({ windowId: win.id });
+					}
 				}
 			}
 		} catch (e) {

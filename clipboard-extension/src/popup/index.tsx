@@ -27,6 +27,12 @@ function IndexPopup() {
 
 	const openSidePanel = async () => {
 		try {
+			// Firefox uses sidebarAction, Chrome uses sidePanel
+			if (globalThis.browser?.sidebarAction) {
+				await globalThis.browser.sidebarAction.open();
+				window.close();
+				return;
+			}
 			const [currentTab] = await chrome.tabs.query({
 				active: true,
 				currentWindow: true,
