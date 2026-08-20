@@ -1,56 +1,62 @@
-# Clipboard-ai-extension
+# AI Clipboard — Copy & Understand
 
-## Write your note and understand concept faster than ever with Clipboard AI extension with the lastest model llama3.3 and chat side bar.
-###  Have you ever experienced moments in class when it’s hard to keep up with the pace? Maybe you’re taking notes, and before you finish, the topic has already changed. With this tool, you can stay on track with class exercises and gain a better understanding of complex or technical topics that are often difficult to grasp in real time
+> Understand anything faster than ever. Select text or copy (`Ctrl+C` / `Cmd+C`), and get instant AI explanations right on the page or inside your side panel. Powered by Meta Llama 3.3 70B & Cloudflare Workers AI.
 
-## Help you understand anything by copying !!!
+![Demo](https://github.com/user-attachments/assets/96e18b12-1c50-45c7-8caf-565467eab06e)
 
-## Just by cmd + c (mac) / win + c (window) it will summarize word / text / sentence you hover
+---
 
-## Demo
+## ✨ Features
 
-https://github.com/user-attachments/assets/96e18b12-1c50-45c7-8caf-565467eab06e
+- 💡 **Inline Result Popover (macOS Look Up style)** — Click *Explain* or *Summarize* on selected text to get an instant floating AI card right next to your selection, with `✕` close, Copy, and *Open in Chat*.
+- 📋 **Copy Capture Toast** — Press `Ctrl+C` / `Cmd+C` on any text → top-right corner toast appears with instant *Explain* & *Summarize* actions.
+- 💬 **Interactive AI Side Panel** — Ask follow-up questions, dive deeper into technical concepts, or chat freely with your AI assistant. Toggle anytime with `Alt+C` (or `Option+C`).
+- ⚙️ **Settings & Custom Keys** — BYO API Key mode for unlimited usage, or use free worker mode (10 requests / 2 hours). Toggle overlay pill and copy toast on/off.
+- 🎨 **Linear/Raycast Minimal UI** — Built with Geist typography, slate palette, and modern shadcn design tokens.
 
-## Install
+---
 
-## requirement
-node 22+
-pnpm 
-wrangler command + cloudflare account
+## 🚀 Quick Setup (Development / Load Unpacked)
 
-### step by step setup
+### Requirements
+
+- **Node.js**: 18+
+- **Package Manager**: `pnpm`
+
+### Installation
 
 ```bash
+# 1. Clone repo
 git clone https://github.com/Long104/AI-Clipboard-extension.git
-cd clipboard-extension
-pnpm approve-bulids
+cd AI-Clipboard-extension/clipboard-extension
+
+# 2. Install dependencies
 pnpm install
+
+# 3. Build production bundle
 pnpm build
 ```
-- Enable developer mode
-<img width="181" height="60" alt="Screenshot 2569-08-09 at 02 29 13" src="https://github.com/user-attachments/assets/024c86c1-13e2-4f89-8852-9a5a73888c14" />
 
-- Load unpacked
-<img width="161" height="61" alt="Screenshot 2569-08-09 at 02 31 35" src="https://github.com/user-attachments/assets/8d7ae808-9176-41a5-a86a-05bc18d743e1" />
+### Loading in Chrome
 
-- select build - chrome-mp3-prod
-<img width="676" height="364" alt="Screenshot 2569-08-09 at 02 32 13" src="https://github.com/user-attachments/assets/03a15dc7-374a-4bb6-9084-bf6a949aae76" />
+1. Open Chrome and navigate to `chrome://extensions`.
+2. Enable **Developer mode** (top-right toggle).
+3. Click **Load unpacked**.
+4. Select `clipboard-extension/build/chrome-mv3-prod/`.
+5. Pin the extension icon and press `Alt+C` (or `Option+C`) to open the AI Sidepanel.
 
+---
 
-## Get started
+## 🛠️ Architecture
 
-Pin the extension 
-<img width="404" height="213" alt="Screenshot 2569-08-09 at 02 38 52" src="https://github.com/user-attachments/assets/d470dd3e-1c0b-40a7-b17b-5802fbbd347b" />
+Monorepo workspace structure:
 
-Toggle close and open the button 
-<img width="254" height="284" alt="Screenshot 2569-08-09 at 02 37 57" src="https://github.com/user-attachments/assets/9fbbc20e-a8a5-4c24-b3f9-0d7090f5b63e" />
-<img width="266" height="287" alt="Screenshot 2569-08-09 at 02 38 05" src="https://github.com/user-attachments/assets/ea2ba237-ef86-4ef0-9444-87458ca03576" />
+- `clipboard-extension/` — Chrome Extension Manifest V3 built with Plasmo framework, React 18, Tailwind CSS, Lucide icons.
+- `clipboard-backend/` — Cloudflare Workers AI backend running `@cf/meta/llama-3.3-70b-instruct-sd`.
+- `clipboard-web/` — Web landing page.
 
-reload the page then start using it
-hover word / text / sentence and Copy ( cmd + c (mac) / win + c (window) ) it will help you understand anything
+---
 
-# Eureka !!!
+## 📄 License
 
-
-
-
+MIT © [Long104](https://github.com/Long104)
