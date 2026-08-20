@@ -115,28 +115,28 @@ export default function FloatingActionPill() {
 			className="fixed z-[99999] -translate-x-1/2 animate-in fade-in zoom-in-95 duration-150"
 			style={{ top: position.top, left: position.left }}
 		>
-			<div className="flex items-center gap-1.5 rounded-full bg-slate-900/90 text-white backdrop-blur-md border border-slate-700/50 px-3 py-1.5 shadow-xl">
-				<button
-					onClick={() => handleAction("explain")}
-					className="flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-medium text-slate-200 hover:bg-slate-800"
-				>
-					<Sparkles size={14} /> Explain
-				</button>
-				<div className="h-4 w-px bg-slate-800" />
-				<button
-					onClick={() => handleAction("summarize")}
-					className="flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-medium text-slate-200 hover:bg-slate-800"
-				>
-					<FileText size={14} /> Summarize
-				</button>
-				<div className="h-4 w-px bg-slate-800" />
-				<button
-					onClick={() => handleAction("copy")}
-					className="flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-medium text-slate-200 hover:bg-slate-800"
-				>
-					{copied ? <Check size={14} /> : <Copy size={14} />} Copy
-				</button>
-			</div>
+		<div className="flex items-center gap-1.5 rounded-full bg-white/95 text-slate-900 backdrop-blur-md border border-slate-200 px-3 py-1.5 shadow-xl">
+			<button
+				onClick={() => handleAction("explain")}
+				className="flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-100"
+			>
+				<Sparkles size={14} /> Explain
+			</button>
+			<div className="h-4 w-px bg-slate-200" />
+			<button
+				onClick={() => handleAction("summarize")}
+				className="flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-100"
+			>
+				<FileText size={14} /> Summarize
+			</button>
+			<div className="h-4 w-px bg-slate-200" />
+			<button
+				onClick={() => handleAction("copy")}
+				className="flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-medium text-slate-600 hover:bg-slate-100"
+			>
+				{copied ? <Check size={14} /> : <Copy size={14} />} Copy
+			</button>
+		</div>
 		</div>
 	);
 }
