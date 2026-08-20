@@ -8,7 +8,7 @@
     "dev": "plasmo dev",
     "reload": "rm -rf build && plasmo dev",
     "build": "plasmo build",
-    "build_firefox": "plasmo build --zip --target=firefox-mv2",
+    "build_firefox": "plasmo build --zip --target=firefox-mv3",
     "package": "plasmo package",
     "test": "vitest run"
   },
@@ -54,7 +54,7 @@
     },
     "browser_specific_settings": {
       "gecko": {
-        "id": "ai-clipboard@satori.example",
+        "id": "longpantorn@gmail.com",
         "strict_min_version": "109.0"
       }
     },
