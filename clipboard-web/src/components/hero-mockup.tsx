@@ -1,38 +1,47 @@
-import { Sparkles, X, Copy, FileText } from "lucide-react";
+"use client";
+
+import { motion } from "framer-motion";
+import { Sparkles, X, Copy, FileText, Check } from "lucide-react";
+import { Keycap } from "@/components/keycap";
 
 const SELECTION_TEXT =
   "Transformer architectures leverage self-attention mechanisms to compute representations of their input and output without using sequence-aligned RNNs or convolution.";
 
-const TAKEWAY_TEXT =
+const TAKEAWAY_TEXT =
   "Instead of processing words sequentially like traditional RNNs, transformers weigh the relevance of all words in a sentence simultaneously using self-attention.";
+
+const spring = { stiffness: 550, damping: 36, mass: 0.8 } as const;
 
 export function HeroMockup() {
   return (
-    <div
-      className="w-full max-w-[620px] mx-auto mt-12 sm:mt-16 p-3 sm:p-4 rounded-2xl bg-surface-1 border border-hairline-strong shadow-popover relative"
+    <motion.div
+      initial={{ opacity: 0, scale: 0.96, y: -8 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={spring}
+      className="w-full max-w-[960px] mx-auto mt-12 sm:mt-16 p-3 sm:p-4 rounded-xl bg-surface border border-hairline shadow-popover relative"
       role="img"
       aria-label="AI Clipboard extension popover showing an inline AI explanation of selected text"
     >
-      {/* Faux Window Chrome */}
+      {/* Faux window chrome */}
       <div className="flex items-center gap-3 px-1 pb-3">
         <div className="flex items-center gap-1.5">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#2a2e39] transition-colors hover:bg-[#ef4444]" />
-          <span className="w-2.5 h-2.5 rounded-full bg-[#2a2e39] transition-colors hover:bg-[#f59e0b]" />
-          <span className="w-2.5 h-2.5 rounded-full bg-[#2a2e39] transition-colors hover:bg-[#22c55e]" />
+          <span className="w-2.5 h-2.5 rounded-full bg-stone" />
+          <span className="w-2.5 h-2.5 rounded-full bg-stone" />
+          <span className="w-2.5 h-2.5 rounded-full bg-stone" />
         </div>
-        <div className="mx-auto flex items-center gap-1.5 px-3 py-1 rounded-md bg-surface-2 border border-hairline text-[11px] font-mono text-ink-tertiary">
-          <FileText className="h-3 w-3" />
+        <div className="mx-auto flex items-center gap-1.5 px-3 py-1 rounded-md bg-surface-elevated border border-hairline font-mono text-caption-sm text-mute">
+          <FileText className="h-3 w-3" aria-hidden="true" />
           research_paper_rag.pdf
         </div>
         <span className="w-8" aria-hidden="true" />
       </div>
 
-      {/* Simulated Browser Body */}
-      <div className="rounded-lg border border-hairline bg-canvas p-4 sm:p-5 text-[13px] leading-relaxed text-ink-secondary relative">
+      {/* Simulated page body */}
+      <div className="rounded-lg border border-hairline-soft bg-canvas p-4 sm:p-5 text-sm leading-relaxed text-body relative">
         <p>
           Recent work on sequence modeling has largely moved away from
           recurrent architectures.{" "}
-          <mark className="bg-lime/15 text-ink-primary rounded-[3px] px-1 py-0.5 box-decoration-clone">
+          <mark className="bg-accent-blue-soft text-ink rounded-[3px] px-1 py-0.5 box-decoration-clone">
             {SELECTION_TEXT}
           </mark>{" "}
           This shift enables parallel training across all positions and removes
@@ -40,59 +49,79 @@ export function HeroMockup() {
           long-range dependencies.
         </p>
 
-        {/* Floating Action Pill */}
-        <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-surface-3/95 backdrop-blur-md border border-hairline-strong px-3 py-1.5 shadow-lg flex items-center gap-2 text-xs font-medium text-ink-primary animate-in fade-in zoom-in-95 duration-200">
-          <span className="flex items-center gap-1 text-lime">
-            <Sparkles className="h-3.5 w-3.5" />
+        {/* Floating action pill */}
+        <motion.div
+          initial={{ opacity: 0, y: 4 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ ...spring, delay: 0.1 }}
+          className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-surface border border-hairline-strong px-1.5 py-1 flex items-center gap-1 text-xs font-medium"
+        >
+          <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-sm text-accent-blue">
+            <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
             Explain
           </span>
           <span className="h-3 w-px bg-hairline" aria-hidden="true" />
-          <span className="flex items-center gap-1">Summarize</span>
+          <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-sm text-body">
+            <FileText className="h-3.5 w-3.5" aria-hidden="true" />
+            Summarize
+          </span>
           <span className="h-3 w-px bg-hairline" aria-hidden="true" />
-          <span className="flex items-center gap-1">
-            <Copy className="h-3 w-3" />
+          <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-sm text-mute">
+            <Copy className="h-3.5 w-3.5" aria-hidden="true" />
             Copy
           </span>
-        </div>
+        </motion.div>
 
-        {/* Result Popover Card */}
-        <div className="w-full max-w-[420px] rounded-xl bg-surface-popover border border-hairline-strong shadow-2xl p-4 mt-3 ml-auto sm:mr-4 animate-in fade-in zoom-in-95 duration-200">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2 text-sm font-semibold text-ink-primary">
-              <Sparkles className="h-4 w-4 text-lime" />
+        {/* Result popover card (command-palette-card spec) */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.96, y: -6 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ ...spring, delay: 0.18 }}
+          className="w-full max-w-[380px] rounded-xl bg-surface border border-hairline shadow-popover overflow-hidden mt-4 ml-auto sm:mr-4"
+        >
+          <div className="h-[38px] px-3 border-b border-hairline flex items-center justify-between">
+            <div className="flex items-center gap-2 text-sm font-medium text-ink">
+              <Sparkles className="h-4 w-4 text-accent-blue" aria-hidden="true" />
               Explain
             </div>
             <button
               type="button"
-              className="h-6 w-6 flex items-center justify-center rounded-md text-ink-tertiary hover:text-ink-primary hover:bg-surface-2 transition-colors"
+              className="h-6 w-6 flex items-center justify-center rounded-sm text-mute hover:text-ink transition-none"
               aria-label="Close popover"
             >
-              <X className="h-3.5 w-3.5" />
+              <X className="h-3.5 w-3.5" aria-hidden="true" />
             </button>
           </div>
-          <p className="text-[13px] leading-relaxed text-ink-secondary">
-            {TAKEWAY_TEXT}
-          </p>
-          <div className="mt-3 inline-flex items-center gap-1.5 text-[11px] font-mono text-ink-tertiary bg-surface-2 border border-hairline rounded-full px-2.5 py-1 tabular-nums">
-            <span aria-hidden="true">⚡</span> 280ms • Llama 3.3 70B (Cloudflare
-            Workers AI)
+
+          <div className="p-3.5 text-sm leading-[1.6] text-body">
+            {TAKEAWAY_TEXT}
+            <div className="mt-2.5 inline-flex items-center gap-1.5 px-2 py-0.5 bg-surface-elevated border border-hairline rounded-xs font-mono text-caption-sm text-mute tabular-nums">
+              <span aria-hidden="true">⚡</span> 280ms • Llama 3.3 70B
+              (Cloudflare Workers AI)
+            </div>
+            <div className="mt-1.5 inline-flex items-center gap-1.5 px-2 py-0.5 bg-surface-elevated border border-hairline rounded-xs font-mono text-caption-sm text-mute tabular-nums">
+              10/10 free queries • <Keycap className="mx-0.5">⌘ ,</Keycap> BYO
+              key
+            </div>
           </div>
-          <div className="mt-4 flex items-center gap-2">
+
+          <div className="h-11 px-3 border-t border-hairline flex items-center justify-between">
             <button
               type="button"
-              className="h-8 px-3 rounded-md bg-surface-2 hover:bg-surface-3 border border-hairline hover:border-hairline-hover text-xs font-medium text-ink-primary transition-colors"
+              className="h-8 px-2.5 rounded-sm text-xs font-medium text-body hover:bg-surface-elevated hover:text-ink transition-none flex items-center gap-1.5"
             >
+              <Check className="h-3.5 w-3.5" aria-hidden="true" />
               Copy
             </button>
             <button
               type="button"
-              className="h-8 px-3 rounded-md bg-surface-2 hover:bg-surface-3 border border-hairline hover:border-hairline-hover text-xs font-medium text-ink-primary transition-colors"
+              className="h-8 px-2.5 rounded-sm text-xs font-medium text-body hover:bg-surface-elevated hover:text-ink transition-none flex items-center gap-1.5"
             >
-              Open in Side Panel <span className="font-mono">Alt+C</span>
+              Open in chat <Keycap>⌥ C</Keycap>
             </button>
           </div>
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }
