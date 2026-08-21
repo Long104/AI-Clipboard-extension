@@ -1,9 +1,10 @@
 import { MotionConfig } from "framer-motion";
 import { Header } from "@/components/header";
 import { Hero } from "@/components/hero";
-import { Demo } from "@/components/demo";
-import { BentoGrid } from "@/components/bento-grid";
-import { Privacy } from "@/components/privacy";
+import { HowItWorks } from "@/components/how-it-works";
+import { FeatureRows } from "@/components/feature-rows";
+import { SidePanelDemo } from "@/components/side-panel-demo";
+import { PrivacyStrip } from "@/components/privacy-strip";
 import { Faq } from "@/components/faq";
 import { FinalCta } from "@/components/final-cta";
 
@@ -14,9 +15,10 @@ export default function Home() {
         <Header />
         <main className="relative">
           <Hero />
-          <Demo />
-          <BentoGrid />
-          <Privacy />
+          <HowItWorks />
+          <FeatureRows />
+          <SidePanelDemo />
+          <PrivacyStrip />
           <Faq />
           <FinalCta />
         </main>
