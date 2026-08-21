@@ -2,145 +2,150 @@
 version: alpha
 name: AI-Clipboard-Landing-Page
 description: |
-  Raycast's actual design system recolored to AI Clipboard's slate+blue theme.
-  Dark-only canvas (#020617), 4-step surface ladder (#020617 -> #0F172A -> #1E293B -> #283548),
-  hairline 1px borders (#303B4E), Geist & Geist Mono typography matching Raycast's scale and tracking,
-  a single primary blue CTA pill (#2563EB) per fold, keycap glyphs for shortcuts, tight 16-24px card padding,
-  96px section rhythm, signature blue diagonal stripe band in the hero, and zero AI-slop (no glows, no blobs,
-  no drop shadows, no glassmorphism, no purple).
+  White editorial Apple-style landing for AI Clipboard.
+  Content floats on whitespace. No card-grid, no hairline-border-everywhere,
+  no textures, no gifs, no generated images, no gradients. Life comes from
+  type, motion, and the product mockup. SF Pro system stack. Blue-600 CTA.
 
 colors:
   primary: "#2563EB"
-  primary-hover: "#4F46E5"
-  primary-pressed: "#1D4ED8"
+  primary-hover: "#1D4ED8"
+  primary-pressed: "#1E40AF"
   on-primary: "#FFFFFF"
-  canvas: "#020617"
-  surface: "#0F172A"
-  surface-elevated: "#1E293B"
-  surface-card: "#283548"
-  button-fg: "#1E293B"
-  hairline: "#303B4E"
-  hairline-soft: "rgba(255,255,255,0.08)"
-  hairline-strong: "rgba(255,255,255,0.16)"
-  ink: "#F8FAFC"
-  body: "#E2E8F0"
-  charcoal: "#CBD5E1"
-  mute: "#94A3B8"
-  ash: "#64748B"
-  stone: "#475569"
-  on-dark: "#FFFFFF"
-  on-dark-mute: "rgba(255,255,255,0.72)"
-  accent-blue: "#3B82F6"
-  accent-blue-soft: "rgba(59,130,246,0.15)"
-  accent-green: "#10B981"
-  accent-green-soft: "rgba(16,185,129,0.15)"
-  accent-amber: "#F59E0B"
-  accent-amber-soft: "rgba(245,158,11,0.15)"
-  accent-red: "#EF4444"
-  accent-red-soft: "rgba(239,68,68,0.15)"
-  hero-stripe-start: "#2563EB"
-  hero-stripe-end: "#1E3A8A"
-  key-bg-start: "#1E293B"
-  key-bg-end: "#0F172A"
+  canvas: "#FFFFFF"
+  surface: "#FFFFFF"
+  surface-elevated: "#F8FAFC"
+  surface-card: "#F1F5F9"
+  button-fg: "#F8FAFC"
+  hairline: "#E2E8F0"
+  hairline-soft: "rgba(15,23,42,0.06)"
+  hairline-strong: "rgba(15,23,42,0.12)"
+  ink: "#0F172A"
+  body: "#334155"
+  charcoal: "#64748B"
+  mute: "#64748B"
+  ash: "#94A3B8"
+  stone: "#CBD5E1"
+  on-canvas: "#0F172A"
+  on-canvas-mute: "#64748B"
+  on-dark: "#0F172A"
+  on-dark-mute: "#64748B"
+  accent-blue: "#2563EB"
+  accent-blue-soft: "rgba(37,99,235,0.10)"
+  accent-green: "#059669"
+  accent-green-soft: "rgba(5,150,105,0.10)"
+  accent-amber: "#D97706"
+  accent-amber-soft: "rgba(217,119,6,0.12)"
+  accent-red: "#DC2626"
+  accent-red-soft: "rgba(220,38,38,0.10)"
+  key-bg-start: "#FFFFFF"
+  key-bg-end: "#F1F5F9"
+  mockup-shadow: "0 20px 40px -15px rgba(15,23,42,0.08), 0 8px 16px -8px rgba(15,23,42,0.06), 0 0 0 1px rgba(15,23,42,0.06)"
 
 typography:
   display-xl:
-    fontFamily: "Geist, system-ui, -apple-system, sans-serif"
-    fontSize: 64px
-    fontWeight: 600
-    lineHeight: 1.1
-    letterSpacing: 0
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Segoe UI', system-ui, sans-serif"
+    fontSize: 72px
+    fontWeight: 400
+    lineHeight: 1.05
+    letterSpacing: -0.04em
   display-lg:
-    fontFamily: "Geist, system-ui, -apple-system, sans-serif"
-    fontSize: 56px
-    fontWeight: 500
-    lineHeight: 1.17
-    letterSpacing: 0.2px
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Segoe UI', system-ui, sans-serif"
+    fontSize: 48px
+    fontWeight: 400
+    lineHeight: 1.08
+    letterSpacing: -0.03em
   heading-xl:
-    fontFamily: "Geist, system-ui, -apple-system, sans-serif"
-    fontSize: 24px
-    fontWeight: 500
-    lineHeight: 1.6
-    letterSpacing: 0.2px
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif"
+    fontSize: 28px
+    fontWeight: 600
+    lineHeight: 1.2
+    letterSpacing: -0.02em
   heading-lg:
-    fontFamily: "Geist, system-ui, -apple-system, sans-serif"
-    fontSize: 22px
-    fontWeight: 500
-    lineHeight: 1.15
-    letterSpacing: 0
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif"
+    fontSize: 24px
+    fontWeight: 600
+    lineHeight: 1.25
+    letterSpacing: -0.015em
   heading-md:
-    fontFamily: "Geist, system-ui, -apple-system, sans-serif"
-    fontSize: 20px
-    fontWeight: 500
-    lineHeight: 1.4
-    letterSpacing: 0.2px
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif"
+    fontSize: 21px
+    fontWeight: 600
+    lineHeight: 1.3
+    letterSpacing: -0.01em
   heading-sm:
-    fontFamily: "Geist, system-ui, -apple-system, sans-serif"
-    fontSize: 18px
-    fontWeight: 500
-    lineHeight: 1.4
-    letterSpacing: 0.2px
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif"
+    fontSize: 17px
+    fontWeight: 600
+    lineHeight: 1.35
+    letterSpacing: -0.01em
   body-lg:
-    fontFamily: "Geist, system-ui, -apple-system, sans-serif"
-    fontSize: 18px
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif"
+    fontSize: 21px
     fontWeight: 400
-    lineHeight: 1.6
-    letterSpacing: 0
+    lineHeight: 1.47
+    letterSpacing: 0.01em
   body-md:
-    fontFamily: "Geist, system-ui, -apple-system, sans-serif"
-    fontSize: 16px
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif"
+    fontSize: 17px
     fontWeight: 400
-    lineHeight: 1.6
+    lineHeight: 1.47
     letterSpacing: 0
   body-strong:
-    fontFamily: "Geist, system-ui, -apple-system, sans-serif"
-    fontSize: 16px
-    fontWeight: 500
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif"
+    fontSize: 17px
+    fontWeight: 600
     lineHeight: 1.4
-    letterSpacing: 0.2px
+    letterSpacing: -0.01em
   body-sm:
-    fontFamily: "Geist, system-ui, -apple-system, sans-serif"
-    fontSize: 14px
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif"
+    fontSize: 15px
     fontWeight: 400
-    lineHeight: 1.6
+    lineHeight: 1.5
     letterSpacing: 0
   body-sm-strong:
-    fontFamily: "Geist, system-ui, -apple-system, sans-serif"
-    fontSize: 14px
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif"
+    fontSize: 15px
+    fontWeight: 600
+    lineHeight: 1.4
+    letterSpacing: -0.01em
+  label-caps:
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif"
+    fontSize: 12px
     fontWeight: 500
-    lineHeight: 1.6
-    letterSpacing: 0.2px
+    lineHeight: 1.3
+    letterSpacing: 0.08em
   caption-md:
-    fontFamily: "Geist Mono, monospace"
+    fontFamily: "ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace"
     fontSize: 13px
     fontWeight: 400
     lineHeight: 1.4
-    letterSpacing: 0.1px
+    letterSpacing: 0.02em
   caption-sm:
-    fontFamily: "Geist Mono, monospace"
+    fontFamily: "ui-monospace, 'SF Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace"
     fontSize: 12px
-    fontWeight: 400
-    lineHeight: 1.5
-    letterSpacing: 0.4px
-  link-md:
-    fontFamily: "Geist, system-ui, -apple-system, sans-serif"
-    fontSize: 16px
     fontWeight: 500
     lineHeight: 1.4
-    letterSpacing: 0.3px
-  button-md:
-    fontFamily: "Geist, system-ui, -apple-system, sans-serif"
-    fontSize: 14px
+    letterSpacing: 0.04em
+  link-md:
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif"
+    fontSize: 15px
     fontWeight: 500
-    lineHeight: 1.6
-    letterSpacing: 0.2px
+    lineHeight: 1.4
+    letterSpacing: 0
+  button-md:
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', system-ui, sans-serif"
+    fontSize: 15px
+    fontWeight: 500
+    lineHeight: 1.2
+    letterSpacing: -0.01em
 
 rounded:
   none: 0px
   xs: 4px
   sm: 6px
   md: 8px
-  lg: 10px
+  lg: 12px
   xl: 16px
   full: 9999px
 
@@ -148,119 +153,119 @@ spacing:
   xxs: 2px
   xs: 4px
   sm: 8px
-  md: 12px
-  lg: 16px
-  xl: 24px
-  xxl: 32px
-  section: 96px
+  md: 16px
+  lg: 24px
+  xl: 40px
+  xxl: 64px
+  section: 140px
 
 components:
   button-primary:
     backgroundColor: "{colors.primary}"
     textColor: "{colors.on-primary}"
     typography: "{typography.button-md}"
-    rounded: "{rounded.md}"
-    padding: 8px 16px
-    height: 36px
+    rounded: "{rounded.full}"
+    padding: 12px 22px
+    height: 44px
   button-primary-hover:
     backgroundColor: "{colors.primary-hover}"
     textColor: "{colors.on-primary}"
     typography: "{typography.button-md}"
-    rounded: "{rounded.md}"
+    rounded: "{rounded.full}"
   button-primary-pressed:
     backgroundColor: "{colors.primary-pressed}"
     textColor: "{colors.on-primary}"
     typography: "{typography.button-md}"
-    rounded: "{rounded.md}"
+    rounded: "{rounded.full}"
   button-secondary:
     backgroundColor: "transparent"
-    textColor: "{colors.on-dark}"
+    textColor: "{colors.ink}"
     typography: "{typography.button-md}"
-    rounded: "{rounded.md}"
-    padding: 8px 16px
-    height: 36px
+    rounded: "{rounded.full}"
+    padding: 12px 22px
+    height: 44px
   button-tertiary:
     backgroundColor: "{colors.surface-elevated}"
-    textColor: "{colors.on-dark}"
+    textColor: "{colors.ink}"
     typography: "{typography.button-md}"
-    rounded: "{rounded.md}"
-    padding: 8px 16px
-    height: 36px
+    rounded: "{rounded.full}"
+    padding: 12px 22px
+    height: 44px
   button-disabled:
-    backgroundColor: "{colors.surface-elevated}"
-    textColor: "{colors.mute}"
-    rounded: "{rounded.md}"
+    backgroundColor: "{colors.surface-card}"
+    textColor: "{colors.ash}"
+    rounded: "{rounded.full}"
   install-button:
-    backgroundColor: "transparent"
-    textColor: "{colors.on-dark}"
+    backgroundColor: "{colors.primary}"
+    textColor: "{colors.on-primary}"
     typography: "{typography.button-md}"
-    rounded: "{rounded.md}"
-    padding: 6px 14px
+    rounded: "{rounded.full}"
+    padding: 8px 16px
   text-input:
-    backgroundColor: "{colors.surface-elevated}"
-    textColor: "{colors.on-dark}"
+    backgroundColor: "{colors.canvas}"
+    textColor: "{colors.ink}"
     typography: "{typography.body-md}"
     rounded: "{rounded.md}"
     padding: 8px 12px
     height: 36px
   text-input-focused:
-    backgroundColor: "{colors.surface-elevated}"
-    textColor: "{colors.on-dark}"
+    backgroundColor: "{colors.canvas}"
+    textColor: "{colors.ink}"
     rounded: "{rounded.md}"
   command-palette-card:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.on-dark}"
+    backgroundColor: "{colors.canvas}"
+    textColor: "{colors.ink}"
     typography: "{typography.body-md}"
     rounded: "{rounded.xl}"
     padding: 0px
   command-palette-row:
     backgroundColor: "transparent"
-    textColor: "{colors.on-dark}"
-    typography: "{typography.body-md}"
+    textColor: "{colors.ink}"
+    typography: "{typography.body-sm}"
     rounded: "{rounded.sm}"
     padding: 6px 10px
   command-palette-row-active:
-    backgroundColor: "{colors.surface-card}"
-    textColor: "{colors.on-dark}"
-    typography: "{typography.body-md}"
+    backgroundColor: "{colors.surface-elevated}"
+    textColor: "{colors.ink}"
+    typography: "{typography.body-sm}"
     rounded: "{rounded.sm}"
   pill-tab:
     backgroundColor: "transparent"
-    textColor: "{colors.body}"
+    textColor: "{colors.charcoal}"
     typography: "{typography.body-sm}"
     rounded: "{rounded.full}"
     padding: 4px 10px
   pill-tab-active:
     backgroundColor: "{colors.surface-elevated}"
-    textColor: "{colors.on-dark}"
+    textColor: "{colors.ink}"
     typography: "{typography.body-sm}"
     rounded: "{rounded.full}"
   badge-pro:
     backgroundColor: "{colors.surface-elevated}"
-    textColor: "{colors.on-dark-mute}"
+    textColor: "{colors.charcoal}"
     typography: "{typography.caption-sm}"
     rounded: "{rounded.xs}"
     padding: 2px 6px
   badge-info-soft:
-    backgroundColor: "{colors.canvas}"
-    textColor: "{colors.accent-blue}"
+    backgroundColor: "{colors.accent-blue-soft}"
+    textColor: "{colors.primary}"
     typography: "{typography.caption-sm}"
     rounded: "{rounded.xs}"
     padding: 2px 8px
   badge-success-soft:
-    backgroundColor: "{colors.canvas}"
+    backgroundColor: "{colors.accent-green-soft}"
     textColor: "{colors.accent-green}"
     typography: "{typography.caption-sm}"
     rounded: "{rounded.xs}"
     padding: 2px 8px
   badge-amber-soft:
-    backgroundColor: "{colors.canvas}"
+    backgroundColor: "{colors.accent-amber-soft}"
     textColor: "{colors.accent-amber}"
     typography: "{typography.caption-sm}"
     rounded: "{rounded.xs}"
     padding: 2px 8px
   badge-error-soft:
-    backgroundColor: "{colors.canvas}"
+    backgroundColor: "{colors.accent-red-soft}"
     textColor: "{colors.accent-red}"
     typography: "{typography.caption-sm}"
     rounded: "{rounded.xs}"
@@ -281,7 +286,7 @@ components:
     height: 20px
   in-card-button:
     backgroundColor: "{colors.button-fg}"
-    textColor: "{colors.on-dark}"
+    textColor: "{colors.ink}"
     typography: "{typography.button-md}"
     rounded: "{rounded.md}"
     padding: 8px 16px
@@ -302,493 +307,460 @@ components:
   subhead:
     backgroundColor: "{colors.canvas}"
     textColor: "{colors.charcoal}"
-    typography: "{typography.heading-md}"
+    typography: "{typography.body-lg}"
   caption:
     backgroundColor: "{colors.canvas}"
-    textColor: "{colors.mute}"
+    textColor: "{colors.charcoal}"
     typography: "{typography.caption-md}"
   status-dot:
-    backgroundColor: "{colors.ash}"
+    backgroundColor: "{colors.accent-green}"
     size: 6px
     rounded: "{rounded.full}"
   window-dot:
     backgroundColor: "{colors.stone}"
-    size: 10px
+    size: 8px
     rounded: "{rounded.full}"
-  hero-stripe-start-stop:
-    backgroundColor: "{colors.hero-stripe-start}"
-    textColor: "{colors.on-primary}"
-  hero-stripe-end-stop:
-    backgroundColor: "{colors.hero-stripe-end}"
-    textColor: "{colors.on-primary}"
-  soft-tint-blue:
-    backgroundColor: "{colors.accent-blue-soft}"
-    size: 10px
-    rounded: "{rounded.full}"
-  soft-tint-green:
-    backgroundColor: "{colors.accent-green-soft}"
-    size: 10px
-    rounded: "{rounded.full}"
-  soft-tint-amber:
-    backgroundColor: "{colors.accent-amber-soft}"
-    size: 10px
-    rounded: "{rounded.full}"
-  soft-tint-red:
-    backgroundColor: "{colors.accent-red-soft}"
-    size: 10px
-    rounded: "{rounded.full}"
-  feature-card-dark:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.on-dark}"
-    typography: "{typography.body-md}"
-    rounded: "{rounded.lg}"
-    padding: 24px
-  feature-card-elevated:
-    backgroundColor: "{colors.surface-elevated}"
-    textColor: "{colors.on-dark}"
-    typography: "{typography.body-md}"
-    rounded: "{rounded.lg}"
-    padding: 24px
-  hero-stripe-band:
-    backgroundColor: "{colors.canvas}"
-    textColor: "{colors.on-dark}"
-    typography: "{typography.display-xl}"
-    rounded: "{rounded.none}"
-    padding: 96px 48px
   app-icon-tile:
     backgroundColor: "{colors.surface-card}"
     rounded: "{rounded.md}"
-    size: 48px
+    size: 32px
   primary-nav:
     backgroundColor: "{colors.canvas}"
-    textColor: "{colors.on-dark}"
+    textColor: "{colors.ink}"
     typography: "{typography.body-sm-strong}"
     rounded: "{rounded.none}"
-    height: 56px
+    height: 52px
   footer-section:
     backgroundColor: "{colors.canvas}"
-    textColor: "{colors.body}"
+    textColor: "{colors.charcoal}"
     typography: "{typography.body-sm}"
     rounded: "{rounded.none}"
-    padding: 64px 48px
+    padding: 64px 24px
   link-inline:
-    textColor: "{colors.on-dark}"
+    textColor: "{colors.ink}"
     typography: "{typography.link-md}"
+  quota-chip:
+    backgroundColor: "{colors.surface-elevated}"
+    textColor: "{colors.charcoal}"
+    typography: "{typography.caption-sm}"
+    rounded: "{rounded.xs}"
+    padding: 2px 8px
 ---
+
+## Intake decisions (CEO review)
+
+CEO already locked: white editorial Apple-style, no card-grid, no textures/gifs/generated images/gradients, SF Pro system stack, Blue-600 CTA, light tokens from the extension. Remaining decisions locked here with one-line rationale:
+
+1. **Radius** — 8px controls (`rounded.md`), 12px nested surfaces (`rounded.lg`, matches extension `--radius`), 16px product mockup (`rounded.xl`), 4px keycaps, pills 9999px. Apple HIG + concentric rule `inner = outer − padding`.
+2. **Density** — Spacious-editorial: `{spacing.section}` 140px desktop (112px tablet, 80px mobile), 24px container padding, 80px internal row gaps. Whitespace is the separator.
+3. **Icons** — Lucide, 1.5px stroke, 16–20px optical size. Matches SF Symbols light/regular, already in the repo.
+4. **Data-as-design** — (a) live quota chip `10 requests / 2 hours` inside the mockup; (b) SF Mono keycaps `⌘C` `⌥C` `⏎` `Esc`. No extra charts.
+5. **Depth** — One floating-shadow exception on the product mockup: `{colors.mockup-shadow}`. Zero box-shadow on nav, buttons, features, FAQ, footer. Nav may use `backdrop-filter: blur(16px)` as the single glass surface.
 
 ## Overview
 
-This specification establishes the official user interface and visual design system for the **AI Clipboard** Chrome extension landing page (`AI-Clipboard-extension`). Following the rejection of generic AI templates ("AI slop"), this document translates **Raycast's actual design system** onto the extension's **slate+blue color palette**, Geist typography, and in-product popover mechanics.
+White editorial Apple-style marketing page for **AI Clipboard — Copy & Understand**. The canvas is pure `{colors.canvas}` `#FFFFFF`. Type, the floating product, and restrained motion do all the work.
 
-The marketing page is treated as an **extended, high-fidelity product screenshot**. The canvas is dark-only (`{colors.canvas}` — `#020617`), elevation is achieved strictly through an achromatic 4-step surface ladder (`#020617` → `#0F172A` → `#1E293B` → `#283548`) bounded by hairline 1px borders (`{colors.hairline}` — `#303B4E`), and all primary calls-to-action use the extension's solid Blue-600 pill (`{colors.primary}` — `#2563EB`).
+Philosophy: content floats on whitespace. No card-grid sections. No hairline-border-everywhere. Max **two** bordered surfaces on the whole page: (1) the hero product mockup, (2) the interactive demo stage. Everything else is type + space.
 
-### Anti-Slop Architectural Rules
-1. **No Drop Shadows**: Drop shadows, blur halos, and fuzzy elevations are completely eliminated. Depth is communicated solely through surface brightness and crisp 1px borders.
-2. **No Aurora / Gradient Glow Blobs**: Radial background blobs, colored blur meshes, and purple/fuchsia light leaks are strictly banned.
-3. **No Glassmorphism Cards**: Card bodies use opaque dark surfaces (`#0F172A` or `#1E293B`). Background blur is restricted to the sticky navigation header over scrollable content.
-4. **Accents Inside Illustrations Only**: Chromatic colors (Blue `#3B82F6`, Green `#10B981`, Amber `#F59E0B`, Red `#EF4444`) are strictly forbidden on site chrome or card backgrounds; they appear exclusively inside UI mockups, status badges, and syntax highlights.
-5. **Signature Stripe Moment**: A single diagonal 3-stripe gradient band in the blue family (`{colors.hero-stripe-start}` `#2563EB` → `{colors.hero-stripe-end}` `#1E3A8A`) is placed across the very top of the hero viewport. It appears **exactly once per page** and never recurs down the page.
-6. **Physical Keycap Glyphs**: Keyboard shortcuts use physical-feel linear gradient keycaps (`{component.keycap}`) with Geist Mono glyphs (`⌘ C`, `⌥ C`, `⏎`, `Esc`).
+Brand mood: quiet, precise, macOS Look Up. Density: spacious. Conversion: a single Blue-600 `#2563EB` pill per fold ("Add to Chrome").
+
+### Anti-slop rules (hard)
+
+1. **No gradients** — no stripe band, no keycap metallic shine beyond a 1-stop fill, no aurora, no blobs.
+2. **No textures, gifs, generated images, stock photos.**
+3. **No card-grid / bento.** Features are editorial rows (text | visual, then visual | text).
+4. **No Geist.** Font stack is SF Pro system only.
+5. **No purple / beige.**
+6. **No decorative motion.** Motion reveals content. Max 400ms. Product-surface tilt is the only parallax.
+7. **Eyebrow restraint:** max one small-caps `{typography.label-caps}` eyebrow per three sections. Hero may use one ("Cloudflare Workers AI · Llama 3.3 70B"). Features get none.
+8. **Copy is verbatim** from `research/marketing-copy.md`. Do not rewrite headlines, bodies, FAQ, or CTAs.
+
+### Engineer mapping (one pass, no new deps)
+
+Existing `framer-motion` only. Files to restyle, not invent:
+
+| File | Change |
+|---|---|
+| `clipboard-web/src/app/layout.tsx` | Remove `Geist` / `Geist_Mono` imports. Body font = system SF Pro stack. Mono = `ui-monospace, "SF Mono", Menlo, Monaco, Consolas, monospace`. |
+| `clipboard-web/src/app/globals.css` | Replace dark tokens with the YAML colors. `color-scheme: light`. `--section-y: 140px`. Focus ring on white. |
+| `clipboard-web/tailwind.config.ts` | Sans/mono stacks; `boxShadow.popover` = `{colors.mockup-shadow}`; drop dark stripe vars. |
+| `clipboard-web/src/components/header.tsx` | Minimal sticky nav; blur on scroll; drop version-badge chrome if it adds a bordered pill. |
+| `clipboard-web/src/components/hero.tsx` | Delete diagonal stripe. Huge regular-weight H1. Whitespace. CTAs. Mockup below. |
+| `clipboard-web/src/components/hero-mockup.tsx` | Drop faux browser-window chrome. The popover itself floats on white with `{colors.mockup-shadow}`, restyled to real light card (`result-popover.tsx`: `bg-white border-slate-200 rounded-xl`). Quota chip stays. Optional: one highlighted sentence above the card, unboxed. |
+| `clipboard-web/src/components/demo.tsx` + `demo-stage.tsx` | Keep interaction. Restyle to light. Demo stage is bordered surface #2. |
+| `clipboard-web/src/components/bento-grid.tsx` + `bento-card.tsx` | Replace grid with five full-width editorial rows (alternate text/visual). Rename conceptually; file names may stay if cheaper. **No card wrappers, no `border-hairline` on the row.** |
+| `clipboard-web/src/components/privacy.tsx` | Typographic strip. No boxes, no bordered columns. Three blocks of type separated by space or a single vertical rhythm. |
+| `clipboard-web/src/components/faq.tsx` | Keep accordion. Hairline row dividers only. No outer card. |
+| `clipboard-web/src/components/final-cta.tsx` | Centered re-hook + one blue pill. Footer = type + one top hairline. |
+| `clipboard-web/src/components/keycap.tsx` | Light fill `{colors.key-bg-start}` / `{colors.key-bg-end}`, hairline `{colors.hairline}`, ink `{colors.body}`. |
 
 ---
 
 ## UX Flow & Information Architecture
 
-### Target Personas
-- **The Research Scientist / Student**: Reads arXiv PDFs, technical docs, and academic literature. Needs instant explanations of mathematical concepts or unfamiliar acronyms without switching tabs or losing reading place.
-- **The Senior Software Engineer**: Reads complex library documentation, RFCs, and API references. Wants keyboard-driven shortcuts (`⌥ C`), copy capture, and local API key privacy.
+### Personas
 
-### Primary User Journeys
-1. **Instant Inline Look Up**: Text selection on any web page → floating action pill appears → click "Explain" → instant in-place response card appears via Cloudflare Workers AI + Llama 3.3 70B.
-2. **Copy Capture Flow**: Press `⌘ C` / `Ctrl+C` to copy code or text → unobtrusive toast notifies capture → instant Explain / Summarize action available directly from the toast.
-3. **Persistent Deep Dive**: Press `⌥ C` (or `Alt+C`) → slide-out side panel opens with full context history for multi-turn Q&A.
-4. **BYO Key Privacy**: Open extension options → toggle from Free Tier (10 req/2h) to BYO Key mode → paste OpenAI / Anthropic key into encrypted local storage (`chrome.storage.local`).
+- **Researcher / student** — arXiv, docs, papers. Wants Look Up without leaving the page.
+- **Engineer** — RFCs, API refs. Wants `⌥C`, copy-capture, local API keys.
 
-### Domain Invariant & State Table
+### Entry / exit
+
+- **Enter:** `/` (clipboard-web). Store CTA currently `#` (CWS not live). GitHub secondary: `https://github.com/pantorn/AI-Clipboard-extension`.
+- **Exit:** Chrome Web Store (primary), GitHub, `/privacy`.
+
+### Journeys (product, mirrored on the page)
+
+1. Select text → pill → Explain → inline popover (Llama 3.3 70B).
+2. `⌘C` → copy toast → Explain / Summarize.
+3. `⌥C` / `Alt+C` → side panel chat.
+4. Options → BYO key in `chrome.storage.local` (unlimited) vs free 10 req / 2 h.
 
 ```mermaid
 flowchart TD
-    A[Page Visit] --> B[Hero: Product Popover Mockup]
-    B --> C[Interactive Demo Playground]
-    C --> D[Bento Feature Grid: Surface Ladder Cards]
-    D --> E[Privacy & Permissions Architecture]
-    E --> F[FAQ Accordion: 0ms Navigation]
-    F --> G[Final CTA: Solid Blue Pill]
-    G --> H[Chrome Web Store Listing]
+    A[Visit /] --> B[Hero type + floating light popover]
+    B --> C[Interactive demo]
+    C --> D[Editorial feature rows]
+    D --> E[Typographic privacy strip]
+    E --> F[FAQ list]
+    F --> G[Final CTA]
+    G --> H[Chrome Web Store]
+    C -->|Esc| C
+    C -->|touch no-select| CEmpty[Demo hint state]
 ```
 
-| State | Hero Popover | Interactive Demo | Feature Grid | FAQ Accordion |
-|---|---|---|---|---|
-| **Default / Idle** | Popover open with generated explanation & action buttons | Unselected sample text with floating pill hint | 5 bento cards with alternating surface ladder | Collapsed accordion rows with 1px hairlines |
-| **Active / Focused** | Highlighted active action button (`#1E293B`) | Live text selected, instant pill popup anchored to selection | Hover border brightens to `{colors.hairline-strong}` (0ms) | Expanded panel with 130ms ease-out enter |
-| **Loading / Streaming** | Border shimmer (1000ms linear) + spinner badge in footer | Shimmer pulse over result container during mock fetch | N/A | N/A |
-| **Empty / Reset** | N/A | "Select text above to trigger inline Look Up" prompt | N/A | N/A |
-| **Error / Quota Edge** | Red soft badge (`#EF4444`) with "Retry" action | Error toast simulator if offline | N/A | N/A |
+### State table
 
-> **Domain Invariant Finding (Mandatory Check)**:
-> **"What UI state is missing?"**
-> **Missing State:** Quota Exhaustion / Rate Limit Warning State in the Hero Demo Mockup.
-> **Impact:** When a user exhausts the free tier (10 requests / 2 hours), they see an error toast when they expect an explanation because no inline quota replenishment / BYO key transition prompt is designed inside the popover preview.
-> **Spec Resolution:** The hero mockup and demo component must explicitly render the quota status indicator (`10/10 free queries remaining`) with a direct link/keycap hint to `Settings [⌘ ,]` for BYO key entry.
+| State | Hero mockup | Demo playground | Feature rows | FAQ | Nav |
+|---|---|---|---|---|---|
+| **Default** | Popover open, explanation + quota chip `10 requests / 2 hours` | Unselected sample text; caption visible | Type + product fragment, no cards | Collapsed rows, hairline dividers | Transparent; no blur |
+| **Hover** | Footer ghost buttons bg `{colors.surface-elevated}` | Pill buttons scale 1.02 / 150ms | Visual fragment scale 1.02 if clickable | Question color stays `{colors.ink}` | Link color `{colors.ink}` |
+| **Focus** | Ring `0 0 0 2px #FFFFFF, 0 0 0 4px #2563EB` | Same ring | Same ring | Same ring | Same ring |
+| **Pressed** | CTA scale 0.98, 150ms | Same | Same | Chevron rotates 180°, 200ms | CTA scale 0.98 |
+| **Loading** | N/A (static art) | 700ms mock stream; 3-line skeleton in result body | N/A | N/A | N/A |
+| **Empty** | N/A | Hint: "Select text above to trigger inline Look Up." | N/A | N/A | N/A |
+| **Error** | Quota chip amber if shown exhausted | Result card `{colors.accent-red}` text + Retry | N/A | N/A | N/A |
+| **Success** | Copy control → Check + "Copied" 2s | Same | N/A | Answer expands 200ms ease-out | N/A |
+| **Permission / touch fail** | N/A | **See domain invariant** | N/A | N/A | N/A |
+| **Scrolled** | Subtle tilt on mockup only | Sticky? no | — | — | `bg-white/80 backdrop-blur-md`; 1px `{colors.hairline}` bottom |
+
+### Domain invariant (missing state — do not "fix" in this spec beyond naming it)
+
+**Missing state:** Interactive demo on touch / iOS, when `window.getSelection()` never yields a range (native callout steals the gesture). User taps the sample, sees no pill, and the playground looks broken.
+
+**Impact:** User sees a dead demo when the landing promised "Select text… explanation appears in place," because no fallback "Tap Explain to preview" control exists.
+
+**For implementers:** keep the current desktop selection demo; add a persistent text button pair (Explain / Summarize) under the sample on viewports that cannot select, so the flow still plays. This is the one gap — do not invent other states.
 
 ---
 
 ## Colors
 
-The color palette remaps Raycast's structure onto AI Clipboard's slate and blue theme.
+Extension light theme (`clipboard-extension/src/style.css` `:root`) remapped. CTA is Blue-600 per product button, not the extension's Blue-500 token.
 
-### Brand & Interactive Action
-- **Primary Blue** (`{colors.primary}` — `#2563EB`): The universal primary action color. Used for the single "Add to Chrome" pill per fold, the primary nav CTA, and the final CTA.
-- **Primary Hover** (`{colors.primary-hover}` — `#4F46E5`): Interactive hover state (Indigo-600) for primary buttons.
-- **Primary Pressed** (`{colors.primary-pressed}` — `#1D4ED8`): Active/pressed state (Blue-700).
-- **On Primary** (`{colors.on-primary}` — `#FFFFFF`): Pure crisp white text on primary buttons (contrast ratio > 7.0:1, WCAG AAA).
+| Token | Hex | Role | Contrast on `#FFFFFF` |
+|---|---|---|---|
+| `{colors.canvas}` | `#FFFFFF` | Page background | — |
+| `{colors.ink}` | `#0F172A` | Headlines, primary text (slate-900) | ~16:1 AAA |
+| `{colors.body}` | `#334155` | Paragraphs (slate-700) | ~8.1:1 AAA |
+| `{colors.charcoal}` / `{colors.mute}` | `#64748B` | Secondary, captions, nav, FAQ closed (slate-500) | ~4.6:1 AA |
+| `{colors.ash}` | `#94A3B8` | Disabled / decorative only — **not body text** | fail AA |
+| `{colors.hairline}` | `#E2E8F0` | The two allowed surfaces + FAQ / footer rules (slate-200) | — |
+| `{colors.surface-elevated}` | `#F8FAFC` | Mockup header, keycap shade, quota chip | — |
+| `{colors.primary}` | `#2563EB` | CTA fill | white on blue ~4.6:1 AA |
+| `{colors.primary-hover}` | `#1D4ED8` | CTA hover | — |
+| `{colors.primary-pressed}` | `#1E40AF` | CTA pressed | — |
+| `{colors.on-primary}` | `#FFFFFF` | CTA label | — |
+| `{colors.accent-green}` | `#059669` | Copied check (darker than 500 so it holds AA on white) | ~4.5:1 |
+| `{colors.accent-amber}` | `#D97706` | Quota warning | ~3.4:1 — use only at 14px+ bold or on chip |
+| `{colors.accent-red}` | `#DC2626` | Error text | ~4.5:1 |
 
-### Surface Ladder (Achromatic Elevation)
-- **Canvas** (`{colors.canvas}` — `#020617`): Deep slate-950 page background. The foundational surface of the entire viewport.
-- **Surface** (`{colors.surface}` — `#0F172A`): Slate-900. First elevation step for standard feature cards, interactive demo playground, and primary nav.
-- **Surface Elevated** (`{colors.surface-elevated}` — `#1E293B`): Slate-800. Second elevation step for alternating bento cards, secondary buttons, inputs, and active pill tabs.
-- **Surface Card** (`{colors.surface-card}` — `#283548`): Third elevation step for command palette row selection, icon tiles, and keycaps.
-- **Button FG** (`{colors.button-fg}` — `#1E293B`): In-card button fill container.
-- **Hairline** (`{colors.hairline}` — `#303B4E`): Universal 1px border on all cards, nav dividers, and containers.
-- **Hairline Soft** (`{colors.hairline-soft}` — `rgba(255,255,255,0.08)`): Translucent inner divider on popovers.
-- **Hairline Strong** (`{colors.hairline-strong}` — `rgba(255,255,255,0.16)`): Focus rings and prominent card boundaries.
-
-### Text & Ink Ladder
-- **Ink** (`{colors.ink}` — `#F8FAFC`): Slate-50. Display headlines, active modal titles, and high-emphasis labels.
-- **Body** (`{colors.body}` — `#E2E8F0`): Slate-200. Standard paragraph text, demo prose, and card descriptions.
-- **Charcoal** (`{colors.charcoal}` — `#CBD5E1`): Slate-300. Sub-headings and active tab text.
-- **Mute** (`{colors.mute}` — `#94A3B8`): Slate-400. Captions, metadata, shortcuts, and footer links.
-- **Ash** (`{colors.ash}` — `#64748B`): Slate-500. Disabled states and tertiary hints.
-- **Stone** (`{colors.stone}` — `#475569`): Slate-600. Window dot borders and subtle glyphs.
-- **On Dark** (`{colors.on-dark}` — `#FFFFFF`): Pure white text on dark cards and controls.
-- **On Dark Mute** (`{colors.on-dark-mute}` — `rgba(255,255,255,0.72)`): Translucent secondary text.
-
-### Semantic & Illustration Accents (Restricted to Mockups)
-- **Accent Blue** (`{colors.accent-blue}` — `#3B82F6`) + **Soft** (`{colors.accent-blue-soft}` — `rgba(59,130,246,0.15)`): "Explain" sparkles, info badges, and Cloudflare status.
-- **Accent Green** (`{colors.accent-green}` — `#10B981`) + **Soft** (`{colors.accent-green-soft}` — `rgba(16,185,129,0.15)`): "Copy" checkmarks, operational indicators, and speed metrics.
-- **Accent Amber** (`{colors.accent-amber}` — `#F59E0B`) + **Soft** (`{colors.accent-amber-soft}` — `rgba(245,158,11,0.15)`): Quota warnings and API key indicators.
-- **Accent Red** (`{colors.accent-red}` — `#EF4444`) + **Soft** (`{colors.accent-red-soft}` — `rgba(239,68,68,0.15)`): Error badges, close hover triggers, and capturing toast pulse.
-
-### Gradients
-- **Hero Stripe Gradient**: 3 diagonal stripes fading from `{colors.hero-stripe-start}` (`#2563EB`) to `{colors.hero-stripe-end}` (`#1E3A8A`) placed across the hero background once per page.
-- **Keycap Gradient**: Subtle vertical keycap gradient from `{colors.key-bg-start}` (`#1E293B`) to `{colors.key-bg-end}` (`#0F172A`).
+No dark-mode variant on this page (`color-scheme: light` only). Do not ship a `.dark` block for the landing.
 
 ---
 
 ## Typography
 
-Typography uses the official extension brand faces: **Geist Sans** for UI copy and **Geist Mono** for keycaps, metadata, latency chips, and code snippets. All sizes, weights, line-heights, and tracking match Raycast's typography table verbatim.
+System stack, no webfont request (drops Geist, zero new deps):
 
-### Hierarchy & Scale Table
+```
+--font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+--font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+```
 
-| Token | Size | Weight | Line Height | Letter Spacing | Font Family | Usage |
-|---|---|---|---|---|---|---|
-| `{typography.display-xl}` | 64px | 600 | 1.10 (70px) | 0.00em (0px) | Geist Sans | Hero H1: "Understand anything faster than ever." |
-| `{typography.display-lg}` | 56px | 500 | 1.17 (65px) | 0.2px | Section H2s: "macOS Look Up Everywhere", "Private by Architecture" |
-| `{typography.heading-xl}` | 24px | 500 | 1.60 (38px) | 0.2px | Sub-section headings, FAQ questions, bento titles |
-| `{typography.heading-lg}` | 22px | 500 | 1.15 (25px) | 0.00em (0px) | Mid-section feature card titles |
-| `{typography.heading-md}` | 20px | 500 | 1.40 (28px) | 0.2px | Feature card headers, popover section titles |
-| `{typography.heading-sm}` | 18px | 500 | 1.40 (25px) | 0.2px | Small card headers, toast status labels |
-| `{typography.body-lg}` | 18px | 400 | 1.60 (29px) | 0.00em (0px) | Hero subheadline, primary lead paragraphs |
-| `{typography.body-md}` | 16px | 400 | 1.60 (26px) | 0.00em (0px) | Default body copy, demo reading text, FAQ answers |
-| `{typography.body-strong}` | 16px | 500 | 1.40 (22px) | 0.2px | Emphasized body text, primary nav links |
-| `{typography.body-sm}` | 14px | 400 | 1.60 (22px) | 0.00em (0px) | Card descriptions, secondary text, trust strip body |
-| `{typography.body-sm-strong}` | 14px | 500 | 1.60 (22px) | 0.2px | In-card labels, table headers, button labels |
-| `{typography.caption-md}` | 13px | 400 | 1.40 (18px) | 0.1px | Geist Mono: Keycap shortcuts (`⌘ C`, `⌥ C`, `⏎`) |
-| `{typography.caption-sm}` | 12px | 400 | 1.50 (18px) | 0.4px | Geist Mono: Quota chips, latency stats (`⚡ 280ms`), badge labels |
-| `{typography.link-md}` | 16px | 500 | 1.40 (22px) | 0.3px | Inline text anchor links (white on hover) |
-| `{typography.button-md}` | 14px | 500 | 1.60 (22px) | 0.2px | Standard button text |
+Apple weight contrast: **display = regular (400) + tight tracking**; **labels = medium (500) + wide tracking**.
+
+| Token | Size / breakpoints | Weight | Tracking | Use |
+|---|---|---|---|---|
+| `display-xl` | 40px → 56px (md) → 72px (lg) | 400 | -0.04em | Single H1 |
+| `display-lg` | 32px → 40px → 48px | 400 | -0.03em | Final CTA H2, FAQ H2 |
+| `heading-xl` | 24px → 28px | 600 | -0.02em | Feature row titles |
+| `heading-md` | 21px | 600 | -0.01em | Privacy titles |
+| `body-lg` | 19px → 21px | 400 | 0.01em | Hero subhead, feature bodies |
+| `body-md` | 17px | 400 | 0 | FAQ answers, demo sample |
+| `body-sm` | 15px | 400 | 0 | Nav links, footer |
+| `label-caps` | 12px | 500 | 0.08em | One hero eyebrow max |
+| `caption-sm` | 12px | 500 | 0.04em | Quota chip, microcopy |
+| `caption-md` | 13px | 400 | 0.02em | Keycaps |
+| `button-md` | 15px | 500 | -0.01em | CTAs |
+
+`-webkit-font-smoothing: antialiased`. Tabular nums on quota (`font-variant-numeric: tabular-nums`).
 
 ---
 
 ## Layout
 
-### Spacing Scale & Rhythm
-- **Base Rhythm**: 8px modular scale (`2/4/8/12/16/24/32/96px`).
-- **Section Rhythm (`{spacing.section}` — 96px)**: Major sections are spaced strictly 96px apart on desktop, 64px on tablet, and 48px on mobile. No arbitrary margins.
-- **Card Padding**: 16px to 24px (never 32px+). Keeps content density high, matching Raycast's compact desktop feel.
-- **Card Gutters**: 16px gap across all bento and feature grids.
-- **Content Container**: Centered container with max-width `1240px` and `24px` horizontal padding (`16px` on mobile). Hero mockup max-width is `1080px`.
+8px base. Spacious, not Raycast-compact.
 
-### Whitespace & Surface Continuity
-The dark canvas continues uninterrupted from top to bottom. Section separators are formed by the natural contrast of card surfaces (`#0F172A` / `#1E293B`) against the `#020617` canvas and 1px hairline rules (`#303B4E`), never by decorative dividers, background color switches, or horizontal gradient rules.
+- Container: max-width **980px** for type; mockup/demo may go **720–800px** centered. Horizontal padding 24px (16px <480).
+- Section padding-y: 140px desktop / 112px tablet / 80px mobile (`{spacing.section}`).
+- Feature row gap: 48–64px between text column and visual; 140px between rows.
+- Do not switch background colors between sections. One white canvas the whole way.
+
+Whitespace philosophy: if a section needs a box to exist, delete the box.
 
 ---
 
 ## Elevation & Depth
 
-| Level | Visual Treatment | Used For |
+| Level | Treatment | Where |
 |---|---|---|
-| **0 — Canvas** | `#020617` (Slate-950), flat | Root page background, hero text area, footer foundation |
-| **1 — Surface + Hairline** | `#0F172A` + 1px `{colors.hairline}` (`#303B4E`) | Standard bento cards, sticky header, demo container, FAQ items |
-| **2 — Surface Elevated** | `#1E293B` + 1px `{colors.hairline}` (`#303B4E`) | Highlighted bento cards, popover cards, secondary buttons, inputs |
-| **3 — Surface Card** | `#283548` + 1px `{colors.hairline-strong}` | Active list item rows, keycaps, active pill tab selections |
+| 0 | Flat white | Page, type, features, privacy, FAQ, CTA, footer |
+| 1 | 1px `{colors.hairline}` only | FAQ row rules, footer top rule, demo stage |
+| 2 | `{colors.mockup-shadow}` + 1px hairline + `{rounded.xl}` | **Hero product mockup only** |
+| Glass | `backdrop-filter: blur(16px)` + `bg-white/80` | **Sticky nav after scroll only** (1 glass surface max) |
 
-**Zero Drop Shadow Rule**: No element on the page carries `box-shadow` for elevation. The only subtle shadow allowed is on the floating popover mockup in the hero to simulate an in-browser floating overlay.
+Banned: `shadow-md/lg/xl/2xl` on anything else, glow, ring-offset shadows as decoration.
 
 ---
 
-## Shapes & Border Radius
+## Shapes
 
-| Token | Value | Applied To |
+Apple nested-surface rule: `inner_radius = outer_radius − padding` (min 4px).
+
+| Token | px | Use |
 |---|---|---|
-| `{rounded.none}` | 0px | Full-bleed hero band, footer border lines, top nav frame |
-| `{rounded.xs}` | 4px | Keyboard shortcut keycaps (`{component.keycap}`), status chips, metadata tags |
-| `{rounded.sm}` | 6px | Floating selection pill buttons, command palette rows, icon wrappers |
-| `{rounded.md}` | 8px | Standard buttons, search inputs, icon tiles (48x48), store action pills |
-| `{rounded.lg}` | 10px | Bento feature cards, trust strip cards, FAQ item containers |
-| `{rounded.xl}` | 16px | Hero popover mockup container, interactive demo viewport frame |
-| `{rounded.full}` | 9999px | Primary CTA pills, status pill badges, avatar chips |
+| `none` | 0 | Nav, footer, page |
+| `xs` | 4 | Keycaps, quota chip |
+| `sm` | 6 | Mockup inner buttons (`16 − 10`) |
+| `md` | 8 | Controls inside mockup |
+| `lg` | 12 | Demo stage (extension `--radius`) |
+| `xl` | 16 | Product mockup card |
+| `full` | 9999 | Primary/secondary CTA, selection pill |
 
-**Concentric Radius Nesting Rule**: Nested surfaces adhere strictly to `inner_radius = outer_radius - padding`. For example: a `16px` (`{rounded.xl}`) card container with `8px` padding contains elements with `8px` (`{rounded.md}`) radius.
+Never 24px+ radii. Never sharp 0 on the mockup.
 
 ---
 
 ## Components
 
-All components are defined with their visual specifications and interactive states (Default, Hover, Active/Pressed, Focus, Loading, Empty, Error).
+All states: default, hover, pressed, focus, loading, empty, error, success.
 
-### 1. Primary Button (`button-primary`) — The Universal CTA Pill
-- **Default**: Background `{colors.primary}` (`#2563EB`), text `{colors.on-primary}` (`#FFFFFF`), typography `{typography.button-md}`, height `36px`, padding `8px 16px`, border-radius `{rounded.full}` (or `{rounded.md}` in standard button contexts).
-- **Hover**: Background `{colors.primary-hover}` (`#4F46E5`), text `#FFFFFF`.
-- **Pressed**: Background `{colors.primary-pressed}` (`#1D4ED8`), transform `scale(0.95)` via Micro spring.
-- **Focus**: Outline none, box-shadow `0 0 0 2px #020617, 0 0 0 4px #3B82F6` (0ms).
-- **Rule**: Exactly ONE primary solid blue pill per viewport fold.
+### Primary button
 
-### 2. Secondary & Tertiary Buttons
-- **`button-secondary`**: Transparent background, 1px solid `{colors.hairline}`, text `{colors.on-dark}`, height `36px`, padding `8px 16px`, rounded `{rounded.md}`. Hover: background `{colors.surface-elevated}`, border `{colors.hairline-strong}`.
-- **`button-tertiary`**: Background `{colors.surface-elevated}` (`#1E293B`), text `{colors.on-dark}`, height `36px`, padding `8px 16px`, rounded `{rounded.md}`. Hover: background `{colors.surface-card}`.
+- Default: `{colors.primary}` fill, `{colors.on-primary}` text, h-44, px-22, `{rounded.full}`, `{typography.button-md}`. Icon Lucide `Download` 16px, stroke 1.5.
+- Hover: `{colors.primary-hover}`, scale 1.02, 150ms ease-out.
+- Pressed: `{colors.primary-pressed}`, scale 0.98.
+- Focus: `0 0 0 2px #FFFFFF, 0 0 0 4px #2563EB`.
+- Loading: keep width, swap icon for 16px spinner (CSS border, not a new lib), `aria-busy`.
+- Disabled: `{colors.surface-card}` / `{colors.ash}`, no pointer.
+- Rule: **one** solid blue pill per fold.
 
-### 3. Keycap Shortcut (`keycap`)
-- **Structure**: Physical keyboard key glyph.
-- **Visuals**: Linear gradient `{colors.key-bg-start}` (`#1E293B`) → `{colors.key-bg-end}` (`#0F172A`), 1px solid `{colors.hairline}`, text `{colors.body}`, typography `{typography.caption-md}` (Geist Mono), height `20px`, padding `1px 6px`, rounded `{rounded.xs}`.
-- **Examples**: `⌘ C`, `⌥ C`, `⏎`, `Esc`, `⌘ K`.
-- **Soft badges** (`badge-*-soft`): colored text on `{colors.canvas}` (opaque), not 15% alpha fills, so WCAG AA holds.
-- **Keycap fill** uses `{colors.key-bg-start}` → `{colors.key-bg-end}` gradient; YAML tokens the two stops (`keycap` and `keycap-shade`).
+### Secondary button
 
-### 4. Floating Action Pill (`floating-action-pill`)
-- **Visuals**: Background `#0F172A` (`{colors.surface}`), 1px solid `{colors.hairline-strong}`, rounded `{rounded.full}`, padding `4px 6px`, display flex, items center, gap 4px.
-- **Items**:
-  - "Explain" action: text `{colors.accent-blue}`, icon `Sparkles` (14px).
-  - Divider: 1px width, 12px height, color `{colors.hairline}`.
-  - "Summarize" action: text `{colors.body}`, icon `FileText` (14px).
-  - Divider: 1px width, 12px height, color `{colors.hairline}`.
-  - "Copy" action: text `{colors.mute}`, icon `Copy` (14px).
+Transparent, no border (border would add a third "surface"). Text `{colors.ink}`. Hover: `{colors.surface-elevated}` fill. Same height/radius as primary.
 
-### 5. Hero Popover Mockup Card (`command-palette-card`)
-- **Container**: Width `380px`, background `{colors.surface}` (`#0F172A`), border 1px solid `{colors.hairline}` (`#303B4E`), rounded `{rounded.xl}` (`16px`), overflow hidden.
-- **Header**: Height `38px`, padding `8px 12px`, border-bottom 1px solid `{colors.hairline}`, flex items center justify-between. Left: Sparkles icon (16px, `{colors.accent-blue}`) + title "Explain" (`{typography.body-strong}`). Right: Close button (`X`, 14px, hover `{colors.ink}`).
-- **Body**: Padding `14px`, typography `{typography.body-sm}`, text `{colors.body}`, line-height 1.6. Contains formatted markdown / bullet takeaways of the highlighted text.
-- **Meta Row**: Margin-top `10px`, inline-flex items-center gap `6px`, padding `2px 8px`, background `{colors.surface-elevated}`, border 1px solid `{colors.hairline}`, rounded `{rounded.xs}`, typography `{typography.caption-sm}`. Content: `⚡ 280ms • Llama 3.3 70B (Cloudflare Workers AI)`.
-- **Footer**: Height `44px`, padding `8px 12px`, border-top 1px solid `{colors.hairline}`, flex items center justify-between.
-  - Left button: Copy `[✓ Copied]` or `[📋 Copy]`, ghost variant, rounded `{rounded.sm}`.
-  - Right button: `Open in chat [⌥ C]`, ghost variant, rounded `{rounded.sm}`, includes keycap hint.
+### Keycap
 
-### 6. Feature Cards (`feature-card-dark` & `feature-card-elevated`)
-- **`feature-card-dark`**: Background `{colors.surface}` (`#0F172A`), border 1px solid `{colors.hairline}`, padding `24px`, rounded `{rounded.lg}`.
-- **`feature-card-elevated`**: Background `{colors.surface-elevated}` (`#1E293B`), border 1px solid `{colors.hairline}`, padding `24px`, rounded `{rounded.lg}`.
-- **Hover**: 1px border transitions to `{colors.hairline-strong}` (0ms).
+h-20, `{rounded.xs}`, 1px `{colors.hairline}`, fill `{colors.key-bg-start}`, text `{colors.body}`, `{typography.caption-md}`. No gradient animation. Examples: `⌘C`, `⌥C`, `⏎`, `Esc`, `⌘,`.
+
+### Quota chip (`quota-chip`)
+
+Inside mockup body. `{typography.caption-sm}` `{colors.charcoal}` on `{colors.surface-elevated}`, `{rounded.xs}`. Copy: `10 requests / 2 hours`. Exhausted variant: `{colors.accent-amber}` text + "BYO key `{keycap}⌘,`".
+
+### Product mockup (`command-palette-card`)
+
+Replica of `result-popover.tsx` light mode:
+
+- 360–380px wide, `{rounded.xl}`, bg `#FFFFFF`, border 1px `{colors.hairline}`, shadow `{colors.mockup-shadow}`.
+- Header 38px, px-14, bottom hairline. Lucide Sparkles 16px `{colors.charcoal}` + "Explain" `{typography.body-sm-strong}`. Close X 16px.
+- Body px-14 py-14, `{typography.body-sm}` `{colors.body}`. Quota chip + optional latency `280ms · Llama 3.3 70B` in `{typography.caption-sm}`.
+- Footer 44px, top hairline. Ghost Copy / Open in chat + `{keycap}⌥C`.
+- Loading (demo only): 3 skeleton lines, 700ms, then text.
+- Error: `{colors.accent-red}` sentence + Retry.
+- Empty: do not show an empty card; hide until result.
+
+### Selection pill (demo + mockup)
+
+`{rounded.full}`, bg white, 1px `{colors.hairline}`, `{colors.mockup-shadow}` **only if it is the hero mockup pill**; in the demo, same as mockup but no second page-level shadow if the demo stage already has a border. Items: Explain (Sparkles), Summarize (FileText), Copy. 14px icons, stroke 1.5.
+
+### Accordion (FAQ)
+
+No card. Item = hairline bottom `{colors.hairline}`. Trigger py-20, `{typography.heading-sm}` `{colors.ink}`, chevron `{colors.charcoal}`. Content `{typography.body-md}` `{colors.body}` pb-20. Expand 200ms ease-out. Hover: no fill.
 
 ---
 
 ## Do's and Don'ts
 
 ### Do
-- Render the entire site in dark mode on canvas `#020617`.
-- Use the solid Blue-600 pill (`#2563EB`) as the primary CTA button.
-- Build depth strictly through the surface ladder (`#020617` → `#0F172A` → `#1E293B` → `#283548`) and 1px hairline borders (`#303B4E`).
-- Use Geist Sans for UI text and Geist Mono for keycaps/stats matching Raycast's size/tracking specs.
-- Render the hero popover mockup as the primary visual hero artwork.
-- Use keycap glyphs (`{component.keycap}`) for all keyboard shortcuts.
-- Render the signature blue diagonal-stripe gradient band at the top of the hero exactly once per page.
-- Keep card padding tight (16px to 24px).
-- Maintain 96px vertical section rhythm.
+
+- White `#FFFFFF` canvas, SF Pro system stack, Blue-600 CTA.
+- Huge regular-weight display type, tight tracking.
+- Float the real light popover on white with the one allowed shadow.
+- Editorial feature rows; privacy as type; FAQ as a list.
+- Scroll reveals 300ms ease-out, 60–80ms stagger.
+- Keep marketing copy verbatim.
 
 ### Don't
-- DO NOT use gradient glow balls, radial spotlights, or aurora background blobs.
-- DO NOT use glassmorphism / background blur on content cards.
-- DO NOT use drop shadows on cards or buttons.
-- DO NOT use purple, violet, or fuchsia anywhere on the page.
-- DO NOT use emojis as feature icons (use Lucide SVG icons).
-- DO NOT use oversized 24px+ border radii on cards (max 10px on cards, 16px on hero frame).
-- DO NOT repeat the diagonal stripe gradient below the hero fold.
-- DO NOT use saturated blue, green, or amber on navbar, chrome buttons, or background panels.
-- DO NOT use generic AI buzzwords in copy ("revolutionize", "unlock", "supercharge", "seamless").
+
+- Don't ship Geist, Inter, or any webfont.
+- Don't ship a bento / card grid / "feature-card-dark".
+- Don't ship the blue diagonal stripe or any gradient background.
+- Don't hairline-border every section.
+- Don't use slate-400 `#94A3B8` for paragraph text (AA fail on white).
+- Don't add images, lottie, particles, count-ups, or auto carousels.
+- Don't rewrite copy.
 
 ---
 
 ## Page Layout & Component Grid
 
 ```
-+-------------------------------------------------------------------------+
-| [STICKY NAV] AI Clipboard Logo | Features · Demo · Arch · FAQ | [Add to Chrome] |
-+-------------------------------------------------------------------------+
-|                                                                         |
-| [HERO SECTION] (Signature Blue 3-Stripe Gradient Band across top)      |
-|                                                                         |
-|               "Understand anything faster than ever."                  |
-|  "Copy text, get instant summaries, or ask follow-ups in a side panel.  |
-|                         Zero tab-switching."                           |
-|                                                                         |
-|              [  Add to Chrome (Blue Pill)  ]   [ View on GitHub ]       |
-|            Free tier includes 10 requests every 2 hours.                |
-|                                                                         |
-|       +-------------------------------------------------------+         |
-|       |  [HERO PRODUCT ART: Mac Document Window + Popover]    |         |
-|       |  "Transformer architectures leverage self-attention..."|        |
-|       |     +-----------------------------------------------+ |         |
-|       |     |  [✨ Explain | Summarize | 📋 Copy]           | |         |
-|       |     +-----------------------------------------------+ |         |
-|       |     |  [RESULT POPOVER] ✨ Explain                  | |         |
-|       |     |  "Instead of processing words sequentially..." | |         |
-|       |     |  ⚡ 280ms • Llama 3.3 70B (Cloudflare AI)      | |         |
-|       |     |  [ Copy ]                 [ Open in chat ⌥C ] | |         |
-|       |     +-----------------------------------------------+ |         |
-|       +-------------------------------------------------------+         |
-+-------------------------------------------------------------------------+
-| [INTERACTIVE DEMO] (Live selectable reader text in #0F172A frame)       |
-| "Select text or press Cmd+C anywhere. The explanation appears in place."|
-+-------------------------------------------------------------------------+
-| [BENTO FEATURE GRID] (Alternating #0F172A & #1E293B cards)             |
-| [1. Smart Clipboard History]     | [2. macOS Look Up Everywhere]        |
-| [3. Deep Dive Side Panel]        | [4. Private by Architecture]         |
-| [5. Instant Zero-Setup Use (Full-width)]                                |
-+-------------------------------------------------------------------------+
-| [PRIVACY TRUST STRIP] (3-column technical card row)                     |
-| [Zero Background Logging] | [Local Key Storage] | [No Training on Data] |
-+-------------------------------------------------------------------------+
-| [FAQ ACCORDION] (5 collapsible rows with 1px hairlines)                 |
-+-------------------------------------------------------------------------+
-| [FINAL CTA] (Re-hook headline + Single Blue CTA Pill)                   |
-| "Stop switching tabs to explain text." -> [ Add to Chrome — It's Free ] |
-+-------------------------------------------------------------------------+
-| [FOOTER] (6-column links, brand wordmark, MV3 / CF Workers AI metadata) |
-+-------------------------------------------------------------------------+
+[NAV] wordmark                    Features  Demo  Privacy  FAQ     [Add to Chrome]
+                                 (blur after scroll; 1 glass)
+
+[HERO]  (min-height ~ 100vh minus nav)
+        optional label-caps eyebrow: Cloudflare Workers AI · Llama 3.3 70B
+        H1 72/400/-0.04em: Understand anything faster than ever.
+        body-lg charcoal: Copy text, get instant summaries, or ask follow-ups
+                          in a side panel. Zero tab-switching.
+        [Add to Chrome]  [View on GitHub]
+        caption-sm: Free tier includes 10 requests every 2 hours. No credit card required.
+        (80px space)
+        FLOATING LIGHT POPOVER  (surface #1) + quota chip
+        optional unboxed highlighted sentence above it
+
+[DEMO]  body-lg caption: Select text or press Cmd+C anywhere. The explanation appears in place.
+        light demo stage (surface #2)
+
+[FEATURES]  five editorial rows, alternating, no cards
+        1 text L / toast visual R     Smart Clipboard History
+        2 popover visual L / text R   macOS Look Up Everywhere
+        3 text L / sidepanel visual R Deep Dive Side Panel
+        4 lock glyph L / text R       Private by Architecture
+        5 text centered + keycaps     Instant Zero-Setup Use
+
+[PRIVACY]  three typographic columns, no boxes
+
+[FAQ]  H2 Frequently Asked Questions (if needed) + 5 hairline rows
+
+[CTA]  H2: Stop switching tabs to explain text.
+       [Add to Chrome — It's Free]
+
+[FOOTER]  one top hairline · 6 links · wordmark · © 2026 · MIT · Chrome MV3
 ```
 
-### Section 1: Sticky Navigation Bar (`primary-nav`)
-- **Height**: 56px.
-- **Background**: `#020617` with `backdrop-blur-md` (80% opacity) + 1px hairline bottom rule (`#303B4E`).
-- **Left**: AI Clipboard icon (`24px`, rounded `{rounded.md}`) + "AI Clipboard" wordmark in `{typography.body-sm-strong}` + version badge (`v2.0 • MV3 Ready` in Geist Mono).
-- **Center**: Nav links (`Features`, `Demo`, `Architecture`, `FAQ`) in `{typography.body-sm}`, hover `{colors.ink}` (0ms).
-- **Right**: GitHub icon button (32x32, 1px border) + "Add to Chrome" `{component.button-primary}` blue pill (36px height).
+### Nav (`header.tsx`)
 
-### Section 2: Cinematic Hero with Signature Stripe Band
-- **Structure**: Full-width container with signature 3-stripe diagonal blue gradient at top (`#2563EB` → `#1E3A8A`).
-- **Pill Tag**: Top release pill `Cloudflare Workers AI + Llama 3.3 70B` with 6px pulsating green dot (`#10B981`).
-- **Headline (H1)**: `{typography.display-xl}` (64px desktop / 36px mobile, weight 600, line-height 1.1, tracking 0):
-  *Understand anything faster than ever.*
-- **Subheadline**: `{typography.body-lg}` (18px, weight 400, color `{colors.mute}`, max-width 580px):
-  *Copy text, get instant summaries, or ask follow-ups in a side panel. Zero tab-switching.*
-- **Action Cluster**:
-  - Primary CTA: `{component.button-primary}` "Add to Chrome" blue pill (`#2563EB`), height 44px, padding `10px 24px`, icon `Download` (16px).
-  - Secondary CTA: `{component.button-secondary}` "View on GitHub", height 44px, padding `10px 20px`, GitHub SVG icon.
-- **Microcopy**: `{typography.caption-sm}` (`#64748B`):
-  *Free tier includes 10 requests every 2 hours. No credit card required.*
-- **Hero Mockup Artwork**: Scaled full-fidelity browser viewport (max-width `960px`) containing highlighted text, the floating action pill, and the floating result popover card.
+Height 52px. Default: `bg-transparent`. Scrolled: `bg-white/80 backdrop-blur-md` + bottom 1px `{colors.hairline}`. Left: `/icon.png` 24px `{rounded.md}` + "AI Clipboard" `{typography.body-sm-strong}`. Center (md+): Features, Demo, Privacy (was "Architecture" — keep hash `#privacy`), FAQ. Right: GitHub icon (no bordered box; 44px hit) + primary "Add to Chrome". Mobile: hide links, keep wordmark + CTA. No hamburger unless links cannot fit — prefer hide.
 
-### Section 3: Interactive Demo Section
-- **Caption**: `{typography.body-lg}`:
-  *Select text or press Cmd+C anywhere. The explanation appears in place.*
-- **Playground Viewport**: Background `{colors.surface}` (`#0F172A`), 1px solid `{colors.hairline}`, rounded `{rounded.xl}`, padding 24px.
-- **Behavior**: Users can highlight sample technical sentences to trigger the interactive floating action pill and live mock response card in real time.
+### Hero (`hero.tsx` + `hero-mockup.tsx`)
 
-### Section 4: Bento Feature Grid (Raycast 5-Card Layout)
-Alternating surface elevations to create rhythm without visual clutter.
+Copy verbatim:
 
-1. **Card 1 (Col span 1 / Surface `#0F172A`) — Smart Clipboard History**
-   - Title: *Smart Clipboard History* (`{typography.heading-md}`)
-   - Body: *Recalls recent clips automatically. Run one-click explain or summarize actions directly from the copy toast.*
-   - Visual: Mini interactive toast component with captured clip and `Explain` action.
-2. **Card 2 (Col span 1 / Surface-Elevated `#1E293B`) — macOS Look Up Everywhere**
-   - Title: *macOS Look Up Everywhere* (`{typography.heading-md}`)
-   - Body: *Highlights trigger a lightweight floating card right next to your selection. Read the takeaway without losing your place.*
-   - Visual: Floating selection pill mockup with keycap `[ ⏎ ]`.
-3. **Card 3 (Col span 1 / Surface-Elevated `#1E293B`) — Deep Dive Side Panel**
-   - Title: *Deep Dive Side Panel* (`{typography.heading-md}`)
-   - Body: *Hit Alt+C to slide out a persistent chat. Ask follow-up questions about selected text without leaving your active tab.*
-   - Visual: Side panel chat message mockup with shortcut chip `{component.keycap}` `⌥ C`.
-4. **Card 4 (Col span 1 / Surface `#0F172A`) — Private by Architecture**
-   - Title: *Private by Architecture* (`{typography.heading-md}`)
-   - Body: *Custom API keys never leave local browser storage. Free tier requests run ephemerally on Cloudflare Workers AI.*
-   - Visual: Shield icon + `chrome.storage.local` isolation diagram.
-5. **Card 5 (Col span 2 full-width / Surface `#0F172A`) — Instant Zero-Setup Use**
-   - Title: *Instant Zero-Setup Use* (`{typography.heading-md}`)
-   - Body: *Install and run immediately. No account signup, no API key required to start, and sub-second responses.*
-   - Visual: Horizontal speed benchmark chip (`⚡ 280ms inference latency`).
+- H1: Understand anything faster than ever.
+- Sub: Copy text, get instant summaries, or ask follow-ups in a side panel. Zero tab-switching.
+- Primary: Add to Chrome → `#`
+- Secondary: View on GitHub → repo URL
+- Micro: Free tier includes 10 requests every 2 hours. No credit card required.
 
-### Section 5: Privacy & Permissions Trust Strip
-3-column technical card row on `#0F172A` with 16px padding and 1px hairline borders:
-1. **Zero background surveillance**: *AI Clipboard activates only when you select text or trigger an explicit action—it never logs unselected browsing.*
-2. **Local key isolation**: *If you bring your own OpenAI or Anthropic API key, it stays strictly in local browser storage (`chrome.storage.local`).*
-3. **No training on your data**: *Free-tier queries route ephemerally through Cloudflare Workers AI and are discarded immediately after inference.*
+H1 is the page's only `<h1>`. Max-width 720px, centered. Mockup centered, not inside a browser frame.
 
-### Section 6: Frequently Asked Questions (FAQ)
-Single-column accordion (max-width `768px`) with 1px hairline row dividers and 0ms active highlight:
-- **Q1**: *Is AI Clipboard free to use?* → **A**: *Yes. You get 10 free AI requests every 2 hours out of the box. If you need unlimited queries, paste your own API key in settings.*
-- **Q2**: *Which browsers are supported?* → **A**: *Google Chrome, Brave, Arc, Microsoft Edge, and any Chromium-based browser supporting Manifest V3.*
-- **Q3**: *Does the extension read everything I copy?* → **A**: *No. It only processes clips when you click an action on the copy toast or select text to trigger an inline explanation. Nothing leaves your browser without user action.*
-- **Q4**: *Which AI model powers the explanations?* → **A**: *The free tier runs Meta Llama 3.3 70B via Cloudflare Workers AI for rapid responses. BYO key supports OpenAI GPT-4o models.*
-- **Q5**: *Can I bring my own API key?* → **A**: *Yes. Open settings and paste your API key for unlimited requests. Your key is stored locally on your machine and communicates directly with the provider.*
+### Demo (`demo.tsx`)
 
-### Section 7: Final CTA Section
-- **Container**: Centered text layout with 96px vertical padding.
-- **Re-hook Headline**: `{typography.display-lg}` (56px desktop / 32px mobile, weight 500):
-  *Stop switching tabs to explain text.*
-- **CTA Button**: `{component.button-primary}` blue pill (`#2563EB`), height 44px, padding `10px 28px`:
-  *Add to Chrome — It's Free*
+Caption verbatim: Select text or press Cmd+C anywhere. The explanation appears in place.
 
-### Section 8: Footer
-- **Layout**: 1px hairline top rule (`#303B4E`), 64px padding, 6-column link matrix + bottom metadata row.
-- **Links**: Product, Extension Features, Privacy Policy, GitHub Repository, Cloudflare Workers AI, Chrome Web Store.
-- **Bottom Bar**: AI Clipboard wordmark + `© 2026 AI Clipboard • MIT License • Built for Chrome MV3`.
+Stage: `{rounded.lg}`, 1px `{colors.hairline}`, bg white, padding 32–40px. Keep selection → pill → mock stream → result. Esc resets. Empty hint as in state table. Touch fallback: Explain / Summarize text buttons.
+
+### Features (replace bento)
+
+Copy verbatim per block:
+
+1. **Smart Clipboard History** — Recalls recent clips automatically. Run one-click explain or summarize actions directly from the copy toast. Visual: copy-toast fragment (Captured + Explain / Summarize), unboxed.
+2. **macOS Look Up Everywhere** — Highlights trigger a lightweight floating card right next to your selection. Read the takeaway without losing your place. Visual: mini popover + `{keycap}⏎`.
+3. **Deep Dive Side Panel** — Hit Alt+C to slide out a persistent chat. Ask follow-up questions about selected text without leaving your active tab. Visual: two chat bubbles + `{keycap}⌥C`.
+4. **Private by Architecture** — Custom API keys never leave local browser storage. Free tier requests run ephemerally on Cloudflare Workers AI. Visual: Lucide `Lock` 20px + `chrome.storage.local` in mono. No shield-card.
+5. **Instant Zero-Setup Use** — Install and run immediately. No account signup, no API key required to start, and sub-second responses. Visual: `{keycap}` cluster, no latency-badge card.
+
+Row structure: 12-col, 5+7 or 7+5, align-center, py from section rhythm. Title `{typography.heading-xl}`, body `{typography.body-lg}` `{colors.body}`.
+
+### Privacy (`privacy.tsx`)
+
+No boxes. Optional one `{typography.label-caps}` eyebrow "Privacy" (counts toward the 1-per-3 quota; skip if hero already used one). Three columns (stack on mobile):
+
+1. **Zero background surveillance** — AI Clipboard activates only when you select text or trigger an explicit action—it never logs unselected browsing.
+2. **Local key isolation** — If you bring your own OpenAI or Anthropic API key, it stays strictly in local browser storage (`chrome.storage.local`).
+3. **No training on your data** — Free-tier queries route ephemerally through Cloudflare Workers AI and are discarded immediately after inference.
+
+Titles `{typography.heading-md}`; bodies `{typography.body-sm}` `{colors.body}`. Icons optional, 20px, `{colors.charcoal}`, not in tiles.
+
+### FAQ (`faq.tsx`)
+
+Questions/answers verbatim from marketing-copy.md (Q1–Q5). Centered max-width 720px. Hairline dividers only.
+
+### Final CTA + footer (`final-cta.tsx`)
+
+Re-hook: Stop switching tabs to explain text.
+Button: Add to Chrome — It's Free.
+
+Footer links: Product, Extension Features, Privacy Policy, GitHub Repository, Cloudflare Workers AI, Chrome Web Store. Bottom: AI Clipboard · © 2026 AI Clipboard • MIT License • Built for Chrome MV3.
 
 ---
 
 ## Responsive & Platform Matrix
 
-| Section | Mobile (<480px) | Tablet (480–768px) | Desktop (769–1280px) | Ultrawide (>1280px) | Platform Constraints & Verification |
+Breakpoints: 480 / 768 / 1024 / 1280. Touch targets ≥44px. Focus visible always. `prefers-reduced-motion` kills all motion.
+
+| Section | Mobile <480 | Tablet 480–768 | Desktop 769–1280 | Platform | Verification |
 |---|---|---|---|---|---|
-| **Sticky Nav** | Logo + "Add to Chrome" pill. Links collapse into drawer. Height 52px. | Logo + GitHub icon + "Add to Chrome" pill. | Full horizontal link cluster + GitHub + blue pill. | Max-width 1240px container locked. | Touch targets ≥ 44px. Verified via Agent-Browser mobile viewport. |
-| **Hero Section** | H1 scales to 36px. CTAs stack full-width. Mockup scales to 100% width. | H1 48px. CTAs horizontal. Mockup 90% width. | H1 64px. CTAs horizontal. Full-fidelity 960px mockup. | Centered with 80px outer gutters. | No horizontal scroll. Signature stripe preserves 45° angle. |
-| **Interactive Demo** | Selection text shortened; popover renders beneath text. | Standard interactive layout with fixed width card. | Full dual-column live interactive selection preview. | Full 1080px frame width. | Touch select enabled on iOS/Android WebKit. |
-| **Bento Grid** | 1-column vertical stack (5 cards). Padding 16px. | 2-column grid. Card 5 spans 2 cols. | 2-column grid. Card 5 spans 2 cols. | 2-column grid with 16px gutters. | Concentric radii consistent across viewports. |
-| **Privacy Strip** | 1-column stack. | 3-column horizontal grid. | 3-column horizontal grid. | 3-column horizontal grid. | Hairline borders maintain 1px crispness on Retina displays. |
-| **FAQ Accordion** | Full width, touch target 48px per accordion header. | Max-width 680px centered. | Max-width 768px centered. | Max-width 768px centered. | Keyboard navigation (`Tab`, `Space`, `Enter`) functional at 0ms. |
-| **Final CTA** | Re-hook 32px. Full-width blue pill. | Re-hook 44px. Centered blue pill. | Re-hook 56px. Centered blue pill. | Re-hook 56px. Centered blue pill. | Single solid pill per viewport rule enforced. |
+| Nav | Wordmark + CTA 44px. Links hidden. | Wordmark + CTA + GitHub. | Full links. | `position: sticky/fixed`; blur only after `scrollY > 8`. | No overlap with H1. |
+| Hero | H1 40px/400. CTAs stack 100% width, 44px. Mockup 100% width, shadow preserved. | H1 56px. CTAs row. Mockup 90%. | H1 72px. Mockup 380px card. | No stripe. No window chrome. | Single h1. Contrast ink/white. |
+| Demo | Short sample. Pill below text. Touch fallback buttons visible. | Standard. | Full stage ~720px. | Selection + keyboard Esc. | Empty hint if idle. |
+| Features | Stack visual under title/body. 80px row gap. | Alternate still; visual 40% width. | Alternate L/R, 140px row gap. | No card class. | No `border` on row wrapper. |
+| Privacy | Stack 3 blocks, 32px gap. | 3-col. | 3-col, 40px gap. | No boxes. | |
+| FAQ | Full width, 48px trigger. | max 680. | max 720. | Tab / Space / Enter. | |
+| CTA | H2 32px. Full-width pill. | H2 40px. | H2 48px. | One blue pill. | |
+| Footer | 2-col links. | 3-col. | 6-col. | Top hairline only. | |
+
+Overflow: `overflow-x: hidden` on body. Mockup must not cause horizontal scroll.
 
 ---
 
 ## Navigation Decision
 
-- **Pattern**: Sticky Navbar with Persistent Primary Action.
-- **Rationale**: For a browser extension landing page, the conversion goal is singular: installing the extension from the Chrome Web Store. A sticky top bar ensures that the "Add to Chrome" action and GitHub link remain accessible regardless of scroll depth without occupying excess vertical space.
-- **Mobile Treatment**: On viewports `<768px`, secondary navigation links are hidden, leaving only the brand icon and the primary CTA pill to maximize install conversion and prevent clutter.
+**Sticky top navbar + persistent primary CTA.** No sidebar. No hover-expand. Mobile: hide secondary links rather than a hamburger drawer (one conversion action). Hash targets: `#features` `#demo` `#privacy` `#faq`.
 
 ---
 
-## Motion & Interaction (Raycast Motion Implementation)
+## Motion & Interaction
 
-Motion is powered by **Framer Motion** (the only allowed new dependency). It adheres strictly to Raycast's motion physics: front-loaded spring arrival, 0ms hover/focus feedback, and clean ease-in exits.
+Library: existing `framer-motion`. Wrap page in `MotionConfig reducedMotion="user"` (already in `page.tsx`).
 
-### 1. Spring Physics Configs
-- **Hero Popover Window Spring**:
-  `{ stiffness: 550, damping: 36, mass: 0.8 }`
-  - Entrance: `opacity: [0, 1]`, `scale: [0.96, 1]`, `y: [-8, 0]`
-  - Critically damped: arrives instantly with snap, zero overshoot or bounce.
-- **List / Card Item Results Spring**:
-  `{ stiffness: 480, damping: 34, mass: 0.9 }`
-- **Button Press Micro Spring**:
-  `{ stiffness: 800, damping: 44, mass: 0.5 }`
-  - Active state: `scale(0.95)` on pointer down, immediate snap back on release.
+Allowed:
 
-### 2. Durations & Easings
-- **Keyboard & Hover Highlight**: `0ms` (Instant). Selected command palette rows and hover borders switch colors immediately without animation lag.
-- **Card Entrance Stagger**: `12ms` between list items / `15ms` between bento cards.
-- **Modal / Popover Exit**: `100ms` with `ease-in` (`cubic-bezier(0.7, 0, 0.84, 0)`). Exits are never spring-animated.
-- **Input Shimmer Loading**: `1000ms` linear border shimmer cycle during AI inference.
+| Name | Value | Where |
+|---|---|---|
+| Scroll reveal | `opacity 0→1`, `y 16→0`, **300ms**, `ease: [0.16, 1, 0.3, 1]` (ease-out) | Hero type, each feature row, privacy, FAQ, CTA |
+| Stagger | **60–80ms** between sibling reveals | Hero cluster (eyebrow, h1, sub, actions, mockup); feature rows |
+| Hover scale | `scale 1.02`, 150ms ease-out | Buttons, clickable pill items |
+| Press | `scale 0.98`, 150ms | Buttons |
+| Accordion | height auto, 200ms ease-out | FAQ |
+| Mockup enter | same 300ms fade+rise | Hero mockup |
+| Mockup tilt | scroll-linked `rotateX(0→4deg)` / `translateY` parallax, **product surface only**, max 8px | Hero mockup. Use `useScroll` + `useTransform`. Disabled if reduced motion. |
+| Demo result | 200ms fade-in | Result card |
 
-### 3. Accessibility & Reduced Motion
+Banned: springs as default page motion, 0ms Raycast keyboard theatre on marketing type, stripe, particles, count-up, shimmer longer than the 700ms demo load, parallax on headlines, bounce, loops >400ms except the 700ms demo skeleton.
+
 ```css
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -799,33 +771,56 @@ Motion is powered by **Framer Motion** (the only allowed new dependency). It adh
   }
 }
 ```
-Under `prefers-reduced-motion: reduce`, all springs and transitions collapse to `0ms` instant visibility changes.
+
+Tilt/parallax must be gated on `useReducedMotion() === false`.
 
 ---
 
 ## Visual Asset Plan
 
-1. **Brand Icons**:
-   - AI Clipboard Icon: `/icon.png` (24x24, 32x32, 128x128).
-   - Chrome Web Store SVG logo via Simple Icons (`https://cdn.simpleicons.org/googlechrome`).
-   - GitHub SVG logo via Simple Icons (`https://cdn.simpleicons.org/github`).
-2. **UI Action Icons**:
-   - Lucide React icons: `Sparkles` (Explain), `FileText` (Summarize), `Copy` (Copy), `Check` (Copied status), `Download` (Add to Chrome), `Shield` (Privacy), `Zap` (Speed), `ChevronDown` (FAQ), `X` (Close).
-3. **No Stock Photography**: Zero stock photos, zero AI-generated art avatars, and zero generic 3D illustrations. All visual interest stems from the rendered product UI popovers and code blocks.
+- Brand: `/icon.png` (24 / 32). No new assets.
+- Simple Icons GitHub SVG inline (already in header). Chrome logo only if needed; not required.
+- Lucide (existing): Sparkles, FileText, Copy, Check, Download, Lock, ChevronDown, X, MessagesSquare. Stroke 1.5.
+- Zero photos, zero OG generation in this pass, zero Lottie.
+
+SEO (already in layout, keep):
+
+- Title: AI Clipboard — Copy & Understand for Chrome
+- Meta: Instant AI explanations and summaries on any webpage with macOS-style Look Up, clipboard history, and a side panel. Free, private, and fast.
+- OG: Instant AI explanations and summaries on any webpage without switching tabs.
+- H1: Understand anything faster than ever.
 
 ---
 
 ## Post-Build Critique Checklist
 
-During QA review and before release, the Engineer and Reviewer must verify:
-- [ ] **Achromatic Canvas**: Page background is strictly `#020617` and cards use `#0F172A` / `#1E293B`.
-- [ ] **No Glow / No Aurora**: All radial gradients, blurred background spheres, and glow filters have been deleted.
-- [ ] **No Drop Shadows**: All card `shadow-md`, `shadow-xl`, `shadow-2xl` classes are removed; elevation is purely via background color and 1px border.
-- [ ] **Single Blue Pill Per Fold**: Only the main "Add to Chrome" button uses the solid `#2563EB` blue pill style.
-- [ ] **Geist Typography Matching Raycast**: Headings and body match the size, line-height, and tracking table. Keycaps use Geist Mono.
-- [ ] **Hero Popover Mockup**: Full-fidelity replica of `result-popover.tsx` with floating action pill and meta latency badge.
-- [ ] **Signature Stripe**: Blue diagonal gradient band appears once at the top of the hero and nowhere else.
-- [ ] **Keyboard Navigation**: Focus rings and hover states react instantly at 0ms.
-- [ ] **Framer Motion Only**: Only `framer-motion` is installed as a new dependency.
-- [ ] **WCAG AA Compliance**: All text-to-background contrast ratios exceed 4.5:1 (Primary CTA exceeds 7.0:1).
-- [ ] **Single H1 Tag**: Exactly one `<h1>` tag on the page ("Understand anything faster than ever.").
+- [ ] Canvas `#FFFFFF`. No dark leftover (`#020617` gone).
+- [ ] No Geist in `layout.tsx` or computed font-family.
+- [ ] No diagonal stripe, no gradient backgrounds.
+- [ ] No bento / feature cards with borders. Features are rows.
+- [ ] Privacy has no boxed columns.
+- [ ] At most two bordered surfaces: mockup + demo stage.
+- [ ] Mockup is the light `bg-white border-slate-200` popover with `{colors.mockup-shadow}`.
+- [ ] Quota chip visible: `10 requests / 2 hours`.
+- [ ] Keycaps SF Mono stack.
+- [ ] Display H1 weight 400, tracking -0.04em.
+- [ ] One H1. One blue pill per fold.
+- [ ] Section y ≈ 140px desktop.
+- [ ] Scroll reveals 300ms; reduced-motion collapses.
+- [ ] Copy matches `research/marketing-copy.md` verbatim.
+- [ ] Focus rings on white. Touch 44px. AA on all text vs white (no slate-400 body).
+- [ ] No new npm deps.
+
+---
+
+## Accessibility
+
+- Single `h1`. Feature titles `h2`. Privacy titles `h3`. FAQ questions are buttons inside `h2` or `h3` via the accordion trigger — do not add a second page h1.
+- `lang="en"`. Skip link optional but recommended: "Skip to demo".
+- Contrast: ink/body/charcoal vs white as tabled. Primary button white on `#2563EB` ~4.6:1.
+- Focus: never `outline: none` without the 2px canvas + 4px `#2563EB` ring.
+- Demo: `role="region"` `aria-label="Interactive demo"`. Result `role="status"` for the mock stream. Esc documented in a visually adjacent hint.
+- Motion: `MotionConfig reducedMotion="user"` + CSS kill-switch.
+- Images: icon `alt=""`. Mockup `role="img"` `aria-label="AI Clipboard popover explaining selected text"`.
+
+Do not commit. Only overwrite the spec file.
