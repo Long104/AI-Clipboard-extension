@@ -9,64 +9,70 @@ export default {
   theme: {
     extend: {
       colors: {
-        canvas: "var(--bg-canvas)",
+        canvas: "var(--canvas)",
         surface: {
-          1: "var(--bg-surface-1)",
-          2: "var(--bg-surface-2)",
-          3: "var(--bg-surface-3)",
-          card: "var(--bg-surface-card)",
-          popover: "var(--bg-surface-popover)",
+          DEFAULT: "var(--surface)",
+          elevated: "var(--surface-elevated)",
+          card: "var(--surface-card)",
         },
         hairline: {
-          DEFAULT: "var(--border-hairline)",
-          strong: "var(--border-hairline-strong)",
-          hover: "var(--border-hairline-hover)",
+          DEFAULT: "var(--hairline)",
+          soft: "var(--hairline-soft)",
+          strong: "var(--hairline-strong)",
         },
         ink: {
-          primary: "var(--text-primary)",
-          secondary: "var(--text-secondary)",
-          tertiary: "var(--text-tertiary)",
-          disabled: "var(--text-disabled)",
+          DEFAULT: "var(--ink)",
+          body: "var(--body)",
+          charcoal: "var(--charcoal)",
+          mute: "var(--mute)",
+          ash: "var(--ash)",
+          stone: "var(--stone)",
         },
-        lime: {
-          DEFAULT: "var(--accent-lime)",
-          hover: "var(--accent-lime-hover)",
-          active: "var(--accent-lime-active)",
-          fg: "var(--accent-lime-fg)",
-          glow: "var(--accent-lime-glow)",
+        primary: {
+          DEFAULT: "var(--primary)",
+          hover: "var(--primary-hover)",
+          pressed: "var(--primary-pressed)",
+          fg: "var(--on-primary)",
         },
-        semantic: {
-          green: "var(--semantic-green)",
-          blue: "var(--semantic-blue)",
-          amber: "var(--semantic-amber)",
-          red: "var(--semantic-red)",
+        accent: {
+          blue: "var(--accent-blue)",
+          "blue-soft": "var(--accent-blue-soft)",
+          green: "var(--accent-green)",
+          "green-soft": "var(--accent-green-soft)",
+          amber: "var(--accent-amber)",
+          "amber-soft": "var(--accent-amber-soft)",
+          red: "var(--accent-red)",
+          "red-soft": "var(--accent-red-soft)",
+        },
+        keycap: {
+          start: "var(--keycap-start)",
+          end: "var(--keycap-end)",
         },
       },
       fontFamily: {
-        sans: ["var(--font-geist-sans)", "Inter", "-apple-system", "sans-serif"],
+        sans: ["var(--font-geist-sans)", "system-ui", "-apple-system", "sans-serif"],
         mono: ["var(--font-geist-mono)", "ui-monospace", "monospace"],
       },
-      boxShadow: {
-        glow: "0 0 35px -5px var(--accent-lime-glow)",
-        card: "0 1px 2px 0 rgba(0, 0, 0, 0.4), 0 4px 12px 0 rgba(0, 0, 0, 0.2)",
-        popover: "0 12px 36px -4px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--border-hairline)",
+      fontSize: {
+        "caption-md": ["13px", { lineHeight: "1.4", letterSpacing: "0.1px" }],
+        "caption-sm": ["12px", { lineHeight: "1.5", letterSpacing: "0.4px" }],
       },
       borderRadius: {
+        xs: "var(--radius-xs)",
         sm: "var(--radius-sm)",
         md: "var(--radius-md)",
         lg: "var(--radius-lg)",
         xl: "var(--radius-xl)",
-        "2xl": "var(--radius-2xl)",
         full: "var(--radius-full)",
       },
       spacing: {
-        "section-y": "var(--section-y)",
-        "section-y-mobile": "var(--section-y-mobile)",
+        section: "var(--section-y)",
         "container-max": "var(--container-max)",
         "container-px": "var(--container-px)",
-        "container-px-mobile": "var(--container-px-mobile)",
-        "grid-gap": "var(--grid-gap)",
-        "grid-gap-sm": "var(--grid-gap-sm)",
+      },
+      boxShadow: {
+        // Spec exception: the ONLY shadow allowed — floating popover mockup in hero
+        popover: "0 12px 40px -8px rgba(0,0,0,0.7), 0 0 0 1px var(--hairline)",
       },
       keyframes: {
         "accordion-down": {
@@ -77,20 +83,10 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        "fade-in": {
-          from: { opacity: "0" },
-          to: { opacity: "1" },
-        },
-        "zoom-in-95": {
-          from: { opacity: "0", transform: "scale(0.95)" },
-          to: { opacity: "1", transform: "scale(1)" },
-        },
       },
       animation: {
-        "accordion-down": "accordion-down 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
-        "accordion-up": "accordion-up 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
-        "fade-in": "fade-in 0.2s ease-out",
-        "zoom-in-95": "zoom-in-95 0.2s ease-out",
+        "accordion-down": "accordion-down 0.13s cubic-bezier(0.16, 1, 0.3, 1)",
+        "accordion-up": "accordion-up 0.13s cubic-bezier(0.16, 1, 0.3, 1)",
       },
     },
   },
