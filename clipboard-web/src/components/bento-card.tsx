@@ -1,5 +1,10 @@
+"use client";
+
 import * as React from "react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/cn";
+
+const itemSpring = { stiffness: 480, damping: 34, mass: 0.9 } as const;
 
 export interface BentoCardProps {
   title: string;
@@ -7,35 +12,36 @@ export interface BentoCardProps {
   visualElement: React.ReactNode;
   spanClass?: string;
   index?: number;
+  elevated?: boolean;
 }
 
-export function BentoCard({ title, description, visualElement, spanClass, index }: BentoCardProps) {
-  const colors = [
-    "border-lime/20 bg-lime/5",
-    "border-semantic-blue/20 bg-semantic-blue/5",
-    "border-semantic-amber/20 bg-semantic-amber/5",
-    "border-semantic-green/20 bg-semantic-green/5",
-    "border-semantic-red/20 bg-semantic-red/5",
-  ];
-  const color = colors[index ?? 0];
-
+export function BentoCard({
+  title,
+  description,
+  visualElement,
+  spanClass,
+  index = 0,
+  elevated = false,
+}: BentoCardProps) {
   return (
-    <div className={cn(
-      "group relative bg-surface-card border border-hairline rounded-xl p-6 sm:p-8 flex flex-col justify-between overflow-hidden transition-all duration-200 hover:-translate-y-1",
-      spanClass,
-      color,
-    )}>
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-48px" }}
+      transition={{ ...itemSpring, delay: index * 0.015 }}
+      className={cn(
+        "group rounded-lg border border-hairline hover:border-hairline-strong transition-none p-6 flex flex-col justify-between overflow-hidden",
+        elevated ? "bg-surface-elevated" : "bg-surface",
+        spanClass,
+      )}
+    >
       <div>
-        <h3 className="text-xl font-semibold text-ink-primary tracking-tight mb-3">
+        <h3 className="text-xl font-medium leading-[1.4] tracking-[0.2px] text-ink mb-3">
           {title}
         </h3>
-        <p className="text-sm text-ink-secondary leading-relaxed">
-          {description}
-        </p>
+        <p className="text-sm leading-[1.6] text-mute">{description}</p>
       </div>
-      <div className="mt-6">
-        {visualElement}
-      </div>
-    </div>
+      <div className="mt-6">{visualElement}</div>
+    </motion.div>
   );
 }
