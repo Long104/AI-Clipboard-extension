@@ -1,3 +1,6 @@
+"use client";
+
+import { motion } from "framer-motion";
 import { EyeOff, KeyRound, ShieldCheck } from "lucide-react";
 
 const pillars = [
@@ -9,7 +12,12 @@ const pillars = [
   {
     icon: KeyRound,
     title: "Local Key Isolation",
-    body: "If you bring your own OpenAI or Anthropic API key, it stays strictly in local browser storage (chrome.storage.local).",
+    body: (
+      <>
+        If you bring your own OpenAI or Anthropic API key, it stays strictly in
+        local browser storage (<span className="font-mono">chrome.storage.local</span>).
+      </>
+    ),
   },
   {
     icon: ShieldCheck,
@@ -23,25 +31,31 @@ export function Privacy() {
     <section
       id="privacy"
       aria-label="Privacy and permissions"
-      className="py-section max-w-[1240px] mx-auto px-4 sm:px-6"
+      className="py-section max-w-[980px] mx-auto px-4 sm:px-6"
     >
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+        viewport={{ once: true, margin: "-64px" }}
+        className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12"
+      >
         {pillars.map((pillar) => (
-          <div
-            key={pillar.title}
-            className="bg-surface border border-hairline rounded-lg p-4 hover:border-hairline-strong transition-none"
-          >
+          <div key={pillar.title}>
             <pillar.icon
-              className="text-mute mb-3 h-5 w-5"
+              className="h-5 w-5 text-mute mb-4"
+              strokeWidth={1.5}
               aria-hidden="true"
             />
-            <h3 className="text-sm font-medium leading-[1.6] tracking-[0.2px] text-ink mb-1.5">
+            <h3 className="text-[21px] font-semibold tracking-[-0.01em] text-ink">
               {pillar.title}
             </h3>
-            <p className="text-sm leading-[1.6] text-mute">{pillar.body}</p>
+            <p className="mt-2 text-[15px] leading-[1.5] text-body">
+              {pillar.body}
+            </p>
           </div>
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 }

@@ -38,9 +38,9 @@ export function Faq() {
     <section
       id="faq"
       aria-label="Frequently asked questions"
-      className="py-section max-w-[768px] mx-auto px-4 sm:px-6"
+      className="py-section max-w-[720px] mx-auto px-4 sm:px-6"
     >
-      <h2 className="text-[32px] sm:text-[56px] font-medium leading-[1.17] tracking-[0.2px] text-ink text-center">
+      <h2 className="text-[32px] md:text-[40px] lg:text-[48px] font-normal leading-[1.08] tracking-[-0.03em] text-ink text-center">
         Frequently Asked Questions
       </h2>
       <Accordion type="single" collapsible className="w-full mt-10">
