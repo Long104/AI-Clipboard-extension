@@ -1,3 +1,4 @@
+import { MotionConfig } from "framer-motion";
 import { Header } from "@/components/header";
 import { Hero } from "@/components/hero";
 import { Demo } from "@/components/demo";
@@ -8,16 +9,18 @@ import { FinalCta } from "@/components/final-cta";
 
 export default function Home() {
   return (
-    <div className="relative min-h-screen bg-canvas text-ink-primary">
-      <Header />
-      <main className="relative">
-        <Hero />
-        <Demo />
-        <BentoGrid />
-        <Privacy />
-        <Faq />
-        <FinalCta />
-      </main>
-    </div>
+    <MotionConfig reducedMotion="user">
+      <div className="relative min-h-screen bg-canvas text-ink">
+        <Header />
+        <main className="relative">
+          <Hero />
+          <Demo />
+          <BentoGrid />
+          <Privacy />
+          <Faq />
+          <FinalCta />
+        </main>
+      </div>
+    </MotionConfig>
   );
 }
