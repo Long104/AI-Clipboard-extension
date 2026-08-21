@@ -8,6 +8,11 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        display: ["var(--font-display)"],
+        sans: ["var(--font-sans)"],
+        mono: ["var(--font-mono)"],
+      },
       colors: {
         canvas: "var(--canvas)",
         surface: {
@@ -15,6 +20,7 @@ export default {
           elevated: "var(--surface-elevated)",
           card: "var(--surface-card)",
         },
+        subtle: "var(--surface-subtle)",
         hairline: {
           DEFAULT: "var(--hairline)",
           soft: "var(--hairline-soft)",
@@ -33,6 +39,7 @@ export default {
           hover: "var(--primary-hover)",
           pressed: "var(--primary-pressed)",
           fg: "var(--on-primary)",
+          surface: "var(--primary-surface)",
         },
         accent: {
           blue: "var(--accent-blue)",
@@ -48,10 +55,17 @@ export default {
           start: "var(--keycap-start)",
           end: "var(--keycap-end)",
         },
-      },
-      fontFamily: {
-        sans: ["-apple-system", "BlinkMacSystemFont", "'SF Pro Display'", "'SF Pro Text'", "'Segoe UI'", "system-ui", "sans-serif"],
-        mono: ["ui-monospace", "'SF Mono'", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"],
+        success: {
+          DEFAULT: "var(--success)",
+          surface: "var(--success-surface)",
+          border: "var(--success-border)",
+        },
+        error: {
+          DEFAULT: "var(--error)",
+          surface: "var(--error-surface)",
+          border: "var(--error-border)",
+        },
+        badge: "var(--badge)",
       },
       fontSize: {
         "caption-md": ["13px", { lineHeight: "1.4", letterSpacing: "0.1px" }],
@@ -71,8 +85,7 @@ export default {
         "container-px": "var(--container-px)",
       },
       boxShadow: {
-        // Spec exception: the ONLY shadow allowed — floating popover mockup in hero
-        popover: "0 20px 40px -15px rgba(15,23,42,0.08), 0 8px 16px -8px rgba(15,23,42,0.06), 0 0 0 1px rgba(15,23,42,0.06)",
+        popover: "var(--shadow-popover)",
       },
       keyframes: {
         "accordion-down": {
