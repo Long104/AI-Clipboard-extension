@@ -15,8 +15,8 @@ const reveal = { duration: 0.3, ease: [0.16, 1, 0.3, 1] } as const;
 export function HeroMockup() {
   const shouldReduceMotion = useReducedMotion();
   const { scrollYProgress } = useScroll();
-  const rotateX = useTransform(scrollYProgress, [0, 1], [4, 0]);
-  const y = useTransform(scrollYProgress, [0, 1], [0, -8]);
+  const rotateX = useTransform(scrollYProgress, [0, 0.15], [0, 4]);
+  const y = useTransform(scrollYProgress, [0, 0.15], [0, -8]);
 
   return (
     <div

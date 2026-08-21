@@ -22,7 +22,7 @@ const RESULTS = {
 type Phase = "idle" | "selected" | "loading" | "result";
 type Mode = keyof typeof RESULTS;
 
-const spring = { stiffness: 550, damping: 36, mass: 0.8 } as const;
+const reveal = { duration: 0.3, ease: [0.16, 1, 0.3, 1] } as const;
 
 export function DemoStage() {
   const frameRef = React.useRef<HTMLDivElement>(null);
@@ -83,20 +83,12 @@ export function DemoStage() {
       ref={frameRef}
       onMouseUp={handleSelection}
       onTouchEnd={handleSelection}
-      className="relative max-w-[1080px] mx-auto bg-surface border border-hairline rounded-xl p-6 select-text"
+      className="relative bg-white border border-hairline rounded-lg p-8 sm:p-10 select-text"
     >
-      {/* Faux browser bar */}
-      <div className="mb-5 flex items-center gap-2">
-        <span className="w-2.5 h-2.5 rounded-full bg-stone" aria-hidden="true" />
-        <span className="w-2.5 h-2.5 rounded-full bg-stone" aria-hidden="true" />
-        <span className="w-2.5 h-2.5 rounded-full bg-stone" aria-hidden="true" />
-        <span className="ml-2 font-mono text-caption-sm text-mute">
-          arXiv/abs/attention-is-all-you-need
-        </span>
-      </div>
+
 
       {/* Selectable reading text */}
-      <div className="space-y-3 text-base leading-[1.6] text-body">
+      <div className="space-y-3 text-[17px] leading-[1.6] text-body">
         <p>
           {SAMPLE_LEAD}
           <mark className="bg-accent-blue-soft text-ink rounded-[3px] px-1 py-0.5 box-decoration-clone">
@@ -104,10 +96,31 @@ export function DemoStage() {
           </mark>
           {SAMPLE_TAIL}
         </p>
-        <p className="text-sm text-mute">
+        <p className="mt-3 text-[15px] text-mute">
           Try it: drag across the highlighted sentence above, or any sentence on
           this page.
         </p>
+
+        {/* Touch fallback (mobile only) — guarantees the flow on iOS where selection never fires */}
+        <p className="mt-4 text-[12px] text-mute">Tap to preview</p>
+        <div className="mt-4 flex items-center gap-2 sm:hidden">
+          <button
+            type="button"
+            onClick={() => run("Explain")}
+            className="h-11 px-4 rounded-full bg-surface-elevated text-[15px] font-medium text-ink active:scale-[0.98] flex items-center gap-1.5"
+          >
+            <Sparkles className="h-4 w-4 stroke-[1.5]" aria-hidden="true" />
+            Explain
+          </button>
+          <button
+            type="button"
+            onClick={() => run("Summarize")}
+            className="h-11 px-4 rounded-full bg-surface-elevated text-[15px] font-medium text-ink active:scale-[0.98] flex items-center gap-1.5"
+          >
+            <FileText className="h-4 w-4 stroke-[1.5]" aria-hidden="true" />
+            Summarize
+          </button>
+        </div>
       </div>
 
       {/* Floating action pill anchored to the selection */}
@@ -118,16 +131,16 @@ export function DemoStage() {
             initial={{ opacity: 0, scale: 0.96, y: 4 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, transition: { duration: 0.1, ease: "easeIn" } }}
-            transition={spring}
+            transition={reveal}
             style={{ top: pill.top, left: pill.left }}
-            className="absolute z-10 -translate-x-1/2 rounded-full bg-surface border border-hairline-strong px-1.5 py-1 flex items-center gap-1 text-xs font-medium"
+            className="absolute z-10 -translate-x-1/2 rounded-full bg-white border border-hairline px-1.5 py-1 flex items-center gap-1 text-xs font-medium shadow-none"
           >
             <button
               type="button"
               onClick={() => run("Explain")}
-              className="flex items-center gap-1 px-1.5 py-0.5 rounded-sm text-accent-blue hover:bg-surface-elevated transition-none"
+              className="flex items-center gap-1 px-1.5 py-0.5 rounded-sm text-primary hover:bg-surface-elevated transition-none"
             >
-              <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+              <Sparkles className="h-3.5 w-3.5 stroke-[1.5]" aria-hidden="true" />
               Explain
             </button>
             <span className="h-3 w-px bg-hairline" aria-hidden="true" />
@@ -136,7 +149,7 @@ export function DemoStage() {
               onClick={() => run("Summarize")}
               className="flex items-center gap-1 px-1.5 py-0.5 rounded-sm text-body hover:bg-surface-elevated hover:text-ink transition-none"
             >
-              <FileText className="h-3.5 w-3.5" aria-hidden="true" />
+              <FileText className="h-3.5 w-3.5 stroke-[1.5]" aria-hidden="true" />
               Summarize
             </button>
             <span className="h-3 w-px bg-hairline" aria-hidden="true" />
@@ -151,7 +164,7 @@ export function DemoStage() {
       {/* Result area: empty / loading / result */}
       <div className="mt-6" aria-live="polite">
         {phase === "idle" && (
-          <div className="border border-dashed border-hairline rounded-md p-4 text-center text-sm text-mute">
+          <div className="p-4 text-center text-[15px] text-mute">
             Select text above to trigger inline Look Up
           </div>
         )}
@@ -159,19 +172,19 @@ export function DemoStage() {
         {phase === "loading" && (
           <motion.div
             key="loading"
-            initial={{ opacity: 0, y: 6 }}
+            initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={spring}
-            className="max-w-[560px] rounded-lg bg-canvas border border-hairline p-4 animate-pulse"
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="max-w-[560px] rounded-lg bg-surface-elevated p-4 animate-pulse"
           >
-            <div className="flex items-center gap-2 text-sm font-medium text-ink">
-              <Sparkles className="h-4 w-4 text-accent-blue" aria-hidden="true" />
+            <div className="flex items-center gap-2 text-[15px] font-semibold text-ink">
+              <Sparkles className="h-4 w-4 text-primary stroke-[1.5]" aria-hidden="true" />
               {mode}
             </div>
             <div className="mt-3 space-y-2">
-              <div className="h-3 rounded-xs bg-surface-elevated w-full" />
-              <div className="h-3 rounded-xs bg-surface-elevated w-11/12" />
-              <div className="h-3 rounded-xs bg-surface-elevated w-3/4" />
+              <div className="h-3 rounded-xs bg-white/60 w-full" />
+              <div className="h-3 rounded-xs bg-white/60 w-11/12" />
+              <div className="h-3 rounded-xs bg-white/60 w-3/4" />
             </div>
           </motion.div>
         )}
@@ -179,14 +192,15 @@ export function DemoStage() {
         {phase === "result" && (
           <motion.div
             key="result"
+            role="status"
             initial={{ opacity: 0, scale: 0.96, y: -6 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={spring}
-            className="max-w-[560px] rounded-lg bg-canvas border border-hairline overflow-hidden"
+            transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            className="max-w-[560px] rounded-md bg-white border border-hairline overflow-hidden"
           >
             <div className="flex items-center justify-between px-4 pt-3">
               <div className="flex items-center gap-2 text-sm font-medium text-ink">
-                <Sparkles className="h-4 w-4 text-accent-blue" aria-hidden="true" />
+                <Sparkles className="h-4 w-4 text-primary" aria-hidden="true" />
                 {mode}
               </div>
               <button
@@ -197,32 +211,34 @@ export function DemoStage() {
                 Reset
               </button>
             </div>
-            <div className="p-4 text-sm leading-[1.6] text-body">
+            <div className="p-4 text-[15px] leading-[1.6] text-body">
               {RESULTS[mode]}
               <div className="mt-2.5 flex flex-wrap gap-1.5">
-                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-surface-elevated border border-hairline rounded-xs font-mono text-caption-sm text-mute tabular-nums">
-                  <span aria-hidden="true">⚡</span> 280ms • Llama 3.3 70B
-                  (Cloudflare Workers AI)
+                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-surface-elevated rounded-xs text-[12px] font-medium tracking-[0.04em] text-mute tabular-nums">
+                  280ms · Llama 3.3 70B
                 </span>
-                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-surface-elevated border border-hairline rounded-xs font-mono text-caption-sm text-mute tabular-nums">
-                  10/10 free queries • <Keycap className="mx-0.5">⌘ ,</Keycap>
-                  BYO key
+                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-surface-elevated rounded-xs text-[12px] font-medium tracking-[0.04em] text-mute tabular-nums">
+                  10 requests / 2 hours
                 </span>
               </div>
             </div>
             <div className="h-11 px-3 border-t border-hairline flex items-center justify-between">
               <button
                 type="button"
-                className="h-8 px-2.5 rounded-sm text-xs font-medium text-body hover:bg-surface-elevated hover:text-ink transition-none flex items-center gap-1.5"
+                onClick={() => {
+                  navigator.clipboard.writeText(RESULTS[mode]);
+                  // show copy feedback if needed
+                }}
+                className="h-8 px-2.5 rounded-sm text-[15px] font-medium text-body hover:bg-surface-elevated hover:text-ink transition-none flex items-center gap-1.5"
               >
-                <Check className="h-3.5 w-3.5" aria-hidden="true" />
+                <Check className="h-4 w-4" aria-hidden="true" />
                 Copy
               </button>
               <button
                 type="button"
-                className="h-8 px-2.5 rounded-sm text-xs font-medium text-body hover:bg-surface-elevated hover:text-ink transition-none flex items-center gap-1.5"
+                className="h-8 px-2.5 rounded-sm text-[15px] font-medium text-body hover:bg-surface-elevated hover:text-ink transition-none flex items-center gap-1.5"
               >
-                Open in chat <Keycap>⌥ C</Keycap>
+                Open in chat <Keycap>⌥C</Keycap>
               </button>
             </div>
           </motion.div>
