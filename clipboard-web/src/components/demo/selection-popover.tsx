@@ -175,7 +175,7 @@ function StreamingPanel({
           {actionLabel(activeAction)}
         </span>
         <div className="flex items-center gap-2">
-          <span className="text-[12px] text-muted">AI is writing…</span>
+          <span className="text-[12px] text-ink-mute">AI is writing…</span>
           <span
             aria-hidden
             className="block w-4 h-4 border-2 border-hairline-strong border-t-primary rounded-full animate-spin"
@@ -235,7 +235,7 @@ function SuccessPanel({
         <span className="text-[13px] font-medium text-ink">
           {actionLabel(activeAction)}
         </span>
-        <span className="text-[12px] text-muted">Done</span>
+        <span className="text-[12px] text-ink-mute">Done</span>
       </div>
       <div className="min-h-[120px] mb-3">
         <MarkdownLite text={streamedText} />
@@ -269,14 +269,14 @@ function SuccessPanel({
 function QuotaPanel() {
   return (
     <div className="p-4">
-      <p className="text-[13px] text-body mb-3">{QUOTA_MESSAGE}</p>
+      <p className="text-[13px] text-ink-body mb-3">{QUOTA_MESSAGE}</p>
       <Link
         href={STORE_URL}
         className="block w-full bg-primary hover:bg-primary-hover text-white h-10 px-5 rounded-md text-sm font-medium text-center no-underline"
       >
         {CHROME_CTA}
       </Link>
-      <p className="mt-2 text-[11px] text-muted text-center">Free · Chrome</p>
+      <p className="mt-2 text-[11px] text-ink-mute text-center">Free · Chrome</p>
     </div>
   );
 }
