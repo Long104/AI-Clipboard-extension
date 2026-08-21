@@ -1,102 +1,232 @@
+"use client";
+
+import * as React from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { Sparkles, FileText, Copy, Check } from "lucide-react";
+import { Keycap } from "@/components/keycap";
+
+const SAMPLE_LEAD =
+  "Recent work on sequence modeling has largely moved away from recurrent architectures. ";
+const SAMPLE_TARGET =
+  "Transformer architectures leverage self-attention mechanisms to compute representations of their input and output without using sequence-aligned RNNs or convolution.";
+const SAMPLE_TAIL =
+  " This shift enables parallel training across all positions and removes the sequential bottleneck that limited earlier architectures on long-range dependencies.";
+
+const RESULTS = {
+  Explain:
+    "Transformers weigh the relevance of every word in a sentence simultaneously using self-attention — unlike RNNs, which process tokens one at a time. This removes the sequential bottleneck and lets representation learning parallelize across all positions.",
+  Summarize:
+    "Transformers replace recurrence with self-attention: every token attends to every other token at once, so representations are computed in parallel rather than sequentially.",
+} as const;
+
+type Phase = "idle" | "selected" | "loading" | "result";
+type Mode = keyof typeof RESULTS;
+
+const spring = { stiffness: 550, damping: 36, mass: 0.8 } as const;
+
 export function DemoStage() {
+  const frameRef = React.useRef<HTMLDivElement>(null);
+  const timerRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [phase, setPhase] = React.useState<Phase>("idle");
+  const [mode, setMode] = React.useState<Mode>("Explain");
+  const [pill, setPill] = React.useState({ top: 0, left: 0 });
+
+  const clearTimer = React.useCallback(() => {
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = null;
+  }, []);
+
+  React.useEffect(() => clearTimer, [clearTimer]);
+
+  React.useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        clearTimer();
+        setPhase("idle");
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [clearTimer]);
+
+  const handleSelection = () => {
+    const frame = frameRef.current;
+    if (!frame) return;
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed || !sel.toString().trim()) {
+      setPhase((p) => (p === "loading" || p === "result" ? p : "idle"));
+      return;
+    }
+    if (sel.rangeCount === 0) return;
+    const range = sel.getRangeAt(0);
+    if (!frame.contains(range.commonAncestorContainer)) return;
+    const rect = range.getBoundingClientRect();
+    const host = frame.getBoundingClientRect();
+    const left = Math.min(
+      Math.max(rect.left - host.left + rect.width / 2, 100),
+      Math.max(host.width - 100, 100),
+    );
+    const top = Math.max(rect.top - host.top - 40, 0);
+    setPill({ top, left });
+    setPhase("selected");
+  };
+
+  const run = (m: Mode) => {
+    setMode(m);
+    setPhase("loading");
+    clearTimer();
+    timerRef.current = setTimeout(() => setPhase("result"), 700);
+  };
+
   return (
-    <div className="max-w-4xl mx-auto rounded-xl border border-hairline bg-canvas shadow-card overflow-hidden">
-      {/* Top faux browser bar */}
-      <div className="h-9 border-b border-hairline bg-surface-1 px-4 flex items-center gap-2">
-        <div className="w-2.5 h-2.5 rounded-full bg-[#2a2e39]" />
-        <div className="w-2.5 h-2.5 rounded-full bg-[#2a2e39]" />
-        <div className="w-2.5 h-2.5 rounded-full bg-[#2a2e39]" />
-        <div className="ml-2 text-[11px] font-mono text-ink-tertiary">arXiv/abs/attention-is-all-you-need</div>
+    <div
+      ref={frameRef}
+      onMouseUp={handleSelection}
+      onTouchEnd={handleSelection}
+      className="relative max-w-[1080px] mx-auto bg-surface border border-hairline rounded-xl p-6 select-text"
+    >
+      {/* Faux browser bar */}
+      <div className="mb-5 flex items-center gap-2">
+        <span className="w-2.5 h-2.5 rounded-full bg-stone" aria-hidden="true" />
+        <span className="w-2.5 h-2.5 rounded-full bg-stone" aria-hidden="true" />
+        <span className="w-2.5 h-2.5 rounded-full bg-stone" aria-hidden="true" />
+        <span className="ml-2 font-mono text-caption-sm text-mute">
+          arXiv/abs/attention-is-all-you-need
+        </span>
       </div>
 
-      {/* Browser content */}
-      <div className="p-5 sm:p-6">
-        <h3 className="text-sm font-mono text-ink-secondary mb-3">Abstract</h3>
-        <div className="space-y-2 text-sm text-ink-secondary mb-6">
-          <p>
-            <span className="font-mono text-lime">“</span>
-            Transformer architectures leverage self-attention mechanisms to compute
-            representations of their input and output without using sequence-aligned
-            RNNs or convolution. <span className="font-mono text-lime">”</span>
-          </p>
-          <p>
-            Recent work on sequence modeling has largely moved away from recurrent
-            architectures. Transformer models have become the standard for
-            language modeling, vision, and even reinforcement learning tasks.
-          </p>
-        </div>
+      {/* Selectable reading text */}
+      <div className="space-y-3 text-base leading-[1.6] text-body">
+        <p>
+          {SAMPLE_LEAD}
+          <mark className="bg-accent-blue-soft text-ink rounded-[3px] px-1 py-0.5 box-decoration-clone">
+            {SAMPLE_TARGET}
+          </mark>
+          {SAMPLE_TAIL}
+        </p>
+        <p className="text-sm text-mute">
+          Try it: drag across the highlighted sentence above, or any sentence on
+          this page.
+        </p>
+      </div>
 
-        {/* Highlighted text with selection */}
-        <div className="relative inline-block mb-4">
-          <div className="text-sm text-ink-secondary pl-4 border-l-2 border-dashed border-hairline-strong/50">
-            <span className="text-ink-primary font-medium">Selected:</span> Transformer architectures leverage self-attention mechanisms to compute representations of their input and output without using sequence-aligned RNNs or convolution.
+      {/* Floating action pill anchored to the selection */}
+      <AnimatePresence>
+        {phase === "selected" && (
+          <motion.div
+            key="pill"
+            initial={{ opacity: 0, scale: 0.96, y: 4 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, transition: { duration: 0.1, ease: "easeIn" } }}
+            transition={spring}
+            style={{ top: pill.top, left: pill.left }}
+            className="absolute z-10 -translate-x-1/2 rounded-full bg-surface border border-hairline-strong px-1.5 py-1 flex items-center gap-1 text-xs font-medium"
+          >
+            <button
+              type="button"
+              onClick={() => run("Explain")}
+              className="flex items-center gap-1 px-1.5 py-0.5 rounded-sm text-accent-blue hover:bg-surface-elevated transition-none"
+            >
+              <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
+              Explain
+            </button>
+            <span className="h-3 w-px bg-hairline" aria-hidden="true" />
+            <button
+              type="button"
+              onClick={() => run("Summarize")}
+              className="flex items-center gap-1 px-1.5 py-0.5 rounded-sm text-body hover:bg-surface-elevated hover:text-ink transition-none"
+            >
+              <FileText className="h-3.5 w-3.5" aria-hidden="true" />
+              Summarize
+            </button>
+            <span className="h-3 w-px bg-hairline" aria-hidden="true" />
+            <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-sm text-mute">
+              <Copy className="h-3.5 w-3.5" aria-hidden="true" />
+              Copy
+            </span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Result area: empty / loading / result */}
+      <div className="mt-6" aria-live="polite">
+        {phase === "idle" && (
+          <div className="border border-dashed border-hairline rounded-md p-4 text-center text-sm text-mute">
+            Select text above to trigger inline Look Up
           </div>
-          <div className="absolute -top-2 -right-2">
-            <div className="w-5 h-5 rounded-full bg-lime/20 border border-lime flex items-center justify-center">
-              <span className="text-lime text-xs">✓</span>
+        )}
+
+        {phase === "loading" && (
+          <motion.div
+            key="loading"
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={spring}
+            className="max-w-[560px] rounded-lg bg-canvas border border-hairline p-4 animate-pulse"
+          >
+            <div className="flex items-center gap-2 text-sm font-medium text-ink">
+              <Sparkles className="h-4 w-4 text-accent-blue" aria-hidden="true" />
+              {mode}
             </div>
-          </div>
-        </div>
+            <div className="mt-3 space-y-2">
+              <div className="h-3 rounded-xs bg-surface-elevated w-full" />
+              <div className="h-3 rounded-xs bg-surface-elevated w-11/12" />
+              <div className="h-3 rounded-xs bg-surface-elevated w-3/4" />
+            </div>
+          </motion.div>
+        )}
 
-        {/* Tab navigation */}
-        <div className="flex gap-1 mb-4 border-b border-hairline">
-          <button className="px-4 py-2 text-xs font-mono text-ink-secondary border-b-2 border-lime bg-surface-2/50 transition-colors">
-            Look Up Popover
-          </button>
-          <button className="px-4 py-2 text-xs font-mono text-ink-tertiary hover:text-ink-secondary transition-colors">
-            Quick Copy Toast
-          </button>
-          <button className="px-4 py-2 text-xs font-mono text-ink-tertiary hover:text-ink-secondary transition-colors">
-            Side Panel
-          </button>
-        </div>
-
-        {/* Tab content */}
-        <div className="space-y-4">
-          {/* Look Up Popover Tab */}
-          <div className="rounded-lg border border-hairline bg-surface-popover p-4 animate-in fade-in zoom-in-95 duration-200">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-5 h-5 rounded-md bg-lime/20 flex items-center justify-center">
-                <svg className="w-3 h-3 text-lime" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1l9 9-9 9-9-9 9-9z" />
-                </svg>
+        {phase === "result" && (
+          <motion.div
+            key="result"
+            initial={{ opacity: 0, scale: 0.96, y: -6 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={spring}
+            className="max-w-[560px] rounded-lg bg-canvas border border-hairline overflow-hidden"
+          >
+            <div className="flex items-center justify-between px-4 pt-3">
+              <div className="flex items-center gap-2 text-sm font-medium text-ink">
+                <Sparkles className="h-4 w-4 text-accent-blue" aria-hidden="true" />
+                {mode}
               </div>
-              <span className="text-xs font-medium text-ink-primary">Explain</span>
+              <button
+                type="button"
+                onClick={() => setPhase("idle")}
+                className="text-xs font-medium text-mute hover:text-ink transition-none"
+              >
+                Reset
+              </button>
             </div>
-            <p className="text-xs leading-relaxed text-ink-secondary">
-              Transformers use self-attention to process all words simultaneously, unlike RNNs which process sequentially. This enables better parallelization and captures long-range dependencies more effectively.
-            </p>
-          </div>
-
-          {/* Quick Copy Toast Tab */}
-          <div className="hidden rounded-lg border border-hairline bg-surface-popover p-4">
-            <div className="flex items-center justify-between mb-3">
-              <div className="text-xs font-medium text-ink-primary">Copy Toast</div>
-              <div className="text-xs text-ink-tertiary">Cmd+C</div>
-            </div>
-            <div className="flex gap-2 mb-3">
-              <button className="h-7 px-2 rounded-md bg-lime/20 border border-lime/50 text-lime text-xs font-medium transition-colors">Explain</button>
-              <button className="h-7 px-2 rounded-md bg-surface-2 border border-hairline text-ink-secondary text-xs font-medium transition-colors">Summarize</button>
-            </div>
-            <div className="text-xs text-ink-tertiary">✓ Captured to clipboard history</div>
-          </div>
-
-          {/* Side Panel Tab */}
-          <div className="hidden rounded-lg border border-hairline bg-surface-popover p-4">
-            <div className="flex items-center justify-between mb-3">
-              <div className="text-xs font-medium text-ink-primary">Side Panel</div>
-              <div className="text-xs text-ink-tertiary">Alt+C</div>
-            </div>
-            <div className="space-y-2">
-              <div className="text-xs text-ink-secondary">
-                <span className="font-mono text-ink-tertiary">You:</span> Can you explain the transformer architecture in more detail?
-              </div>
-              <div className="text-xs text-ink-secondary">
-                <span className="font-mono text-lime">AI:</span> Transformers use self-attention mechanisms to compute representations of input and output tokens simultaneously, enabling parallel processing across the entire sequence.
+            <div className="p-4 text-sm leading-[1.6] text-body">
+              {RESULTS[mode]}
+              <div className="mt-2.5 flex flex-wrap gap-1.5">
+                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-surface-elevated border border-hairline rounded-xs font-mono text-caption-sm text-mute tabular-nums">
+                  <span aria-hidden="true">⚡</span> 280ms • Llama 3.3 70B
+                  (Cloudflare Workers AI)
+                </span>
+                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-surface-elevated border border-hairline rounded-xs font-mono text-caption-sm text-mute tabular-nums">
+                  10/10 free queries • <Keycap className="mx-0.5">⌘ ,</Keycap>
+                  BYO key
+                </span>
               </div>
             </div>
-          </div>
-        </div>
+            <div className="h-11 px-3 border-t border-hairline flex items-center justify-between">
+              <button
+                type="button"
+                className="h-8 px-2.5 rounded-sm text-xs font-medium text-body hover:bg-surface-elevated hover:text-ink transition-none flex items-center gap-1.5"
+              >
+                <Check className="h-3.5 w-3.5" aria-hidden="true" />
+                Copy
+              </button>
+              <button
+                type="button"
+                className="h-8 px-2.5 rounded-sm text-xs font-medium text-body hover:bg-surface-elevated hover:text-ink transition-none flex items-center gap-1.5"
+              >
+                Open in chat <Keycap>⌥ C</Keycap>
+              </button>
+            </div>
+          </motion.div>
+        )}
       </div>
     </div>
   );
