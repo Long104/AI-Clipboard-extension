@@ -50,8 +50,8 @@ export default {
         },
       },
       fontFamily: {
-        sans: ["var(--font-geist-sans)", "system-ui", "-apple-system", "sans-serif"],
-        mono: ["var(--font-geist-mono)", "ui-monospace", "monospace"],
+        sans: ["-apple-system", "BlinkMacSystemFont", "'SF Pro Display'", "'SF Pro Text'", "'Segoe UI'", "system-ui", "sans-serif"],
+        mono: ["ui-monospace", "'SF Mono'", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"],
       },
       fontSize: {
         "caption-md": ["13px", { lineHeight: "1.4", letterSpacing: "0.1px" }],
@@ -72,7 +72,7 @@ export default {
       },
       boxShadow: {
         // Spec exception: the ONLY shadow allowed — floating popover mockup in hero
-        popover: "0 12px 40px -8px rgba(0,0,0,0.7), 0 0 0 1px var(--hairline)",
+        popover: "0 20px 40px -15px rgba(15,23,42,0.08), 0 8px 16px -8px rgba(15,23,42,0.06), 0 0 0 1px rgba(15,23,42,0.06)",
       },
       keyframes: {
         "accordion-down": {
@@ -85,8 +85,8 @@ export default {
         },
       },
       animation: {
-        "accordion-down": "accordion-down 0.13s cubic-bezier(0.16, 1, 0.3, 1)",
-        "accordion-up": "accordion-up 0.13s cubic-bezier(0.16, 1, 0.3, 1)",
+        "accordion-down": "accordion-down 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
+        "accordion-up": "accordion-up 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
       },
     },
   },

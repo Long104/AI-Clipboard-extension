@@ -3,71 +3,74 @@
 @tailwind utilities;
 
 :root {
-  /* Surface Ladder (achromatic elevation only) */
-  --canvas: #020617;
-  --surface: #0f172a;
-  --surface-elevated: #1e293b;
-  --surface-card: #283548;
-  --hairline: #303b4e;
-  --hairline-soft: rgba(255, 255, 255, 0.08);
-  --hairline-strong: rgba(255, 255, 255, 0.16);
+  --canvas: #ffffff;
+  --surface: #ffffff;
+  --surface-elevated: #f8fafc;
+  --surface-card: #f1f5f9;
+  --hairline: #e2e8f0;
+  --hairline-soft: rgba(15, 23, 42, 0.06);
+  --hairline-strong: rgba(15, 23, 42, 0.12);
 
-  /* Ink ladder */
-  --ink: #f8fafc;
-  --body: #e2e8f0;
-  --charcoal: #cbd5e1;
-  --mute: #94a3b8;
-  --ash: #64748b;
-  --stone: #475569;
+  --ink: #0f172a;
+  --body: #334155;
+  --charcoal: #64748b;
+  --mute: #64748b;
+  --ash: #94a3b8;
+  --stone: #cbd5e1;
 
-  /* Primary blue CTA */
   --primary: #2563eb;
-  --primary-hover: #4f46e5;
-  --primary-pressed: #1d4ed8;
+  --primary-hover: #1d4ed8;
+  --primary-pressed: #1e40af;
   --on-primary: #ffffff;
 
-  /* Semantic accents (mockups / illustrations only) */
-  --accent-blue: #3b82f6;
-  --accent-blue-soft: rgba(59, 130, 246, 0.15);
-  --accent-green: #10b981;
-  --accent-green-soft: rgba(16, 185, 129, 0.15);
-  --accent-amber: #f59e0b;
-  --accent-amber-soft: rgba(245, 158, 11, 0.15);
-  --accent-red: #ef4444;
-  --accent-red-soft: rgba(239, 68, 68, 0.15);
+  --accent-blue: #2563eb;
+  --accent-blue-soft: rgba(37, 99, 235, 0.1);
+  --accent-green: #059669;
+  --accent-green-soft: rgba(5, 150, 105, 0.1);
+  --accent-amber: #d97706;
+  --accent-amber-soft: rgba(217, 119, 6, 0.12);
+  --accent-red: #dc2626;
+  --accent-red-soft: rgba(220, 38, 38, 0.1);
 
-  /* Hero stripe band */
-  --hero-stripe-start: #2563eb;
-  --hero-stripe-end: #1e3a8a;
+  --keycap-start: #ffffff;
+  --keycap-end: #f1f5f9;
 
-  /* Keycap gradient */
-  --keycap-start: #1e293b;
-  --keycap-end: #0f172a;
-
-  /* Radii */
   --radius-xs: 4px;
   --radius-sm: 6px;
   --radius-md: 8px;
-  --radius-lg: 10px;
+  --radius-lg: 12px;
   --radius-xl: 16px;
   --radius-full: 9999px;
 
-  /* Spacing */
-  --section-y: 96px;
-  --container-max: 1240px;
+  --section-y: 80px;
+  --container-max: 980px;
   --container-px: 24px;
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --section-y: 112px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --section-y: 140px;
+  }
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
-    color-scheme: dark;
+    color-scheme: light;
   }
 
   body {
     background-color: var(--canvas);
     color: var(--ink);
-    font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+    font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
@@ -86,7 +89,7 @@
     outline: none;
     box-shadow:
       0 0 0 2px var(--canvas),
-      0 0 0 4px var(--accent-blue);
+      0 0 0 4px var(--primary);
   }
 }
 
