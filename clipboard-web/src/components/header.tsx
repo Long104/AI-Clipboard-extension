@@ -1,23 +1,45 @@
+"use client";
+import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Download } from "lucide-react";
 import { STORE_URL, GITHUB_URL } from "@/lib/constants";
+import { cn } from "@/lib/cn";
 
 const navLinks = [
   { href: "#features", label: "Features" },
   { href: "#demo", label: "Demo" },
-  { href: "#privacy", label: "Architecture" },
+  { href: "#privacy", label: "Privacy" },
   { href: "#faq", label: "FAQ" },
 ];
 
 export function Header() {
+  const [scrolled, setScrolled] = React.useState(false);
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 8);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <header className="fixed top-0 inset-x-0 z-50 h-14 bg-canvas/80 backdrop-blur-md border-b border-hairline">
-      <div className="mx-auto max-w-[1240px] px-4 sm:px-6 flex items-center justify-between h-full">
+    <header
+      className={cn(
+        "fixed top-0 inset-x-0 z-50 h-[52px] transition-none",
+        scrolled
+          ? "bg-white/80 backdrop-blur-md border-b border-hairline"
+          : "bg-transparent border-b border-transparent"
+      )}
+    >
+      <div className="mx-auto max-w-[980px] px-4 sm:px-6 flex items-center justify-between h-full">
         <div className="flex items-center">
           <Link
             href="/"
-            className="flex items-center gap-2.5 text-sm font-medium text-ink"
+            className="flex items-center gap-2.5 text-[15px] font-semibold tracking-[-0.01em] text-ink"
             aria-label="AI Clipboard home"
           >
             <Image
@@ -29,17 +51,18 @@ export function Header() {
             />
             AI Clipboard
           </Link>
-          <span className="hidden md:inline-flex ml-3 px-2 py-0.5 font-mono text-caption-sm text-mute bg-surface border border-hairline rounded-full tabular-nums">
-            Extension v2.0 • MV3 Ready
-          </span>
         </div>
 
         <nav
-          className="hidden md:flex items-center gap-6 text-sm text-body"
+          className="hidden md:flex items-center gap-6 text-[15px] text-mute"
           aria-label="Primary"
         >
           {navLinks.map((link) => (
-            <a key={link.href} href={link.href} className="hover:text-ink">
+            <a
+              key={link.href}
+              href={link.href}
+              className="hover:text-ink"
+            >
               {link.label}
             </a>
           ))}
@@ -51,7 +74,7 @@ export function Header() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="GitHub repository"
-            className="h-8 w-8 flex items-center justify-center text-mute hover:text-ink border border-hairline rounded-md hover:border-hairline-strong"
+            className="h-11 w-11 flex items-center justify-center text-mute hover:text-ink"
           >
             <svg
               role="img"
@@ -65,9 +88,9 @@ export function Header() {
           </a>
           <a
             href={STORE_URL}
-            className="h-9 px-4 bg-primary hover:bg-primary-hover active:bg-primary-pressed active:scale-95 text-primary-fg text-sm font-medium rounded-md flex items-center gap-1.5"
+            className="h-11 px-[22px] bg-primary hover:bg-primary-hover active:bg-primary-pressed active:scale-[0.98] hover:scale-[1.02] transition-transform duration-150 ease-out text-on-primary text-[15px] font-medium tracking-[-0.01em] rounded-full flex items-center gap-2"
           >
-            <Download className="h-3.5 w-3.5" />
+            <Download className="h-4 w-4" strokeWidth={1.5} />
             Add to Chrome
           </a>
         </div>
