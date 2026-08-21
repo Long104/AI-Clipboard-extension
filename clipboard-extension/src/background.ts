@@ -290,6 +290,19 @@ if (typeof chrome !== "undefined" && chrome.runtime?.onMessage) {
 				case "OPEN_SIDEPANEL": {
 					(async () => {
 						try {
+							if (process.env.PLASMO_BROWSER === "firefox") {
+								// Firefox uses sidebarAction / native sidebar, not chrome.sidePanel
+								if (globalThis.browser?.sidebarAction) {
+									if (typeof globalThis.browser.sidebarAction.toggle === "function") {
+										await globalThis.browser.sidebarAction.toggle();
+									} else {
+										await globalThis.browser.sidebarAction.open();
+									}
+								}
+								sendResponse({ success: true });
+								return;
+							}
+
 							// Gesture-safe path: use the tabId from the content script that
 							// sent the message. This preserves the user gesture.
 							if (sender?.tab?.id != null) {
@@ -432,8 +445,10 @@ export async function handleCommand(
 if (typeof chrome !== "undefined" && chrome.commands?.onCommand) {
 	chrome.commands.onCommand.addListener((command) => {
 		handleCommand(command, (target) => {
-			// @ts-ignore sidePanel is not yet in @types/chrome
-			chrome.sidePanel?.open?.(target);
+			if (process.env.PLASMO_BROWSER !== "firefox") {
+				// @ts-ignore sidePanel is not yet in @types/chrome
+				chrome.sidePanel?.open?.(target);
+			}
 		});
 	});
 }

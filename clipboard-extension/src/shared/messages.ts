@@ -10,7 +10,8 @@ export type AiRequestError =
 	| "API_ERROR"
 	| "INVALID_INPUT"
 	| "SERVER_ERROR"
-	| "INPUT_TOO_LONG";
+	| "INPUT_TOO_LONG"
+	| "SIDEPANEL_ERROR";
 
 export type ExtensionRequest =
 	| { type: "TOGGLE_SWITCH"; isOn: boolean }
