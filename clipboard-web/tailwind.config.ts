@@ -96,10 +96,15 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "caret-blink": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
         "accordion-up": "accordion-up 0.2s cubic-bezier(0.16, 1, 0.3, 1)",
+        "caret-blink": "caret-blink 1s step-end infinite",
       },
     },
   },
