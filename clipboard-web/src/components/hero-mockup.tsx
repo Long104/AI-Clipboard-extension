@@ -4,8 +4,7 @@ import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion
 import { Sparkles, X, Copy } from "lucide-react";
 import { Keycap } from "@/components/keycap";
 
-const SELECTION_TEXT =
-  "Transformer architectures leverage self-attention mechanisms to compute representations of their input and output without using sequence-aligned RNNs or convolution.";
+
 
 const TAKEAWAY_TEXT =
   "Instead of processing words sequentially like traditional RNNs, transformers weigh the relevance of all words in a sentence simultaneously using self-attention.";

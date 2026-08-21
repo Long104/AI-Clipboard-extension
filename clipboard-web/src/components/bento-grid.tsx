@@ -1,4 +1,4 @@
-import { BentoCard, FeatureRow } from "@/components/bento-card";
+import { BentoCard } from "@/components/bento-card";
 import { Keycap } from "@/components/keycap";
 import { Check, Sparkles, Lock, FileText } from "lucide-react";
 
