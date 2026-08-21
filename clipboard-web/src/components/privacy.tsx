@@ -20,21 +20,27 @@ const pillars = [
 
 export function Privacy() {
   return (
-    <section id="privacy" className="py-16 sm:py-20 border-y border-hairline bg-surface-1/30">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-          {pillars.map((pillar) => (
-            <div key={pillar.title} className="flex flex-col items-start">
-              <pillar.icon className="text-ink-secondary mb-3 h-6 w-6" aria-hidden="true" />
-              <h3 className="text-base font-semibold text-ink-primary mb-2">
-                {pillar.title}
-              </h3>
-              <p className="text-sm text-ink-secondary leading-relaxed">
-                {pillar.body}
-              </p>
-            </div>
-          ))}
-        </div>
+    <section
+      id="privacy"
+      aria-label="Privacy and permissions"
+      className="py-section max-w-[1240px] mx-auto px-4 sm:px-6"
+    >
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {pillars.map((pillar) => (
+          <div
+            key={pillar.title}
+            className="bg-surface border border-hairline rounded-lg p-4 hover:border-hairline-strong transition-none"
+          >
+            <pillar.icon
+              className="text-mute mb-3 h-5 w-5"
+              aria-hidden="true"
+            />
+            <h3 className="text-sm font-medium leading-[1.6] tracking-[0.2px] text-ink mb-1.5">
+              {pillar.title}
+            </h3>
+            <p className="text-sm leading-[1.6] text-mute">{pillar.body}</p>
+          </div>
+        ))}
       </div>
     </section>
   );

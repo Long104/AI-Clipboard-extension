@@ -35,15 +35,15 @@ const faqs = [
 
 export function Faq() {
   return (
-    <section id="faq" className="py-20 sm:py-28 max-w-3xl mx-auto px-4 sm:px-6">
-      <h2 className="text-3xl font-semibold text-ink-primary tracking-tight text-center">
+    <section
+      id="faq"
+      aria-label="Frequently asked questions"
+      className="py-section max-w-[768px] mx-auto px-4 sm:px-6"
+    >
+      <h2 className="text-[32px] sm:text-[56px] font-medium leading-[1.17] tracking-[0.2px] text-ink text-center">
         Frequently Asked Questions
       </h2>
-      <p className="text-sm text-ink-tertiary text-center mt-2 mb-10">
-        Everything you need to know about keys, models, and limits.
-      </p>
-
-      <Accordion type="single" collapsible className="w-full">
+      <Accordion type="single" collapsible className="w-full mt-10">
         {faqs.map((faq, i) => (
           <AccordionItem key={faq.question} value={`item-${i}`}>
             <AccordionTrigger>{faq.question}</AccordionTrigger>
