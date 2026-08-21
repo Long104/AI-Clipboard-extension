@@ -1,43 +1,69 @@
+"use client";
+
+import { motion } from "framer-motion";
 import { Download } from "lucide-react";
 import { STORE_URL, GITHUB_URL } from "@/lib/constants";
 import { HeroMockup } from "@/components/hero-mockup";
 
+const spring = { stiffness: 550, damping: 36, mass: 0.8 } as const;
+
 export function Hero() {
   return (
-    <section className="pt-32 pb-16 sm:pt-40 sm:pb-24 overflow-hidden relative">
-      {/* Background radial spotlight */}
+    <section className="relative pt-32 pb-16 sm:pt-40 sm:pb-24 overflow-hidden">
+      {/* Signature blue diagonal stripe band — exactly once per page */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10"
+        className="absolute top-0 left-0 right-0 h-[6px]"
         style={{
           background:
-            "radial-gradient(ellipse 600px 300px at 50% 15%, rgba(212,255,50,0.06), transparent 70%)",
+            "repeating-linear-gradient(135deg, var(--hero-stripe-start) 0px, var(--hero-stripe-start) 12px, var(--hero-stripe-end) 12px, var(--hero-stripe-end) 24px)",
         }}
       />
 
       <div className="mx-auto max-w-3xl px-4 sm:px-6 text-center">
-        {/* Release Pill */}
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface-2 border border-hairline text-xs text-ink-secondary mb-6">
-          <span className="w-1.5 h-1.5 rounded-full bg-semantic-green animate-pulse" aria-hidden="true" />
-          Cloudflare Workers AI + Llama 3.3 70B
-        </div>
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={spring}
+          className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-hairline mb-6"
+        >
+          <span
+            className="w-1.5 h-1.5 rounded-full bg-accent-green animate-pulse"
+            aria-hidden="true"
+          />
+          <span className="font-mono text-caption-sm text-mute">
+            Cloudflare Workers AI + Llama 3.3 70B
+          </span>
+        </motion.div>
 
-        {/* H1 Headline */}
-        <h1 className="text-4xl sm:text-6xl font-bold tracking-[-0.04em] text-ink-primary max-w-3xl mx-auto text-center leading-[1.08]">
+        <motion.h1
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ ...spring, delay: 0.012 }}
+          className="text-[36px] sm:text-[48px] lg:text-[64px] font-semibold leading-[1.1] tracking-normal text-ink max-w-3xl mx-auto"
+        >
           Understand anything faster than ever.
-        </h1>
+        </motion.h1>
 
-        {/* Subheadline */}
-        <p className="mt-6 text-base sm:text-lg text-ink-secondary max-w-xl mx-auto text-center leading-relaxed">
+        <motion.p
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ ...spring, delay: 0.024 }}
+          className="mt-6 text-lg leading-[1.6] text-mute max-w-[580px] mx-auto"
+        >
           Copy text, get instant summaries, or ask follow-ups in a side panel.
           Zero tab-switching.
-        </p>
+        </motion.p>
 
-        {/* CTA Action Cluster */}
-        <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ ...spring, delay: 0.036 }}
+          className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3"
+        >
           <a
             href={STORE_URL}
-            className="h-12 px-6 bg-lime hover:bg-lime-hover active:scale-[0.98] text-lime-fg font-semibold rounded-lg text-sm sm:text-base flex items-center justify-center gap-2.5 shadow-glow transition-all w-full sm:w-auto"
+            className="h-11 px-6 w-full sm:w-auto bg-primary hover:bg-primary-hover active:bg-primary-pressed active:scale-95 text-primary-fg font-medium rounded-full text-sm flex items-center justify-center gap-2.5"
           >
             <Download className="h-4 w-4" />
             Add to Chrome
@@ -46,7 +72,7 @@ export function Hero() {
             href={GITHUB_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="h-12 px-6 bg-surface-1 hover:bg-surface-2 active:scale-[0.98] border border-hairline hover:border-hairline-hover text-ink-primary font-medium rounded-lg text-sm sm:text-base flex items-center justify-center gap-2 transition-all w-full sm:w-auto"
+            className="h-11 px-5 w-full sm:w-auto hover:bg-surface-elevated border border-hairline hover:border-hairline-strong active:scale-95 text-ink font-medium rounded-md text-sm flex items-center justify-center gap-2"
           >
             <svg
               role="img"
@@ -59,15 +85,18 @@ export function Hero() {
             </svg>
             View on GitHub
           </a>
-        </div>
+        </motion.div>
 
-        {/* Microcopy Under CTA */}
-        <p className="mt-3 text-xs text-ink-tertiary text-center">
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ ...spring, delay: 0.048 }}
+          className="mt-3 font-mono text-caption-sm text-ash"
+        >
           Free tier includes 10 requests every 2 hours. No credit card required.
-        </p>
+        </motion.p>
       </div>
 
-      {/* Hero Interactive Product Mockup */}
       <HeroMockup />
     </section>
   );
