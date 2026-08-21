@@ -35,22 +35,18 @@ const faqs = [
 
 export function Faq() {
   return (
-    <section
-      id="faq"
-      aria-label="Frequently asked questions"
-      className="py-section max-w-[720px] mx-auto px-4 sm:px-6"
-    >
-      <h2 className="text-[32px] md:text-[40px] lg:text-[48px] font-normal leading-[1.08] tracking-[-0.03em] text-ink text-center">
-        Frequently Asked Questions
-      </h2>
-      <Accordion type="single" collapsible className="w-full mt-10">
-        {faqs.map((faq, i) => (
-          <AccordionItem key={faq.question} value={`item-${i}`}>
-            <AccordionTrigger>{faq.question}</AccordionTrigger>
-            <AccordionContent>{faq.answer}</AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
+    <section id="faq" className="py-section">
+      <div className="mx-auto max-w-[720px] px-4 sm:px-6">
+        <h2 className="font-display font-bold tracking-[-0.03em] leading-[1.15] text-[2rem] sm:text-[2.25rem] text-ink">FAQ</h2>
+        <Accordion type="single" collapsible className="w-full mt-10">
+          {faqs.map((faq, i) => (
+            <AccordionItem key={"item-" + i} value={"item-" + i}>
+              <AccordionTrigger className="text-[15px] sm:text-base font-medium tracking-normal hover:text-primary transition-colors">{faq.question}</AccordionTrigger>
+              <AccordionContent className="text-[15px] text-ink-body">{faq.answer}</AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </div>
     </section>
   );
 }
