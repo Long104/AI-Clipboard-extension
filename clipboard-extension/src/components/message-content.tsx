@@ -54,7 +54,7 @@ export function MessageContent({ text }: { text: string }) {
 	}
 
 	if (parts.length === 0) {
-		return <span className="whitespace-pre-wrap break-words">{text}</span>;
+		return <span className="whitespace-pre-wrap break-words text-slate-800 dark:text-slate-200">{text}</span>;
 	}
 
 	return (
@@ -63,7 +63,7 @@ export function MessageContent({ text }: { text: string }) {
 				part.type === "code" ? (
 					<CodeBlock key={i} code={part.content} language={part.lang} />
 				) : (
-					<span key={i} className="whitespace-pre-wrap break-words">
+					<span key={i} className="whitespace-pre-wrap break-words text-slate-800 dark:text-slate-200">
 						{part.content}
 					</span>
 				)

@@ -181,7 +181,7 @@ export default function ResultPopover() {
 				</Button>
 			</div>
 
-			<div className="p-3.5 text-sm" style={{ maxHeight: `${POPOVER_MAX_HEIGHT}px`, overflowY: "auto" }}>
+			<div className="p-3.5 text-sm text-slate-800 dark:text-slate-200" style={{ maxHeight: `${POPOVER_MAX_HEIGHT}px`, overflowY: "auto" }}>
 				{state.status === "loading" && (
 					<div className="flex items-center justify-center gap-2 text-slate-500 py-8">
 						<div className="animate-spin rounded-full h-4 w-4 border-b-2 border-slate-500" />

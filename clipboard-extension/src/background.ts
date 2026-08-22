@@ -328,16 +328,18 @@ if (typeof chrome !== "undefined" && chrome.runtime?.onMessage) {
 
 				case "AI_ACTION": {
 					const text = validateInput(message.text);
-					if (text === null) {
-						sendResponse({ error: "INVALID_INPUT" });
-						return false;
-					}
-					const composed = composePrompt(message.action, text);
 					const meta = {
 						requestId: message.requestId,
 						tabId: sender?.tab?.id ?? null,
 						frameId: sender?.frameId ?? 0,
 					};
+					if (text === null) {
+						const payload: PopoverResult = { ...meta, ok: false, error: "INVALID_INPUT", at: Date.now() };
+						chrome.storage.local.set({ [POPOVER_RESULT_KEY]: payload }, () => { void 0; });
+						sendResponse({ error: "INVALID_INPUT" });
+						return false;
+					}
+					const composed = composePrompt(message.action, text);
 					const writePopoverRequest = enqueueWrite(async () => {
 						await new Promise<void>((resolve) => {
 							chrome.storage.local.set(
