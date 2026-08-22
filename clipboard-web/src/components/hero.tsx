@@ -15,7 +15,7 @@ export function Hero() {
     <section className="pt-28 sm:pt-32 pb-24 sm:pb-32">
       <div className="mx-auto max-w-[880px] px-6">
         <h1 className="font-display font-extrabold tracking-[-0.04em] leading-[1.05] text-[clamp(2.5rem,7vw,3.75rem)] text-ink text-balance max-w-[720px] mx-auto text-center">
-          Understand anything faster than ever.
+          Understand anything <span className="motif-selection">faster than ever</span>.
         </h1>
 
         <p className="text-[1.125rem] sm:text-[1.25rem] leading-[1.6] text-ink-body max-w-xl mx-auto text-center mt-5">

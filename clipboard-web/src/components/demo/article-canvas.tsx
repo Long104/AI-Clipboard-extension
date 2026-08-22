@@ -121,7 +121,7 @@ export function ArticleCanvas({ demo, onAnchorRectChange }: ArticleCanvasProps) 
         aria-label="Interactive demo — select text to try AI actions"
         className="max-w-[880px] mx-auto bg-white border border-hairline rounded-xl p-6 sm:p-8 shadow-sm"
       >
-        <div className="text-[12px] text-ink-ash font-sans tracking-[0.08em] uppercase mb-4">
+        <div className="font-mono font-medium text-[12px] text-ink-ash mb-4">
           {ARTICLE_EXCERPT.byline}
         </div>
 

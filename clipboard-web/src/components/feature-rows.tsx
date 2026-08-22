@@ -2,7 +2,7 @@ export function FeatureRows() {
   return (
     <section id="features" className="py-section">
       <div className="mx-auto max-w-[1040px] px-6">
-        <p className="text-center text-[12px] font-semibold tracking-[0.08em] uppercase text-ink-mute">
+        <p className="text-center font-mono font-medium text-[12px] text-ink-mute">
           Features
         </p>
 
@@ -40,7 +40,7 @@ export function FeatureRows() {
 
             {/* Copy column */}
             <div className="lg:col-span-5 lg:order-2">
-              <h3 className="font-display font-bold tracking-[-0.02em] text-[1.375rem] sm:text-[1.5rem] text-ink">
+              <h3 className="font-display font-medium tracking-[-0.02em] text-[1.375rem] sm:text-[1.5rem] text-ink">
                 Instant Zero-Setup Use
               </h3>
               <p className="mt-3 text-[15px] sm:text-base leading-[1.6] text-ink-body">
@@ -53,7 +53,7 @@ export function FeatureRows() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center py-12 lg:py-16 border-t border-hairline">
             {/* Copy column */}
             <div className="lg:col-span-5 lg:order-1">
-              <h3 className="font-display font-bold tracking-[-0.02em] text-[1.375rem] sm:text-[1.5rem] text-ink">
+              <h3 className="font-display font-medium tracking-[-0.02em] text-[1.375rem] sm:text-[1.5rem] text-ink">
                 Deep Dive Side Panel
               </h3>
               <p className="mt-3 text-[15px] sm:text-base leading-[1.6] text-ink-body">
@@ -137,7 +137,7 @@ export function FeatureRows() {
 
             {/* Copy column */}
             <div className="lg:col-span-5 lg:order-2">
-              <h3 className="font-display font-bold tracking-[-0.02em] text-[1.375rem] sm:text-[1.5rem] text-ink">
+              <h3 className="font-display font-medium tracking-[-0.02em] text-[1.375rem] sm:text-[1.5rem] text-ink">
                 Private by Architecture
               </h3>
               <p className="mt-3 text-[15px] sm:text-base leading-[1.6] text-ink-body">

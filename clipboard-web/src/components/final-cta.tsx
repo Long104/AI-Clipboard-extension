@@ -7,7 +7,7 @@ export function FinalCta() {
       <section className="py-section">
         <div className="mx-auto max-w-[640px] px-6 text-center">
           <h2 className="font-display font-bold tracking-[-0.03em] leading-[1.15] text-[1.75rem] sm:text-[2.25rem] text-ink">
-            Stop switching tabs to explain text.
+            Stop switching tabs to <span className="motif-selection">explain text</span>.
           </h2>
           <a
             href={STORE_URL}

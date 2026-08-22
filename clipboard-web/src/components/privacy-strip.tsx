@@ -2,7 +2,7 @@ export function PrivacyStrip() {
   return (
     <section id="privacy" className="border-y border-hairline bg-subtle/60">
       <div className="mx-auto max-w-[880px] px-6 py-20 sm:py-24">
-        <p className="text-[12px] font-semibold tracking-[0.08em] uppercase text-ink-mute">Privacy</p>
+        <p className="font-mono font-medium text-[12px] text-ink-mute">Privacy</p>
         <div className="mt-6">
           {/* three statements, each: */}
           <p className="py-8 border-b border-hairline text-[1.0625rem] sm:text-[1.125rem] leading-[1.6] text-ink-body max-w-[64ch]">

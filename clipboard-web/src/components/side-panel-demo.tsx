@@ -108,7 +108,7 @@ export function SidePanelDemo() {
     <section id="sidepanel" className="py-section">
       <div className="mx-auto max-w-[1040px] px-6">
         <div>
-          <span className="text-[12px] font-semibold tracking-[0.08em] uppercase text-ink-mute">Side panel</span>
+          <span className="font-mono font-medium text-[12px] text-ink-mute">Side panel</span>
           <h2 className="font-display font-bold tracking-[-0.03em] text-[2rem] sm:text-[2.25rem] text-ink mt-2">Try the side panel</h2>
           <p className="text-[15px] sm:text-base text-ink-body mt-3 max-w-[52ch]">A persistent thread of everything you&apos;ve asked while reading.</p>
         </div>
@@ -122,14 +122,14 @@ export function SidePanelDemo() {
                   <React.Fragment key={i}>
                     {part}
                     {i < arr.length - 1 && (
-                      <mark className="bg-[var(--primary-surface)] text-ink rounded-[3px] px-0.5">prohibits parallelization</mark>
+                      <mark className="motif-selection">prohibits parallelization</mark>
                     )}
                   </React.Fragment>
                 ))}
               </p>
             </div>
             <div className="mt-8 pt-6 border-t border-hairline">
-              <span className="text-[11px] font-medium uppercase tracking-wider text-ink-mute block mb-3">Suggested queries</span>
+              <span className="font-mono font-medium text-[11px] text-ink-mute block mb-3">Suggested queries</span>
               <div className="flex flex-wrap gap-2">
                 {SUGGESTED_QUESTIONS.map((q) => (
                   <button key={q} type="button" onClick={() => handleAsk(q)} className="min-h-[36px] px-3 rounded-full border border-hairline text-[12px] font-medium text-ink hover:bg-subtle transition-colors">{q}</button>
@@ -167,7 +167,7 @@ export function SidePanelDemo() {
                       <span className="text-[11px] text-ink-ash mt-0.5 flex items-center gap-2">
                         <span>{item.time}</span>
                         {item.action && (
-                          <span className="uppercase text-[9px] tracking-wider bg-surface-subtle px-1.5 py-0.5 rounded text-ink-mute font-mono">{item.action}</span>
+                          <span className="font-mono font-normal text-[10px] bg-surface-subtle px-1.5 py-0.5 rounded text-ink-mute">{item.action}</span>
                         )}
                       </span>
                       <span className="text-[12px] leading-[1.6] text-ink-body mt-1.5 block">{item.answer}</span>

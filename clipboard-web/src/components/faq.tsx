@@ -19,7 +19,7 @@ const faqs = [
   {
     question: "Does the extension read everything I copy?",
     answer:
-      "No. It only processes clips when you click an action on the copy toast or select text to trigger an inline explanation. Nothing leaves your browser without user action.",
+      "No. It only processes clips when you click an action on the copy toast or select text to trigger an inline explanation. Nothing leaves your browser without explicit user action.",
   },
   {
     question: "Which AI model powers the explanations?",
@@ -42,7 +42,19 @@ export function Faq() {
           {faqs.map((faq, i) => (
             <AccordionItem key={"item-" + i} value={"item-" + i}>
               <AccordionTrigger className="text-[15px] sm:text-base font-medium tracking-normal hover:text-primary transition-colors">{faq.question}</AccordionTrigger>
-              <AccordionContent className="text-[15px] text-ink-body">{faq.answer}</AccordionContent>
+              <AccordionContent className="text-[15px] text-ink-body">
+                {i === 0 ? (
+                  <>
+                    Yes. You get <span className="motif-selection">10 free AI requests</span> every 2 hours out of the box. If you need unlimited queries, paste your own API key in settings.
+                  </>
+                ) : i === 2 ? (
+                  <>
+                    No. It only processes clips when you click an action on the copy toast or select text to trigger an inline explanation. <span className="motif-selection">Nothing leaves your browser</span> without explicit user action.
+                  </>
+                ) : (
+                  faq.answer
+                )}
+              </AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>

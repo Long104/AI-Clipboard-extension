@@ -44,6 +44,7 @@
   --ash: #A3A3A3;
   --stone: #D4D4CE;
 
+  /* Brand accent — Blue-600. oklch(0.55 0.24 262): chroma 0.24 <= 0.4 PASS (design-taste color floor) */
   --primary: #2563EB;
   --primary-hover: #1D4ED8;
   --primary-pressed: #1D4ED8;
@@ -121,6 +122,17 @@
 
   .tabular-nums {
     font-variant-numeric: tabular-nums;
+  }
+
+  /* Signature motif: selection highlight (see DESIGN.md Decisions)
+     Reads like browser text-selection on the page's own copy — the product IS select-to-understand. */
+  .motif-selection {
+    background-color: color-mix(in oklab, var(--primary) 14%, transparent);
+    color: var(--primary);
+    padding: 0 0.15em;
+    border-radius: 2px;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
   }
 
   /* Keyboard focus: strict ring on canvas offset (0ms, no blur halo) */
