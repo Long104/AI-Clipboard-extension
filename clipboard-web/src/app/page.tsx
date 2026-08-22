@@ -1,6 +1,7 @@
 import { MotionConfig } from "framer-motion";
 import { Header } from "@/components/header";
 import { Hero } from "@/components/hero";
+import { PlaygroundSection } from "@/components/playground-section";
 import { HowItWorks } from "@/components/how-it-works";
 import { FeatureRows } from "@/components/feature-rows";
 import { SidePanelDemo } from "@/components/side-panel-demo";
@@ -15,6 +16,7 @@ export default function Home() {
         <Header />
         <main className="relative">
           <Hero />
+          <PlaygroundSection />
           <HowItWorks />
           <FeatureRows />
           <SidePanelDemo />

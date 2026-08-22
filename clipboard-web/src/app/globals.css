@@ -145,6 +145,53 @@
 }
 
 @layer utilities {
+  /* Hero ambient mesh — warm + primary light on the fold (see specs/hero-redesign-spec.md) */
+  .hero-stage {
+    background:
+      radial-gradient(ellipse 90% 55% at 50% -12%, rgba(37, 99, 235, 0.07), transparent 70%),
+      radial-gradient(ellipse 45% 40% at 12% 32%, rgba(217, 119, 6, 0.045), transparent 70%),
+      radial-gradient(ellipse 55% 45% at 88% 18%, rgba(37, 99, 235, 0.05), transparent 70%);
+  }
+
+  /* Hairline grid overlay, dissolving radially from the headline */
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(to right, rgba(26, 26, 26, 0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(26, 26, 26, 0.035) 1px, transparent 1px);
+    background-size: 48px 48px;
+    -webkit-mask-image: radial-gradient(ellipse 75% 65% at 50% 38%, black 25%, transparent 78%);
+    mask-image: radial-gradient(ellipse 75% 65% at 50% 38%, black 25%, transparent 78%);
+  }
+
+  /* Floating frosted product fragments around the hero headline */
+  .hero-fragment {
+    position: absolute;
+    z-index: 1;
+    pointer-events: none;
+    background: rgba(255, 255, 255, 0.82);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(26, 26, 26, 0.08);
+    border-radius: 12px;
+    box-shadow:
+      0 20px 40px -15px rgba(0, 0, 0, 0.08),
+      0 0 1px rgba(0, 0, 0, 0.05);
+    animation: hero-float 7s ease-in-out infinite;
+    transform: rotate(var(--frag-rotate, 0deg));
+  }
+
+  @keyframes hero-float {
+    0%, 100% { transform: translateY(0) rotate(var(--frag-rotate, 0deg)); }
+    50% { transform: translateY(-8px) rotate(var(--frag-rotate, 0deg)); }
+  }
+
+  @media (max-width: 1023px) {
+    .hero-fragment { display: none; }
+  }
+
   /* Reduced motion: everything collapses to 0ms instant visibility */
   @media (prefers-reduced-motion: reduce) {
     *,
