@@ -42,7 +42,7 @@ export function Header() {
             aria-label="AI Clipboard home"
           >
             <Image
-              src="/icon.png"
+              src="/logo.png"
               alt=""
               width={24}
               height={24}

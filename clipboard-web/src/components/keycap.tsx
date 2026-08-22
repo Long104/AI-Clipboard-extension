@@ -8,13 +8,13 @@ export interface KeycapProps {
 
 export function Keycap({ children, className }: KeycapProps) {
   return (
-    <div
+    <span
       className={cn(
         "inline-flex h-[20px] min-w-[20px] items-center justify-center whitespace-nowrap rounded-xs border border-hairline bg-keycap-start px-1.5 py-px font-mono text-caption-md leading-none text-body",
         className,
       )}
     >
       {children}
-    </div>
+    </span>
   );
 }
