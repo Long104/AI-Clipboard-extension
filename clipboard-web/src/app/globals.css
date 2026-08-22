@@ -2,20 +2,158 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@font-face {
+  font-family: "Cabinet Grotesk";
+  src: url("/fonts/cabinet-grotesk-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
 
-@media (prefers-color-scheme: dark) {
+@font-face {
+  font-family: "Cabinet Grotesk";
+  src: url("/fonts/cabinet-grotesk-700.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Cabinet Grotesk";
+  src: url("/fonts/cabinet-grotesk-800.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --canvas: #FAFAF8;
+  --surface: #FFFFFF;
+  --surface-elevated: #F4F4F0;
+  --surface-card: #FFFFFF;
+  --surface-subtle: #F4F4F0;
+
+  --hairline: #E5E5E0;
+  --hairline-soft: rgba(26,26,26,0.05);
+  --hairline-strong: #D4D4CE;
+
+  --ink: #1A1A1A;
+  --body: #525252;
+  --charcoal: #737373;
+  --mute: #737373;
+  --ash: #A3A3A3;
+  --stone: #D4D4CE;
+
+  /* Brand accent — Blue-600. oklch(0.55 0.24 262): chroma 0.24 <= 0.4 PASS (design-taste color floor) */
+  --primary: #2563EB;
+  --primary-hover: #1D4ED8;
+  --primary-pressed: #1D4ED8;
+  --on-primary: #FFFFFF;
+  --primary-surface: #EFF6FF;
+
+  --accent-blue: #2563EB;
+  --accent-blue-soft: rgba(37,99,235,0.12);
+  --accent-green: #059669;
+  --accent-green-soft: rgba(5,150,105,0.1);
+  --accent-amber: #d97706;
+  --accent-amber-soft: rgba(217,119,6,0.12);
+  --accent-red: #dc2626;
+  --accent-red-soft: rgba(220,38,38,0.1);
+
+  --success: #16A34A;
+  --success-surface: #F0FDF4;
+  --success-border: #BBF7D0;
+  --error: #DC2626;
+  --error-surface: #FEF2F2;
+  --error-border: #FECACA;
+  --badge: #F3F4F6;
+
+  --keycap-start: #FFFFFF;
+  --keycap-end: #F4F4F0;
+
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  --section-y: 96px;
+  --container-max: 980px;
+  --container-px: 24px;
+
+  --font-display: "Cabinet Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "JetBrains Mono", Menlo, Monaco, Consolas, monospace;
+
+  --shadow-popover: 0 10px 30px -10px rgba(0,0,0,0.12), 0 0 1px 1px rgba(0,0,0,0.05);
+}
+
+@media (min-width: 768px) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --section-y: 128px;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@media (min-width: 1024px) {
+  :root {
+    --section-y: 140px;
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    color-scheme: light;
+  }
+
+  body {
+    background-color: var(--canvas);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--accent-blue-soft);
+    color: var(--ink);
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Signature motif: selection highlight (see DESIGN.md Decisions)
+     Reads like browser text-selection on the page's own copy — the product IS select-to-understand. */
+  .motif-selection {
+    background-color: color-mix(in oklab, var(--primary) 14%, transparent);
+    color: var(--primary);
+    padding: 0 0.15em;
+    border-radius: 2px;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+
+  /* Keyboard focus: strict ring on canvas offset (0ms, no blur halo) */
+  :focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px var(--canvas),
+      0 0 0 4px var(--primary);
+  }
+}
+
+@layer utilities {
+  /* Reduced motion: everything collapses to 0ms instant visibility */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
