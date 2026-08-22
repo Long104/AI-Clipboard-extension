@@ -5,7 +5,6 @@ import { STORE_URL, GITHUB_URL } from "@/lib/constants";
 export function Hero() {
   return (
     <section className="hero-stage relative overflow-hidden min-h-[100dvh] flex flex-col items-center justify-center px-6 py-24 sm:py-28">
-      <div className="hero-grain" aria-hidden />
 
       <div className="mx-auto max-w-[880px] w-full">
         <h1 className="font-display font-extrabold tracking-[-0.04em] leading-[1.05] text-[clamp(2.5rem,7vw,3.75rem)] text-ink text-balance max-w-[720px] mx-auto text-center relative z-10">
