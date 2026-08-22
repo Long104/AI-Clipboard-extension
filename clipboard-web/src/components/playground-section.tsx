@@ -4,7 +4,6 @@ import * as React from "react";
 import { useDemoRun } from "@/components/demo/use-demo-run";
 import { ArticleCanvas } from "@/components/demo/article-canvas";
 import { SelectionPopover } from "@/components/demo/selection-popover";
-import { Keycap } from "@/components/keycap";
 
 export function PlaygroundSection() {
   const demo = useDemoRun();
@@ -26,12 +25,6 @@ export function PlaygroundSection() {
           Select any sentence in the paper below, or tap a quick action. Zero
           setup, nothing to install.
         </p>
-
-        <div className="mt-5 flex flex-wrap items-center justify-center gap-1.5 text-[14px] text-ink-mute">
-          Select text or press
-          <Keycap>⌘C</Keycap>
-          anywhere. The explanation appears in place.
-        </div>
 
         {/* Reader window */}
         <div className="mt-10 rounded-xl border border-hairline bg-white shadow-[0_20px_40px_-20px_rgba(0,0,0,0.1)] overflow-hidden">
