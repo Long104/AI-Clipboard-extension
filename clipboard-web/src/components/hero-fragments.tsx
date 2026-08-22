@@ -7,7 +7,7 @@ export function HeroFragments() {
           Left edge deliberately crops past the fold: the document continues
           off-canvas, like a real screenshot rather than a centered card. */}
       <div
-        className="hero-fragment hero-fragment--near -left-4 lg:left-6 bottom-6 w-[340px] p-4"
+        className="hero-fragment hero-fragment--near -left-4 lg:left-6 xl:left-10 bottom-[11%] w-[350px] p-4"
         style={
           {
             "--frag-rotate": "-1.5deg",
@@ -32,7 +32,7 @@ export function HeroFragments() {
 
       {/* Fragment B — live selection state (upper-right, supporting) */}
       <div
-        className="hero-fragment right-[4%] top-36 w-[270px] p-4"
+        className="hero-fragment right-[5%] top-[19%] w-[270px] p-4"
         style={
           {
             "--frag-rotate": "1.25deg",
@@ -58,7 +58,7 @@ export function HeroFragments() {
 
       {/* Fragment C — AI result card (lower-right, supporting) */}
       <div
-        className="hero-fragment right-[6%] bottom-3 w-[310px] p-4"
+        className="hero-fragment right-[7%] bottom-[9%] w-[320px] p-4"
         style={
           {
             "--frag-rotate": "-0.5deg",
