@@ -3,7 +3,7 @@ import { STORE_URL, GITHUB_URL } from "@/lib/constants";
 
 export function Hero() {
   return (
-    <section className="hero-stage relative overflow-hidden pt-36 sm:pt-40 pb-24 sm:pb-32">
+    <section className="hero-stage relative overflow-hidden pt-32 sm:pt-36 pb-14 sm:pb-16">
       <div className="hero-grid" aria-hidden />
 
       <div className="mx-auto max-w-[880px] px-6">

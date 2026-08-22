@@ -13,7 +13,7 @@ export function PlaygroundSection() {
   return (
     <section
       id="playground"
-      className="relative py-[var(--section-y)] border-t border-hairline scroll-mt-20"
+      className="relative pt-16 sm:pt-20 pb-[var(--section-y)] border-t border-hairline scroll-mt-20"
     >
       <div className="mx-auto max-w-[880px] px-6">
         <p className="text-center text-[12px] font-medium text-ink-ash">

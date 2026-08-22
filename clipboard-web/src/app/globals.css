@@ -145,12 +145,14 @@
 }
 
 @layer utilities {
-  /* Hero ambient mesh — warm + primary light on the fold (see specs/hero-redesign-spec.md) */
+  /* Hero ambient mesh — asymmetric warm/primary light anchored to the fragments
+     (amber lower-left by the toolbar, blue off-center upper-right). Deliberately
+     NOT a symmetric center halo — that's the AI-template tell. */
   .hero-stage {
     background:
-      radial-gradient(ellipse 90% 55% at 50% -12%, rgba(37, 99, 235, 0.07), transparent 70%),
-      radial-gradient(ellipse 45% 40% at 12% 32%, rgba(217, 119, 6, 0.045), transparent 70%),
-      radial-gradient(ellipse 55% 45% at 88% 18%, rgba(37, 99, 235, 0.05), transparent 70%);
+      radial-gradient(ellipse 55% 45% at 66% -8%, rgba(37, 99, 235, 0.06), transparent 70%),
+      radial-gradient(ellipse 50% 42% at 6% 72%, rgba(217, 119, 6, 0.055), transparent 70%),
+      radial-gradient(ellipse 40% 38% at 96% 24%, rgba(37, 99, 235, 0.045), transparent 70%);
   }
 
   /* Hairline grid overlay, dissolving radially from the headline */
@@ -162,11 +164,13 @@
       linear-gradient(to right, rgba(26, 26, 26, 0.035) 1px, transparent 1px),
       linear-gradient(to bottom, rgba(26, 26, 26, 0.035) 1px, transparent 1px);
     background-size: 48px 48px;
-    -webkit-mask-image: radial-gradient(ellipse 75% 65% at 50% 38%, black 25%, transparent 78%);
-    mask-image: radial-gradient(ellipse 75% 65% at 50% 38%, black 25%, transparent 78%);
+    -webkit-mask-image: radial-gradient(ellipse 78% 68% at 50% 40%, black 22%, transparent 76%);
+    mask-image: radial-gradient(ellipse 78% 68% at 50% 40%, black 22%, transparent 76%);
   }
 
-  /* Floating frosted product fragments around the hero headline */
+  /* Floating frosted product fragments around the hero headline.
+     Each fragment gets its own depth: near fragments cast deeper shadows and
+     drift on their own tempo (--float-dur) so nothing moves in lockstep. */
   .hero-fragment {
     position: absolute;
     z-index: 1;
@@ -175,17 +179,25 @@
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
     border: 1px solid rgba(26, 26, 26, 0.08);
-    border-radius: 12px;
+    border-radius: 14px;
     box-shadow:
-      0 20px 40px -15px rgba(0, 0, 0, 0.08),
-      0 0 1px rgba(0, 0, 0, 0.05);
-    animation: hero-float 7s ease-in-out infinite;
+      0 24px 48px -18px rgba(0, 0, 0, 0.1),
+      0 1px 2px rgba(0, 0, 0, 0.04);
+    animation: hero-float var(--float-dur, 7s) ease-in-out infinite;
     transform: rotate(var(--frag-rotate, 0deg));
+  }
+
+  /* Dominant fragment — sits visually closer to the viewer */
+  .hero-fragment--near {
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow:
+      0 36px 72px -24px rgba(0, 0, 0, 0.16),
+      0 2px 4px rgba(0, 0, 0, 0.04);
   }
 
   @keyframes hero-float {
     0%, 100% { transform: translateY(0) rotate(var(--frag-rotate, 0deg)); }
-    50% { transform: translateY(-8px) rotate(var(--frag-rotate, 0deg)); }
+    50% { transform: translateY(-8px) rotate(calc(var(--frag-rotate, 0deg) + 0.35deg)); }
   }
 
   @media (max-width: 1023px) {
