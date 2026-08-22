@@ -26,19 +26,8 @@ export function PlaygroundSection() {
           setup, nothing to install.
         </p>
 
-        {/* Reader window */}
+        {/* Reader sheet — no fake browser chrome, just the paper */}
         <div className="mt-10 rounded-xl border border-hairline bg-white shadow-[0_20px_40px_-20px_rgba(0,0,0,0.1)] overflow-hidden">
-          <div className="flex items-center gap-2 px-4 h-11 border-b border-hairline bg-[#FAFAF8]">
-            <span className="flex gap-1.5" aria-hidden>
-              <span className="w-3 h-3 rounded-full bg-[#FF5F57]" />
-              <span className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
-              <span className="w-3 h-3 rounded-full bg-[#28C840]" />
-            </span>
-            <span className="ml-3 hidden sm:inline-flex items-center h-7 px-3 rounded-md border border-hairline bg-white font-mono text-[12px] text-ink-mute">
-              arxiv.org/abs/1706.03762
-            </span>
-          </div>
-
           <div className="p-4 sm:p-6 bg-subtle">
             <ArticleCanvas demo={demo} onAnchorRectChange={setAnchorRect} />
           </div>
