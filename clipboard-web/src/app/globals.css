@@ -155,17 +155,17 @@
       radial-gradient(ellipse 40% 38% at 96% 24%, rgba(37, 99, 235, 0.045), transparent 70%);
   }
 
-  /* Hairline grid overlay, dissolving radially from the headline */
-  .hero-grid {
+  /* Film grain overlay — inline SVG feTurbulence, no network request, all DPRs.
+     Replaces the retired hairline grid (2023 AI-template tell). Light-theme
+     tuned: opacity 0.035, soft-light blend so it reads as paper, not dirt. */
+  .hero-grain {
     position: absolute;
     inset: 0;
     pointer-events: none;
-    background-image:
-      linear-gradient(to right, rgba(26, 26, 26, 0.035) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(26, 26, 26, 0.035) 1px, transparent 1px);
-    background-size: 48px 48px;
-    -webkit-mask-image: radial-gradient(ellipse 78% 68% at 50% 40%, black 22%, transparent 76%);
-    mask-image: radial-gradient(ellipse 78% 68% at 50% 40%, black 22%, transparent 76%);
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+    opacity: 0.035;
+    mix-blend-mode: soft-light;
   }
 
   /* Floating frosted product fragments around the hero headline.
