@@ -155,20 +155,6 @@
       radial-gradient(ellipse 40% 38% at 96% 24%, rgba(37, 99, 235, 0.045), transparent 70%);
   }
 
-  /* Film grain — light-theme tuned: multiply blend (soft-light is a no-op on
-     white), fine 2-octave noise = paper specks, no blobs. Measured stdev ~4,
-     block-uniformity < 0.5 (variant D of grain test, 2026-08-23). */
-  .page-grain {
-    position: fixed;
-    inset: 0;
-    z-index: 60;
-    pointer-events: none;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    background-size: 220px 220px;
-    opacity: 0.3;
-    mix-blend-mode: multiply;
-  }
-
   /* Floating frosted product fragments around the hero headline.
      Each fragment gets its own depth: near fragments cast deeper shadows and
      drift on their own tempo (--float-dur) so nothing moves in lockstep. */

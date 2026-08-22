@@ -24,7 +24,6 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased">
         {children}
-        <div className="page-grain" aria-hidden />
       </body>
     </html>
   );
