@@ -2,6 +2,11 @@
 
 > Understand anything faster than ever. Select text or copy (`Ctrl+C` / `Cmd+C`), and get instant AI explanations right on the page or inside your side panel. Powered by Meta Llama 3.3 70B & Cloudflare Workers AI.
 
+## Install
+
+[Add to Chrome](https://chromewebstore.google.com/detail/ai-clipboard-%E2%80%94-copy-under/clppnjmmefhldcnbdacnogcnmhlpkenp)
+[Add to Firefox](https://addons.mozilla.org/addon/ai-clipboard-copy-understand/)
+
 ![Demo](https://github.com/user-attachments/assets/96e18b12-1c50-45c7-8caf-565467eab06e)
 
 ---
@@ -16,7 +21,7 @@
 
 ---
 
-## 🚀 Quick Setup (Development / Load Unpacked)
+## Install from source (development)
 
 ### Requirements
 

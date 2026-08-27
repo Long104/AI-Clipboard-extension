@@ -1,4 +1,4 @@
-import { STORE_URL, GITHUB_URL, PRIVACY_URL } from "@/lib/constants";
+import { STORE_URL, FIREFOX_URL, GITHUB_URL, PRIVACY_URL } from "@/lib/constants";
 
 export function FinalCta() {
   return (
@@ -14,6 +14,14 @@ export function FinalCta() {
             className="mt-8 inline-flex items-center justify-center min-h-[48px] px-8 rounded-md bg-primary hover:bg-primary-hover text-white text-[15px] font-medium transition-colors"
           >
             Add to Chrome — It&apos;s Free
+          </a>
+          <a
+            href={FIREFOX_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-8 inline-flex items-center justify-center min-h-[48px] px-8 rounded-md bg-orange-500 hover:bg-orange-600 text-white text-[15px] font-medium transition-colors"
+          >
+            Add to Firefox — It&apos;s Free
           </a>
           <p className="mt-3 text-[13px] text-ink-ash">
             Free tier includes 10 requests every 2 hours. No credit card required.

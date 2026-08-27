@@ -20,6 +20,11 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Install
+
+[![Add to Chrome](https://img.shields.io/badge/Add%20to%20Chrome-3dbd56?style=for-the-badge&logo=googledrive&logoColor=white)](https://chromewebstore.google.com/detail/ai-clipboard-%E2%80%94-copy-under/clppnjmmefhldcnbdacnogcnmhlpkenp)
+[![Add to Firefox](https://img.shields.io/badge/Add%20to%20Firefox-e34f26?style=for-the-badge&logo=firefox&logoColor=white)](https://addons.mozilla.org/addon/ai-clipboard-copy-understand)
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

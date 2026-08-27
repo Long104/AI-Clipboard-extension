@@ -1,6 +1,6 @@
 import { HeroFragments } from "@/components/hero-fragments";
 import { ChevronDown } from "lucide-react";
-import { STORE_URL, GITHUB_URL } from "@/lib/constants";
+import { STORE_URL, FIREFOX_URL, GITHUB_URL } from "@/lib/constants";
 
 export function Hero() {
   return (
@@ -19,9 +19,19 @@ export function Hero() {
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3 relative z-10">
           <a
             href={STORE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center justify-center min-h-[44px] px-6 rounded-md bg-primary hover:bg-primary-hover text-white text-[15px] font-medium transition-colors shadow-[0_10px_30px_-12px_rgba(37,99,235,0.5)]"
           >
             Add to Chrome
+          </a>
+          <a
+            href={FIREFOX_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center min-h-[44px] px-6 rounded-md bg-orange-500 hover:bg-orange-600 text-white text-[15px] font-medium transition-colors shadow-[0_10px_30px_-12px_rgba(251,191,36,0.5)]"
+          >
+            Add to Firefox
           </a>
           <a
             href={GITHUB_URL}
